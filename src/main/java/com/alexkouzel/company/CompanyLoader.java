@@ -1,9 +1,8 @@
 package com.alexkouzel.company;
 
-import com.alexkouzel.client.exceptions.RequestFailedException;
-import com.alexkouzel.common.exceptions.ParsingException;
+import com.alexkouzel.client.exceptions.HttpRequestException;
 import com.alexkouzel.common.utils.StringUtils;
-import com.alexkouzel.client.DataClient;
+import com.alexkouzel.client.HttpDataClient;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,13 +11,13 @@ public class CompanyLoader {
 
     private static final String URL = "https://www.sec.gov/files/company_tickers_exchange.json";
 
-    private final DataClient client;
+    private final HttpDataClient client;
 
-    public CompanyLoader(DataClient client) {
+    public CompanyLoader(HttpDataClient client) {
         this.client = client;
     }
 
-    public List<Company> loadCompanies() throws ParsingException, RequestFailedException {
+    public List<Company> loadAll() throws HttpRequestException {
         CompanyTickersExchange data = client.loadJson(URL, CompanyTickersExchange.class);
 
         return data

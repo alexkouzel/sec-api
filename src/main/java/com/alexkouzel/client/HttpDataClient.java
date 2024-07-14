@@ -1,7 +1,6 @@
 package com.alexkouzel.client;
 
-import com.alexkouzel.common.exceptions.ParsingException;
-import com.alexkouzel.client.exceptions.RequestFailedException;
+import com.alexkouzel.client.exceptions.HttpRequestException;
 import com.alexkouzel.client.exceptions.StatusCodeException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,11 +19,11 @@ import java.util.function.Consumer;
 import java.util.zip.DeflaterInputStream;
 import java.util.zip.GZIPInputStream;
 
-public abstract class DataClient {
+public abstract class HttpDataClient {
 
     private final int attemptLimit;
 
-    private final Consumer<Integer> errorHandler;
+    private final Consumer<Integer> statusCodeHandler;
 
     protected final RateLimiter rateLimiter;
 
@@ -34,13 +33,13 @@ public abstract class DataClient {
 
     private final HttpClient client;
 
-    public DataClient(
+    public HttpDataClient(
             int attemptLimit,
-            Consumer<Integer> errorHandler,
+            Consumer<Integer> statusCodeHandler,
             RateLimiter rateLimiter
     ) {
         this.attemptLimit = attemptLimit;
-        this.errorHandler = errorHandler;
+        this.statusCodeHandler = statusCodeHandler;
         this.rateLimiter = rateLimiter;
         this.jsonMapper = new ObjectMapper();
         this.xmlMapper = new XmlMapper();
@@ -53,49 +52,54 @@ public abstract class DataClient {
 
     protected abstract HttpRequest buildRequest(String url, String contentType);
 
-    public <T> T loadJson(String url, Class<T> type) throws ParsingException, RequestFailedException {
+    public <T> T loadJson(String url, Class<T> type) throws HttpRequestException {
         return loadType(url, type, jsonMapper);
     }
 
-    public <T> T loadXml(String url, Class<T> type) throws ParsingException, RequestFailedException {
+    public <T> T loadXml(String url, Class<T> type) throws HttpRequestException {
         return loadType(url, type, xmlMapper);
     }
 
-    public <T> T loadType(String url, Class<T> type, ObjectMapper mapper)
-            throws ParsingException, RequestFailedException {
+    public <T> T loadType(String url, Class<T> type, ObjectMapper mapper) throws HttpRequestException {
         try {
             return mapper.readValue(loadText(url), type);
         } catch (JsonProcessingException e) {
-            throw new ParsingException();
+            throw new HttpRequestException(e.getMessage());
         }
     }
 
-    public String loadText(String url) throws RequestFailedException, ParsingException {
+    public String loadText(String url) throws HttpRequestException {
         try (InputStream stream = loadStream(url, "text/html")) {
             return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new ParsingException();
+            throw new HttpRequestException(e.getMessage());
         }
     }
 
-    public InputStream loadStream(String url, String contentType) throws RequestFailedException {
+    public InputStream loadStream(String url, String contentType) throws HttpRequestException {
         HttpRequest request = buildRequest(url, contentType);
         return loadStream(request, attemptLimit);
     }
 
-    private InputStream loadStream(HttpRequest request, int attemptsLeft) throws RequestFailedException {
-        if (attemptsLeft <= 0) {
-            throw new RequestFailedException();
-        }
+    private InputStream loadStream(HttpRequest request, int attemptsLeft) throws HttpRequestException {
         try {
             return loadStream(request);
-        } catch (IOException | InterruptedException | StatusCodeException e) {
-            return loadStream(request, attemptsLeft - 1);
+        } catch (StatusCodeException | IOException e) {
+            attemptsLeft--;
+
+            if (attemptsLeft == 0)
+                throw new HttpRequestException("Last attempt error :: " + e.getMessage());
+
+            return loadStream(request, attemptsLeft);
+
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new HttpRequestException("Request interrupted :: " + e.getMessage());
         }
     }
 
     private InputStream loadStream(HttpRequest request)
-            throws IOException, InterruptedException, StatusCodeException {
+            throws InterruptedException, IOException, StatusCodeException {
 
         if (rateLimiter != null)
             rateLimiter.acquirePermit();
@@ -103,10 +107,12 @@ public abstract class DataClient {
         var responseType = HttpResponse.BodyHandlers.ofInputStream();
         HttpResponse<InputStream> response = client.send(request, responseType);
 
-        if (response.statusCode() != 200) {
-            errorHandler.accept(response.statusCode());
-            throw new StatusCodeException();
-        }
+        int statusCode = response.statusCode();
+        statusCodeHandler.accept(statusCode);
+
+        if (statusCode != 200)
+            throw new StatusCodeException("Invalid HTTP code: " + statusCode);
+
         return extractStream(response);
     }
 

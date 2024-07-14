@@ -1,8 +1,8 @@
-package com.alexkouzel.filing.refs.index;
+package com.alexkouzel.filing.metadata.index;
 
 import com.alexkouzel.common.exceptions.ParsingException;
 import com.alexkouzel.filing.FilingType;
-import com.alexkouzel.filing.refs.FilingRef;
+import com.alexkouzel.filing.metadata.FilingMetadata;
 import com.alexkouzel.common.utils.DateUtils;
 import lombok.experimental.UtilityClass;
 
@@ -17,23 +17,23 @@ import java.util.List;
 @UtilityClass
 public class IndexFeedParser {
 
-    public List<FilingRef> parse(InputStream stream) throws ParsingException {
-        List<FilingRef> refs = new ArrayList<>();
+    public List<FilingMetadata> parse(InputStream stream) throws ParsingException {
+        List<FilingMetadata> metadata = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
             int idx = 0;
             String line;
             while ((line = reader.readLine()) != null) {
-                if (idx >= 11) refs.add(parseLine(line));
+                if (idx >= 11) metadata.add(parseLine(line));
                 idx++;
             }
         } catch (IOException e) {
             throw new ParsingException("Failed to read a line");
         }
-        return refs;
+        return metadata;
     }
 
-    private FilingRef parseLine(String line) throws ParsingException {
+    private FilingMetadata parseLine(String line) throws ParsingException {
         String[] parts = line.split("\\|");
 
         if (parts.length != 5)
@@ -52,7 +52,7 @@ public class IndexFeedParser {
         // Parse filing date
         LocalDate filedAt = DateUtils.parse(parts[3], "yyyy-MM-dd");
 
-        return new FilingRef(accNum, issuerCik, type, filedAt);
+        return new FilingMetadata(accNum, issuerCik, type, filedAt);
     }
 
 }

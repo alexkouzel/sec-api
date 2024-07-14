@@ -1,8 +1,8 @@
-package com.alexkouzel.filing.refs.daily;
+package com.alexkouzel.filing.metadata.daily;
 
 import com.alexkouzel.common.exceptions.ParsingException;
 import com.alexkouzel.filing.FilingType;
-import com.alexkouzel.filing.refs.FilingRef;
+import com.alexkouzel.filing.metadata.FilingMetadata;
 import com.alexkouzel.common.utils.DateUtils;
 import com.alexkouzel.common.utils.StringUtils;
 import lombok.experimental.UtilityClass;
@@ -14,18 +14,18 @@ import java.util.List;
 @UtilityClass
 public class DailyFeedParser {
 
-    public List<FilingRef> parse(String data) throws ParsingException {
+    public List<FilingMetadata> parse(String data) throws ParsingException {
         String hr = StringUtils.substring(data, "<hr>", "<hr>");
         if (hr == null) throw new ParsingException("<hr> field is missing");
 
-        List<FilingRef> refs = new ArrayList<>();
+        List<FilingMetadata> result = new ArrayList<>();
         for (String entry : hr.split("\n")) {
-            refs.add(parseEntry(entry));
+            result.add(parseEntry(entry));
         }
-        return refs;
+        return result;
     }
 
-    private FilingRef parseEntry(String entry) {
+    private FilingMetadata parseEntry(String entry) {
         String[] parts = entry.split("</a>");
 
         // Parse issuer CIK
@@ -45,7 +45,7 @@ public class DailyFeedParser {
         String dateValue = entry.substring(0, entry.indexOf(" "));
         LocalDate filedAt = DateUtils.parse(dateValue, "MM-dd-yyyy");
 
-        return new FilingRef(accNum, issuerCik, type, filedAt);
+        return new FilingMetadata(accNum, issuerCik, type, filedAt);
     }
 
 }

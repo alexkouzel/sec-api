@@ -1,38 +1,31 @@
 package com.alexkouzel.filing.f345;
 
 import com.alexkouzel.common.exceptions.ParsingException;
-import com.alexkouzel.filing.refs.FilingRef;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.alexkouzel.common.utils.StringUtils;
-import com.alexkouzel.filing.FilingUrlParser;
 import lombok.RequiredArgsConstructor;
 
 import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
-public class OwnershipDocParser {
+public class OwnershipDocumentParser {
 
     private final XmlMapper xmlMapper;
 
     private static final Pattern NEW_LINE_PATTERN = Pattern.compile("\n");
 
-    public OwnershipDoc parse(String data, FilingRef ref) throws ParsingException {
-        return new OwnershipDoc(
-                ref.accNum(),
-                ref.getTxtUrl(),
-                getXmlUrl(data, ref),
-                ref.filedAt(),
-                getXmlForm(data)
-        );
+    public OwnershipDocument parse(String data) throws ParsingException {
+        return new OwnershipDocument(
+                parseXmlFilename(data),
+                parseOwnershipForm(data));
     }
 
-    private String getXmlUrl(String data, FilingRef ref) {
-        String filename = StringUtils.substring(data, "<FILENAME>", "\n");
-        return FilingUrlParser.getXmlUrl(ref.issuerCik(), ref.accNum(), filename);
+    private String parseXmlFilename(String data) {
+        return StringUtils.substring(data, "<FILENAME>", "\n");
     }
 
-    private OwnershipForm getXmlForm(String data) throws ParsingException {
+    private OwnershipForm parseOwnershipForm(String data) throws ParsingException {
         try {
             String xml = getXmlData(data);
             return xmlMapper.readValue(xml, OwnershipForm.class);

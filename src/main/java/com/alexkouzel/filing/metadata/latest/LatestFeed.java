@@ -1,4 +1,4 @@
-package com.alexkouzel.filing.refs.latest;
+package com.alexkouzel.filing.metadata.latest;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import lombok.Getter;

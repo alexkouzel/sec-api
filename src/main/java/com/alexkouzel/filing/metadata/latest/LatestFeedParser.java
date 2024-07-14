@@ -1,8 +1,8 @@
-package com.alexkouzel.filing.refs.latest;
+package com.alexkouzel.filing.metadata.latest;
 
 import com.alexkouzel.common.exceptions.ParsingException;
 import com.alexkouzel.filing.FilingType;
-import com.alexkouzel.filing.refs.FilingRef;
+import com.alexkouzel.filing.metadata.FilingMetadata;
 import com.alexkouzel.common.utils.DateUtils;
 import lombok.experimental.UtilityClass;
 
@@ -17,15 +17,15 @@ public class LatestFeedParser {
 
     private final Pattern ISSUER_CIK_PATTERN = Pattern.compile("data/(\\d+)");
 
-    public List<FilingRef> parse(LatestFeed feed) throws ParsingException {
-        List<FilingRef> refs = new ArrayList<>();
+    public List<FilingMetadata> parse(LatestFeed feed) throws ParsingException {
+        List<FilingMetadata> metadata = new ArrayList<>();
         for (LatestFeedEntry entry : feed.getEntry()) {
-            refs.add(parseEntry(entry));
+            metadata.add(parseEntry(entry));
         }
-        return refs;
+        return metadata;
     }
 
-    private FilingRef parseEntry(LatestFeedEntry entry) throws ParsingException {
+    private FilingMetadata parseEntry(LatestFeedEntry entry) throws ParsingException {
         String[] summaryParts = entry.getSummary().split(" ");
 
         // Parse accession number
@@ -47,7 +47,7 @@ public class LatestFeedParser {
         String filedAtValue = summaryParts[2];
         LocalDate filedAt = DateUtils.parse(filedAtValue, "yyyy-MM-dd");
 
-        return new FilingRef(accNum, issuerCik, type, filedAt);
+        return new FilingMetadata(accNum, issuerCik, type, filedAt);
     }
 
 }

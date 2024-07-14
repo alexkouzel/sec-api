@@ -1,4 +1,4 @@
-package com.alexkouzel.filing.refs.cik;
+package com.alexkouzel.filing.metadata.cik;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.alexkouzel.filing.deserializers.BooleanDeserializer;

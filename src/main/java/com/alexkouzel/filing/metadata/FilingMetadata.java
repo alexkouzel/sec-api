@@ -1,11 +1,11 @@
-package com.alexkouzel.filing.refs;
+package com.alexkouzel.filing.metadata;
 
 import com.alexkouzel.filing.FilingType;
-import com.alexkouzel.filing.FilingUrlParser;
+import com.alexkouzel.filing.FilingUrlBuilder;
 
 import java.time.LocalDate;
 
-public record FilingRef(
+public record FilingMetadata(
 
         String accNum,
 
@@ -18,7 +18,7 @@ public record FilingRef(
 ) {
 
     public String getTxtUrl() {
-        return FilingUrlParser.getTxtUrl(issuerCik, accNum);
+        return FilingUrlBuilder.buildTxtUrl(issuerCik, accNum);
     }
 
 }

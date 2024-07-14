@@ -1,7 +1,7 @@
-package com.alexkouzel.filing.refs.cik;
+package com.alexkouzel.filing.metadata.cik;
 
 import com.alexkouzel.filing.FilingType;
-import com.alexkouzel.filing.refs.FilingRef;
+import com.alexkouzel.filing.metadata.FilingMetadata;
 import lombok.experimental.UtilityClass;
 
 import java.time.LocalDate;
@@ -11,11 +11,11 @@ import java.util.List;
 @UtilityClass
 public class CikSubmissionParser {
 
-    public List<FilingRef> parse(CikSubmission submission) {
+    public List<FilingMetadata> parse(CikSubmission submission) {
         CikSubmissionFilings.Recent recent = submission.getFilings().getRecent();
         int filingNum = recent.getAccessionNumber().size();
 
-        List<FilingRef> refs = new ArrayList<>();
+        List<FilingMetadata> result = new ArrayList<>();
         for (int i = 0; i < filingNum; i++) {
 
             String accNum = recent.getAccessionNumber().get(i);
@@ -23,10 +23,10 @@ public class CikSubmissionParser {
             FilingType type = FilingType.ofValue(recent.getForm().get(i));
             LocalDate filedAt = recent.getFilingDate().get(i);
 
-            FilingRef ref = new FilingRef(accNum, issuerCik, type, filedAt);
-            refs.add(ref);
+            FilingMetadata metadata = new FilingMetadata(accNum, issuerCik, type, filedAt);
+            result.add(metadata);
         }
-        return refs;
+        return result;
     }
 
 }
