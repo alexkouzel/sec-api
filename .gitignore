@@ -1,8 +1,12 @@
-.gradle
+### Java ###
 build/
-!gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+
+### Gradle ###
+.gradle
+!gradle/wrapper/gradle-wrapper.jar
+gradle.properties
 
 ### IntelliJ IDEA ###
 .idea/
