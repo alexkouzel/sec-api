@@ -19,46 +19,43 @@ The `userAgent` should follow this format:
 Sample Company Name AdminContact@<sample company domain>.com
 ```
 
-This client adheres to the guidelines, as specified in the SEC's [Accessing EDGAR Data](https://www.sec.gov/search-filings/edgar-search-assistance/accessing-edgar-data).
-
 Next, you can use this client as follows: 
 
 1. Load information about public companies in the USA:
 
 ```java
-var loader = new CompanyLoader(client);
-
-// Load information on all companies
-List<Company> companies = loader.loadAll();
+var companyLoader = new CompanyLoader(client);
+List<Company> companies = companyLoader.loadAll();
 ```
 
 2. Load filing metadata:
 
 ```java
-var loader = new FilingMetadataLoader(client);
+var filingMetadataLoader = new FilingMetadataLoader(client);
 
 // Load filing metadata on Q3 2023
-List<FilingMetadata> metadata1 = loader.loadByQuarter(2023, 3);
+List<FilingMetadata> metadataQ3 = filingMetadataLoader.loadByQuarter(2023, 3);
 
 // Load today's filing metadata
-List<FilingMetadata> metadata2 = loader.loadDaysAgo(0);
+List<FilingMetadata> metadataToday = filingMetadataLoader.loadDaysAgo(0);
 
-// Load metadata on the latest 80 filings, but skipping the first 20
-List<FilingMetadata> metadata3 = loader.loadLatest(20, LatestFeedCount.EIGHTY);
+// Load metadata for the latest 80 filings, but skipping the first 20
+List<FilingMetadata> latestMetadata = filingMetadataLoader.loadLatest(20, LatestFeedCount.EIGHTY);
 
-// Load metadata on Tesla's filings
-List<FilingMetadata> metadata4 = loader.loadByCik("0001318605");
+// Load metadata for Tesla's filings
+List<FilingMetadata> teslaMetadata = filingMetadataLoader.loadByCik("0001318605");
 ```
 
 3. Load ownership documents:
 
 ```java
-var loader = new OwnershipDocumentLoader(client);
+var ownershipDocumentLoader = new OwnershipDocumentLoader(client);
 
 // Load ownership document by its filing metadata
 FilingMetadata metadata = ...;
-OwnershipDocument doc1 = loader.loadByMetadata(metadata);
+OwnershipDocument doc1 = ownershipDocumentLoader.loadByMetadata(metadata);
 
 // Load ownership document by a URL
-OwnershipDocument doc2 = loader.loadByUrl("https://www.sec.gov/Archives/edgar/data/1318605/000197292824000002/0001972928-24-000002.txt");
+String url = "https://www.sec.gov/Archives/edgar/data/1318605/000197292824000002/0001972928-24-000002.txt";
+OwnershipDocument doc2 = ownershipDocumentLoader.loadByUrl(url);
 ```
