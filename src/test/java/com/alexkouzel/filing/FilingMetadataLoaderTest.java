@@ -5,6 +5,7 @@ import com.alexkouzel.client.exceptions.HttpRequestException;
 import com.alexkouzel.common.exceptions.ParsingException;
 import com.alexkouzel.filing.metadata.FilingMetadata;
 import com.alexkouzel.filing.metadata.FilingMetadataLoader;
+import com.alexkouzel.filing.metadata.latest.LatestFeedCount;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -16,29 +17,29 @@ public class FilingMetadataLoaderTest {
     private static final FilingMetadataLoader loader = new FilingMetadataLoader(new TestEdgarClient());
 
     @Test
-    public void loadByCik() throws HttpRequestException, ParsingException {
-        List<FilingMetadata> metadata = loader.loadByCik(FilingType.F4, "0000946581");
+    public void loadByCik() throws HttpRequestException {
+        List<FilingMetadata> metadata = loader.loadByCik("0000946581");
         assertFalse(metadata.isEmpty());
         verifyMetadata(metadata.get(0));
     }
 
     @Test
     public void loadByQuarter() throws HttpRequestException, ParsingException {
-        List<FilingMetadata> metadata = loader.loadByQuarter(FilingType.F4, 2022, 3);
+        List<FilingMetadata> metadata = loader.loadByQuarter(2022, 3);
         assertFalse(metadata.isEmpty());
         verifyMetadata(metadata.get(0));
     }
 
     @Test
     public void loadDaysAgo() throws HttpRequestException, ParsingException {
-        List<FilingMetadata> metadata = loader.loadDaysAgo(FilingType.F4, 1);
+        List<FilingMetadata> metadata = loader.loadDaysAgo(1);
         assertFalse(metadata.isEmpty());
         verifyMetadata(metadata.get(0));
     }
 
     @Test
     public void loadLatest() throws HttpRequestException, ParsingException {
-        List<FilingMetadata> metadata = loader.loadLatest(FilingType.F4, 0, 200);
+        List<FilingMetadata> metadata = loader.loadLatest(0, LatestFeedCount.TEN);
         assertFalse(metadata.isEmpty());
         verifyMetadata(metadata.get(0));
     }
