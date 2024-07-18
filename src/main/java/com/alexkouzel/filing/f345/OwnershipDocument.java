@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public record OwnershipDocument(
 
-        String accNum,
+        String accNo,
 
         FilingType type,
 

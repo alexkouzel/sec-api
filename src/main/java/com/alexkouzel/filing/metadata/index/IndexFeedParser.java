@@ -40,8 +40,8 @@ public class IndexFeedParser {
             throw new ParsingException("Invalid number of data parts");
 
         // Parse accession number
-        int accNumIdx = parts[4].lastIndexOf("/") + 1;
-        String accNum = parts[4].substring(accNumIdx, parts[4].length() - 4);
+        int accNoIdx = parts[4].lastIndexOf("/") + 1;
+        String accNo = parts[4].substring(accNoIdx, parts[4].length() - 4);
 
         // Parse issuer CIK
         String issuerCik = parts[0];
@@ -52,7 +52,7 @@ public class IndexFeedParser {
         // Parse filing date
         LocalDate filedAt = DateUtils.parse(parts[3], "yyyy-MM-dd");
 
-        return new FilingMetadata(accNum, issuerCik, type, filedAt);
+        return new FilingMetadata(accNo, issuerCik, type, filedAt);
     }
 
 }

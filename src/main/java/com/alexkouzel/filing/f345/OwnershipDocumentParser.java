@@ -22,7 +22,7 @@ public class OwnershipDocumentParser {
 
     public OwnershipDocument parse(String data, FilingMetadata metadata) throws ParsingException {
         return new OwnershipDocument(
-                metadata.accNum(),
+                metadata.accNo(),
                 metadata.type(),
                 metadata.filedAt(),
                 parseXmlFilename(data),

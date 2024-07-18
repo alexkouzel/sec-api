@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 public record FilingMetadata(
 
-        String accNum,
+        String accNo,
 
         String issuerCik,
 
@@ -18,7 +18,7 @@ public record FilingMetadata(
 ) {
 
     public String getTxtUrl() {
-        return FilingUrlBuilder.buildTxtUrl(issuerCik, accNum);
+        return FilingUrlBuilder.buildTxtUrl(issuerCik, accNo);
     }
 
 }

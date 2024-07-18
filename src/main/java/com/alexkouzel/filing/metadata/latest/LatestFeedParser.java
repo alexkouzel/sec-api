@@ -29,7 +29,7 @@ public class LatestFeedParser {
         String[] summaryParts = entry.getSummary().split(" ");
 
         // Parse accession number
-        String accNum = summaryParts[4];
+        String accNo = summaryParts[4];
 
         // Parse issuer CIK
         String href = entry.getLink().getHref();
@@ -47,7 +47,7 @@ public class LatestFeedParser {
         String filedAtValue = summaryParts[2];
         LocalDate filedAt = DateUtils.parse(filedAtValue, "yyyy-MM-dd");
 
-        return new FilingMetadata(accNum, issuerCik, type, filedAt);
+        return new FilingMetadata(accNo, issuerCik, type, filedAt);
     }
 
 }

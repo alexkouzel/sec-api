@@ -46,12 +46,12 @@ public class FilingMetadataLoaderTest {
 
     private void verifyMetadata(FilingMetadata metadata) {
         assertNotNull(metadata);
-        assertNotNull(metadata.accNum());
+        assertNotNull(metadata.accNo());
         assertNotNull(metadata.issuerCik());
         assertNotNull(metadata.type());
         assertNotNull(metadata.filedAt());
 
-        assertEquals(20, metadata.accNum().length());
+        assertEquals(20, metadata.accNo().length());
         assertTrue(metadata.issuerCik().length() <= 10);
     }
 

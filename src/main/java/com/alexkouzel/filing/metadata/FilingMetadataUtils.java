@@ -20,16 +20,16 @@ public class FilingMetadataUtils {
         return Collections.max(metadata, Comparator.comparing(FilingMetadata::filedAt));
     }
 
-    public static List<FilingMetadata> filterAccNums(List<FilingMetadata> metadata, Set<String> accNums) {
-        return ListUtils.filter(metadata, entry -> !accNums.contains(entry.accNum()));
+    public static List<FilingMetadata> filteraccNos(List<FilingMetadata> metadata, Set<String> accNos) {
+        return ListUtils.filter(metadata, entry -> !accNos.contains(entry.accNo()));
     }
 
-    public static Set<String> getAccNums(List<FilingMetadata> metadata) {
-        return metadata.stream().map(FilingMetadata::accNum).collect(Collectors.toSet());
+    public static Set<String> getaccNos(List<FilingMetadata> metadata) {
+        return metadata.stream().map(FilingMetadata::accNo).collect(Collectors.toSet());
     }
 
     public static List<FilingMetadata> removeDups(List<FilingMetadata> metadata) {
-        return ListUtils.removeDups(metadata, FilingMetadata::accNum);
+        return ListUtils.removeDups(metadata, FilingMetadata::accNo);
     }
 
 }

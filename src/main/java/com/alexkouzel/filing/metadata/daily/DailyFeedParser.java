@@ -33,8 +33,8 @@ public class DailyFeedParser {
         String issuerCik = parts[1].substring(issuerCikIdx);
 
         // Parse accession number
-        int accNumIdx = parts[0].indexOf(issuerCik) + issuerCik.length() + 1;
-        String accNum = parts[0].substring(accNumIdx, parts[0].indexOf("-index"));
+        int accNoIdx = parts[0].indexOf(issuerCik) + issuerCik.length() + 1;
+        String accNo = parts[0].substring(accNoIdx, parts[0].indexOf("-index"));
 
         // Parse filing type
         int typeIdx = parts[0].indexOf(">") + 1;
@@ -45,7 +45,7 @@ public class DailyFeedParser {
         String dateValue = entry.substring(0, entry.indexOf(" "));
         LocalDate filedAt = DateUtils.parse(dateValue, "MM-dd-yyyy");
 
-        return new FilingMetadata(accNum, issuerCik, type, filedAt);
+        return new FilingMetadata(accNo, issuerCik, type, filedAt);
     }
 
 }

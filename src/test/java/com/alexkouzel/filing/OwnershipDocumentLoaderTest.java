@@ -36,7 +36,7 @@ public class OwnershipDocumentLoaderTest {
 
     private void verifyEquals(OwnershipDocument expected, OwnershipDocument actual) {
         assertNotNull(actual);
-        assertEquals(expected.accNum(), actual.accNum());
+        assertEquals(expected.accNo(), actual.accNo());
         assertEquals(expected.type(), actual.type());
         assertEquals(expected.filedAt(), actual.filedAt());
         assertEquals(expected.xmlFilename(), actual.xmlFilename());
