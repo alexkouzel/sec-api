@@ -27,7 +27,8 @@ public class OwnershipDocumentLoader {
     }
 
     public OwnershipDocument loadByMetadata(FilingMetadata metadata) throws HttpRequestException, ParsingException {
-        return loadByUrl(metadata.getTxtUrl());
+        String data = client.loadText(metadata.getTxtUrl());
+        return parser.parse(data, metadata);
     }
 
 }

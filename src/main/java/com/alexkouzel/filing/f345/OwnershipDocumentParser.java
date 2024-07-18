@@ -1,11 +1,16 @@
 package com.alexkouzel.filing.f345;
 
 import com.alexkouzel.common.exceptions.ParsingException;
+import com.alexkouzel.common.utils.DateUtils;
+import com.alexkouzel.filing.FilingType;
+import com.alexkouzel.filing.metadata.FilingMetadata;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.alexkouzel.common.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
@@ -15,10 +20,34 @@ public class OwnershipDocumentParser {
 
     private static final Pattern NEW_LINE_PATTERN = Pattern.compile("\n");
 
-    public OwnershipDocument parse(String data) throws ParsingException {
+    public OwnershipDocument parse(String data, FilingMetadata metadata) throws ParsingException {
         return new OwnershipDocument(
+                metadata.accNum(),
+                metadata.type(),
+                metadata.filedAt(),
                 parseXmlFilename(data),
                 parseOwnershipForm(data));
+    }
+
+    public OwnershipDocument parse(String data) throws ParsingException {
+        String header = StringUtils.until(data, "\n\n");
+        String[] lines = header.split("\n");
+
+        String accNo = getHeaderValue(lines[3]);
+        String type = getHeaderValue(lines[4]);
+        String filedAt = getHeaderValue(lines[7]);
+
+        return new OwnershipDocument(
+                accNo,
+                FilingType.ofValue(type),
+                DateUtils.parse(filedAt, "yyyyMMdd"),
+                parseXmlFilename(data),
+                parseOwnershipForm(data));
+    }
+
+    private String getHeaderValue(String line) {
+        int valueIdx = line.lastIndexOf("\t") + 1;
+        return line.substring(valueIdx);
     }
 
     private String parseXmlFilename(String data) {

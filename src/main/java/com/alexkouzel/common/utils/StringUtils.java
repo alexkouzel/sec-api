@@ -22,6 +22,16 @@ public class StringUtils {
         return value.substring(start + open.length(), end);
     }
 
+    public String until(String value, String close) {
+        int idx = value.indexOf(close);
+        return value.substring(0, idx);
+    }
+
+    public String since(String value, String open) {
+        int idx = value.indexOf(open);
+        return value.substring(idx + open.length());
+    }
+
     public String padLeft(String value, int length, char c) {
         String padding = generate(length - value.length(), c);
         return padding + value;

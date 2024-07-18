@@ -14,6 +14,18 @@ public class StringUtilsTest {
     }
 
     @Test
+    public void until() {
+        String result = StringUtils.until("aabbccdd", "cd");
+        assertEquals("aabbc", result);
+    }
+
+    @Test
+    public void since() {
+        String result = StringUtils.since("aabbccdd", "abbc");
+        assertEquals("cdd", result);
+    }
+
+    @Test
     public void padLeft() {
         String result = StringUtils.padLeft("TEST", 8, 'c');
         assertEquals("ccccTEST", result);
