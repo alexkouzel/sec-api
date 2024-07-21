@@ -1,6 +1,7 @@
 package com.alexkouzel.filing.metadata;
 
 import com.alexkouzel.common.utils.ListUtils;
+import com.alexkouzel.filing.FilingType;
 import lombok.experimental.UtilityClass;
 
 import java.util.Collections;
@@ -20,11 +21,15 @@ public class FilingMetadataUtils {
         return Collections.max(metadata, Comparator.comparing(FilingMetadata::filedAt));
     }
 
-    public static List<FilingMetadata> filteraccNos(List<FilingMetadata> metadata, Set<String> accNos) {
+    public static List<FilingMetadata> filterAccNos(List<FilingMetadata> metadata, Set<String> accNos) {
         return ListUtils.filter(metadata, entry -> !accNos.contains(entry.accNo()));
     }
 
-    public static Set<String> getaccNos(List<FilingMetadata> metadata) {
+    public static List<FilingMetadata> filterType(List<FilingMetadata> metadata, FilingType type) {
+        return ListUtils.filter(metadata, entry -> entry.type() == type);
+    }
+
+    public static Set<String> getAccNos(List<FilingMetadata> metadata) {
         return metadata.stream().map(FilingMetadata::accNo).collect(Collectors.toSet());
     }
 

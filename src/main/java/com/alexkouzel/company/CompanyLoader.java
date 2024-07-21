@@ -38,11 +38,7 @@ public class CompanyLoader {
     ) {}
 
     private Company extractCompany(String[] fields) {
-        String id = StringUtils.padLeft(fields[0], 10, '0');
-        String name = fields[1];
-        String symbol = fields[2];
-        String exchange = fields[3];
-        return new Company(id, name, symbol, exchange);
+        return new Company(fields[0], fields[1], fields[2], fields[3]);
     }
 
 }

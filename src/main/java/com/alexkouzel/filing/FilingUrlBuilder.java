@@ -1,5 +1,6 @@
 package com.alexkouzel.filing;
 
+import com.alexkouzel.common.utils.StringUtils;
 import lombok.experimental.UtilityClass;
 
 import java.util.regex.Pattern;
@@ -21,8 +22,12 @@ public class FilingUrlBuilder {
     }
 
     private String buildUrl(String issuerCik, String accNo, String filename) {
-        String urlaccNo = DASH_PATTERN.matcher(accNo).replaceAll("");
-        return String.format(URL_TEMPLATE, issuerCik, urlaccNo, filename);
+
+        if (issuerCik.charAt(0) == '0')
+            issuerCik = StringUtils.removeLeft(issuerCik, '0');
+
+        accNo = DASH_PATTERN.matcher(accNo).replaceAll("");
+        return String.format(URL_TEMPLATE, issuerCik, accNo, filename);
     }
 
 }

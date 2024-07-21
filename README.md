@@ -34,16 +34,20 @@ List<Company> companies = companyLoader.loadAll();
 var filingMetadataLoader = new FilingMetadataLoader(client);
 
 // Load filing metadata on Q3 2023
-List<FilingMetadata> metadataQ3 = filingMetadataLoader.loadByQuarter(2023, 3);
+List<FilingMetadata> metadataQ3 = 
+        filingMetadataLoader.loadByQuarter(2023, 3);
 
 // Load today's filing metadata
-List<FilingMetadata> metadataToday = filingMetadataLoader.loadDaysAgo(0);
+List<FilingMetadata> metadataToday = 
+        filingMetadataLoader.loadDaysAgo(0);
 
 // Load metadata for the latest 80 filings, but skipping the first 20
-List<FilingMetadata> latestMetadata = filingMetadataLoader.loadLatest(20, LatestFeedCount.EIGHTY);
+List<FilingMetadata> latestMetadata = 
+        filingMetadataLoader.loadLatest(20, LatestFeedCount.EIGHTY);
 
 // Load metadata for Tesla's filings
-List<FilingMetadata> teslaMetadata = filingMetadataLoader.loadByCik("0001318605");
+List<FilingMetadata> teslaMetadata = 
+        filingMetadataLoader.loadByCik("1318605");
 ```
 
 3. Load ownership documents:
@@ -52,10 +56,10 @@ List<FilingMetadata> teslaMetadata = filingMetadataLoader.loadByCik("0001318605"
 var ownershipDocumentLoader = new OwnershipDocumentLoader(client);
 
 // Load ownership document by its filing metadata
-FilingMetadata metadata = ...;
+FilingMetadata metadata = latestMetadata.get(0);
 OwnershipDocument doc1 = ownershipDocumentLoader.loadByMetadata(metadata);
 
 // Load ownership document by a URL
-String url = "https://www.sec.gov/Archives/edgar/data/1318605/000197292824000002/0001972928-24-000002.txt";
+String url = FilingUrlBuilder.buildTxtUrl("1318605", "0001972928-24-000002");
 OwnershipDocument doc2 = ownershipDocumentLoader.loadByUrl(url);
 ```

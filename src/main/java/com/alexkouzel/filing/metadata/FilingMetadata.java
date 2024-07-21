@@ -9,6 +9,7 @@ public record FilingMetadata(
 
         String accNo,
 
+        // Note: issuer CIK in filing metadata does not have leading zeros
         String issuerCik,
 
         FilingType type,

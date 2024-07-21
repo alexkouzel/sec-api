@@ -18,7 +18,7 @@ public class FilingMetadataLoaderTest {
 
     @Test
     public void loadByCik() throws HttpRequestException {
-        List<FilingMetadata> metadata = loader.loadByCik("0000946581");
+        List<FilingMetadata> metadata = loader.loadByCik("946581");
         assertFalse(metadata.isEmpty());
         verifyMetadata(metadata.get(0));
     }

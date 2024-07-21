@@ -37,6 +37,24 @@ public class StringUtils {
         return padding + value;
     }
 
+    public String padRight(String value, int length, char c) {
+        String padding = generate(length - value.length(), c);
+        return value + padding;
+    }
+
+    public String removeLeft(String value, char c) {
+        int idx = indexOfNot(value, c);
+        return idx == 0 ? value : value.substring(idx);
+    }
+
+    public int indexOfNot(String value, char c) {
+        int i = 0;
+        while (i < value.length() && value.indexOf(i) == c) {
+            i++;
+        }
+        return i;
+    }
+
     public String generate(int size, char c) {
         if (size <= 0) return "";
         char[] chars = new char[size];

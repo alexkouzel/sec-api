@@ -2,11 +2,11 @@ package com.alexkouzel.filing.metadata;
 
 import com.alexkouzel.client.exceptions.HttpRequestException;
 import com.alexkouzel.common.exceptions.ParsingException;
+import com.alexkouzel.common.utils.StringUtils;
 import com.alexkouzel.filing.FilingType;
 import com.alexkouzel.filing.metadata.cik.CikSubmission;
 import com.alexkouzel.filing.metadata.latest.LatestFeedCount;
 import com.alexkouzel.filing.metadata.latest.LatestFeedParser;
-import com.alexkouzel.common.utils.ListUtils;
 import com.alexkouzel.client.HttpDataClient;
 import com.alexkouzel.filing.metadata.cik.CikSubmissionParser;
 import com.alexkouzel.filing.metadata.daily.DailyFeedParser;
@@ -73,6 +73,7 @@ public class FilingMetadataLoader {
     }
 
     public List<FilingMetadata> loadByCik(String cik) throws HttpRequestException {
+        cik = StringUtils.padLeft(cik, 10, '0');
         String url = String.format(SUBMISSIONS_URL, cik);
         CikSubmission submission = client.loadJson(url, CikSubmission.class);
         return CikSubmissionParser.parse(submission);
