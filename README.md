@@ -2,7 +2,7 @@
 This API allows you to access data from the [U.S. Securities and Exchange Commission (SEC)](https://www.sec.gov/), including:
 
 - Information on public companies in the USA.
-- Filing metadata for various types: 10-Q, 10-K, 4, 8-K, 13-F, etc.
+- Filing references for various types: 10-Q, 10-K, 4, 8-K, 13-F, etc.
 - Ownership documents: F3, F4, and F5.
 
 ## Getting Started
@@ -28,26 +28,26 @@ var companyLoader = new CompanyLoader(client);
 List<Company> companies = companyLoader.loadAll();
 ```
 
-2. Load filing metadata:
+2. Load filing references:
 
 ```java
-var filingMetadataLoader = new FilingMetadataLoader(client);
+var filingReferenceLoader = new FilingReferenceLoader(client);
 
-// Load filing metadata on Q3 2023
-List<FilingMetadata> metadataQ3 = 
-        filingMetadataLoader.loadByQuarter(2023, 3);
+// Load filing references on Q3 2023
+List<FilingReference> refsQ3 = 
+        filingReferenceLoader.loadByQuarter(2023, 3);
 
-// Load today's filing metadata
-List<FilingMetadata> metadataToday = 
-        filingMetadataLoader.loadDaysAgo(0);
+// Load today's filing references
+List<FilingReference> refsToday = 
+        filingReferenceLoader.loadDaysAgo(0);
 
-// Load metadata for the latest 80 filings, but skipping the first 20
-List<FilingMetadata> latestMetadata = 
-        filingMetadataLoader.loadLatest(20, LatestFeedCount.EIGHTY);
+// Load references for the latest 80 filings, but skipping the first 20
+List<FilingReference> refsLatest =
+        filingReferenceLoader.loadLatest(20, LatestFeedCount.EIGHTY);
 
-// Load metadata for Tesla's filings
-List<FilingMetadata> teslaMetadata = 
-        filingMetadataLoader.loadByCik("1318605");
+// Load references for Tesla's (CIK = 1318605) filings
+List<FilingReference> refsTesla =
+        filingReferenceLoader.loadByCik("1318605");
 ```
 
 3. Load ownership documents:
@@ -55,11 +55,11 @@ List<FilingMetadata> teslaMetadata =
 ```java
 var ownershipDocumentLoader = new OwnershipDocumentLoader(client);
 
-// Load ownership document by its filing metadata
-FilingMetadata metadata = latestMetadata.get(0);
-OwnershipDocument doc1 = ownershipDocumentLoader.loadByMetadata(metadata);
+// Load ownership document by its reference
+FilingReference ref = refsToday.get(0);
+OwnershipDocument doc1 = ownershipDocumentLoader.loadByRef(ref);
 
-// Load ownership document by a URL
+// Load ownership document by a URL that returns a .txt file
 String url = FilingUrlBuilder.buildTxtUrl("1318605", "0001972928-24-000002");
-OwnershipDocument doc2 = ownershipDocumentLoader.loadByUrl(url);
+OwnershipDocument doc2 = ownershipDocumentLoader.loadByTxtUrl(url);
 ```
