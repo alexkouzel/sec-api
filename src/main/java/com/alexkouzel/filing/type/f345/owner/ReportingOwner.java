@@ -1,7 +1,7 @@
 package com.alexkouzel.filing.type.f345.owner;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.alexkouzel.filing.deserializers.BooleanDeserializer;
+import com.alexkouzel.common.deserializers.BooleanDeserializer;
 import lombok.Getter;
 import lombok.Setter;
 

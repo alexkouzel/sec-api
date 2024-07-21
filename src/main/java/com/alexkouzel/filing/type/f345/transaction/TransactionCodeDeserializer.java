@@ -1,6 +1,5 @@
-package com.alexkouzel.filing.deserializers;
+package com.alexkouzel.filing.type.f345.transaction;
 
-import com.alexkouzel.filing.type.f345.transaction.TransactionCode;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;

@@ -1,6 +1,6 @@
 package com.alexkouzel.filing.type.f345.footnote;
 
-import com.alexkouzel.filing.deserializers.EdgarDateDeserializer;
+import com.alexkouzel.common.deserializers.DateDeserializer;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -16,7 +16,7 @@ public class FootnoteEdgarDate {
 
     private FootnoteID footnoteId;
 
-    @JsonDeserialize(using = EdgarDateDeserializer.class)
+    @JsonDeserialize(using = DateDeserializer.class)
     private LocalDate value;
 
     @JsonCreator

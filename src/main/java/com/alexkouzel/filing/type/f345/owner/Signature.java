@@ -1,6 +1,6 @@
 package com.alexkouzel.filing.type.f345.owner;
 
-import com.alexkouzel.filing.deserializers.EdgarDateDeserializer;
+import com.alexkouzel.common.deserializers.DateDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +13,7 @@ public class Signature {
 
     private String signatureName;
 
-    @JsonDeserialize(using = EdgarDateDeserializer.class)
+    @JsonDeserialize(using = DateDeserializer.class)
     private LocalDate signatureDate;
 
 }

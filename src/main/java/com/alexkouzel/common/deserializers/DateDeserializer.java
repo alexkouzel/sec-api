@@ -1,4 +1,4 @@
-package com.alexkouzel.filing.deserializers;
+package com.alexkouzel.common.deserializers;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 
-public class EdgarDateDeserializer extends JsonDeserializer<LocalDate> {
+public class DateDeserializer extends JsonDeserializer<LocalDate> {
 
     @Override
     public LocalDate deserialize(JsonParser parser, DeserializationContext ctx) throws IOException {

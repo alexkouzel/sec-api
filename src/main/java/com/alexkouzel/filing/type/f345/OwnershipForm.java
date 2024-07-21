@@ -5,8 +5,8 @@ import com.alexkouzel.filing.type.f345.owner.ReportingOwner;
 import com.alexkouzel.filing.type.f345.owner.Signature;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.alexkouzel.filing.deserializers.BooleanDeserializer;
-import com.alexkouzel.filing.deserializers.EdgarDateDeserializer;
+import com.alexkouzel.common.deserializers.BooleanDeserializer;
+import com.alexkouzel.common.deserializers.DateDeserializer;
 import com.alexkouzel.filing.type.f345.footnote.FootnoteContainer;
 import com.alexkouzel.filing.type.f345.transaction.derivative.DerivativeTable;
 import com.alexkouzel.filing.type.f345.transaction.nonderivative.NonDerivativeTable;
@@ -32,10 +32,10 @@ public class OwnershipForm {
 
     private Issuer issuer;
 
-    @JsonDeserialize(using = EdgarDateDeserializer.class)
+    @JsonDeserialize(using = DateDeserializer.class)
     private LocalDate periodOfReport;
 
-    @JsonDeserialize(using = EdgarDateDeserializer.class)
+    @JsonDeserialize(using = DateDeserializer.class)
     private LocalDate dateOfOriginalSubmission;
 
     @JsonDeserialize(using = BooleanDeserializer.class)

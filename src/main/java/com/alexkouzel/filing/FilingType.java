@@ -12,10 +12,8 @@ public enum FilingType {
 
     F3("3"),        // initial insider transactions
     F3_A("3/A"),    // initial insider transactions (amendment)
-
     F4("4"),        // insider transactions
     F4_A("4/A"),    // insider transactions (amendment)
-
     F5("5"),        // annual insider transactions that weren't reported in form 4
     F5_A("5/A"),    // annual insider transactions that weren't reported in form 4 (amendment)
 
