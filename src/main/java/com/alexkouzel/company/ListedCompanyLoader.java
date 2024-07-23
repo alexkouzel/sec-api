@@ -22,7 +22,7 @@ public class ListedCompanyLoader {
         return data
                 .data()
                 .stream()
-                .map(this::extractCompany)
+                .map(this::extract)
                 .collect(Collectors.toList());
     }
 
@@ -36,7 +36,7 @@ public class ListedCompanyLoader {
 
     ) {}
 
-    private ListedCompany extractCompany(String[] fields) {
+    private ListedCompany extract(String[] fields) {
         return new ListedCompany(fields[0], fields[1], fields[2], fields[3]);
     }
 

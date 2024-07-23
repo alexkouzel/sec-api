@@ -24,8 +24,8 @@ public class FilingReferenceLoaderTest {
     }
 
     @Test
-    public void loadByQuarter() throws HttpRequestException, ParsingException {
-        List<FilingReference> ref = loader.loadByQuarter(2022, 3);
+    public void loadByFiscalQuarter() throws HttpRequestException, ParsingException {
+        List<FilingReference> ref = loader.loadByFiscalQuarter(2022, 3);
         assertFalse(ref.isEmpty());
         verifyRef(ref.get(0));
     }

@@ -51,7 +51,7 @@ public class FilingReferenceLoader {
         return DailyFeedParser.parse(data);
     }
 
-    public List<FilingReference> loadByQuarter(int year, int quarter) throws ParsingException, HttpRequestException {
+    public List<FilingReference> loadByFiscalQuarter(int year, int quarter) throws ParsingException, HttpRequestException {
         String url = String.format(FULL_INDEX_URL, year, quarter);
         InputStream stream = client.loadStream(url, "text/html");
         return IndexFeedParser.parse(stream);
