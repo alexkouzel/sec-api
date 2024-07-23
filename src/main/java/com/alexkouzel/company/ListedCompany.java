@@ -1,12 +1,12 @@
 package com.alexkouzel.company;
 
-public record Company(
+public record ListedCompany(
 
         String id,
 
         String name,
 
-        String symbol,
+        String ticker,
 
         String exchange
 

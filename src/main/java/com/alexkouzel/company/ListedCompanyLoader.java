@@ -1,23 +1,22 @@
 package com.alexkouzel.company;
 
 import com.alexkouzel.client.exceptions.HttpRequestException;
-import com.alexkouzel.common.utils.StringUtils;
 import com.alexkouzel.client.HttpDataClient;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CompanyLoader {
+public class ListedCompanyLoader {
 
     private static final String URL = "https://www.sec.gov/files/company_tickers_exchange.json";
 
     private final HttpDataClient client;
 
-    public CompanyLoader(HttpDataClient client) {
+    public ListedCompanyLoader(HttpDataClient client) {
         this.client = client;
     }
 
-    public List<Company> loadAll() throws HttpRequestException {
+    public List<ListedCompany> loadAll() throws HttpRequestException {
         CompanyTickersExchange data = client.loadJson(URL, CompanyTickersExchange.class);
 
         return data
@@ -37,8 +36,8 @@ public class CompanyLoader {
 
     ) {}
 
-    private Company extractCompany(String[] fields) {
-        return new Company(fields[0], fields[1], fields[2], fields[3]);
+    private ListedCompany extractCompany(String[] fields) {
+        return new ListedCompany(fields[0], fields[1], fields[2], fields[3]);
     }
 
 }

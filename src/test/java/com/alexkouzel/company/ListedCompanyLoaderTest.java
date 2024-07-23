@@ -9,23 +9,23 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CompanyLoaderTest {
+public class ListedCompanyLoaderTest {
 
-    private static final CompanyLoader loader = new CompanyLoader(new TestEdgarClient());
+    private static final ListedCompanyLoader loader = new ListedCompanyLoader(new TestEdgarClient());
 
     @Test
     public void test() throws HttpRequestException {
-        List<Company> companies = loader.loadAll();
+        List<ListedCompany> companies = loader.loadAll();
         assertTrue(companies.size() > 10_000);
         verifyCompany(companies.get(0));
     }
 
-    private void verifyCompany(Company company) {
+    private void verifyCompany(ListedCompany company) {
         assertNotNull(company);
         assertNotNull(company.id());
         assertNotNull(company.exchange());
         assertNotNull(company.name());
-        assertNotNull(company.symbol());
+        assertNotNull(company.ticker());
     }
 
 }
