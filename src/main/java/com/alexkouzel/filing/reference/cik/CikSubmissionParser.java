@@ -19,9 +19,11 @@ public class CikSubmissionParser {
         for (int i = 0; i < filingCount; i++) {
 
             String accNo = recent.getAccessionNumber().get(i);
-            String issuerCik = submission.getCik();
-            FilingType type = FilingType.ofValue(recent.getForm().get(i));
+            String typeValue = recent.getForm().get(i);
             LocalDate filedAt = recent.getFilingDate().get(i);
+
+            int issuerCik = submission.getCik();
+            FilingType type = FilingType.ofValue(typeValue);
 
             FilingReference ref = new FilingReference(accNo, issuerCik, type, filedAt);
             refs.add(ref);

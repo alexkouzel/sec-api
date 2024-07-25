@@ -13,7 +13,7 @@ import java.util.Map;
 @Setter
 public class CikSubmission {
 
-    private String cik;
+    private int cik;
 
     private String entityType;
 

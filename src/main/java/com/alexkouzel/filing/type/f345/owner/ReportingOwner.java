@@ -19,7 +19,7 @@ public class ReportingOwner {
     @Setter
     public static class ID {
 
-        private String rptOwnerCik;
+        private int rptOwnerCik;
 
         private String rptOwnerCcc;
 

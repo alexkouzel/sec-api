@@ -34,20 +34,16 @@ List<ListedCompany> companies = listedCompanyLoader.loadAll();
 var filingReferenceLoader = new FilingReferenceLoader(client);
 
 // Load filing references on Q3 2023
-List<FilingReference> refsQ3 = 
-        filingReferenceLoader.loadByFiscalQuarter(2023, 3);
+List<FilingReference> refsQ3 = filingReferenceLoader.loadByFiscalQuarter(2023, 3);
 
 // Load today's filing references
-List<FilingReference> refsToday = 
-        filingReferenceLoader.loadDaysAgo(0);
+List<FilingReference> refsToday = filingReferenceLoader.loadDaysAgo(0);
 
 // Load references for the latest 80 filings, but skipping the first 20
-List<FilingReference> refsLatest =
-        filingReferenceLoader.loadLatest(20, LatestFeedCount.EIGHTY);
+List<FilingReference> refsLatest = filingReferenceLoader.loadLatest(20, LatestFeedCount.EIGHTY);
 
 // Load references for Tesla's (CIK = 1318605) filings
-List<FilingReference> refsTesla =
-        filingReferenceLoader.loadByCik("1318605");
+List<FilingReference> refsTesla = filingReferenceLoader.loadByCik(1318605);
 ```
 
 3. Load ownership documents:

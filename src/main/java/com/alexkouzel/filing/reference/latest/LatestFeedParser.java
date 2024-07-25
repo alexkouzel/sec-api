@@ -34,10 +34,12 @@ public class LatestFeedParser {
         // Parse issuer CIK
         String href = entry.getLink().getHref();
         Matcher matcher = ISSUER_CIK_PATTERN.matcher(href);
-        String issuerCik = matcher.find() ? matcher.group(1) : null;
+        String issuerCikValue = matcher.find() ? matcher.group(1) : null;
 
-        if (issuerCik == null)
+        if (issuerCikValue == null)
             throw new ParsingException("Couldn't match issuer CIK at href");
+
+        int issuerCik = Integer.parseInt(issuerCikValue);
 
         // Parse filing type
         String typeValue = entry.getCategory().getTerm();

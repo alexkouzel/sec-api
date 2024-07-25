@@ -9,8 +9,7 @@ public record FilingReference(
 
         String accNo,
 
-        // Note: issuer CIK in filing reference does not have leading zeros
-        String issuerCik,
+        int issuerCik,
 
         FilingType type,
 

@@ -30,10 +30,11 @@ public class DailyFeedParser {
 
         // Parse issuer CIK
         int issuerCikIdx = parts[1].indexOf(">") + 1;
-        String issuerCik = parts[1].substring(issuerCikIdx);
+        String issuerCikValue = parts[1].substring(issuerCikIdx);
+        int issuerCik = Integer.parseInt(issuerCikValue);
 
         // Parse accession number
-        int accNoIdx = parts[0].indexOf(issuerCik) + issuerCik.length() + 1;
+        int accNoIdx = parts[0].indexOf(issuerCikValue) + issuerCikValue.length() + 1;
         String accNo = parts[0].substring(accNoIdx, parts[0].indexOf("-index"));
 
         // Parse filing type

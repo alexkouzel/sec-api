@@ -72,9 +72,9 @@ public class FilingReferenceLoader {
         return LatestFeedParser.parse(feed);
     }
 
-    public List<FilingReference> loadByCik(String cik) throws HttpRequestException {
-        cik = StringUtils.padLeft(cik, 10, '0');
-        String url = String.format(SUBMISSIONS_URL, cik);
+    public List<FilingReference> loadByCik(int cik) throws HttpRequestException {
+        String cikValue = StringUtils.padLeft(String.valueOf(cik), 10, '0');
+        String url = String.format(SUBMISSIONS_URL, cikValue);
         CikSubmission submission = client.loadJson(url, CikSubmission.class);
         return CikSubmissionParser.parse(submission);
     }

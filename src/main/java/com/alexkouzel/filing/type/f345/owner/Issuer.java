@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class Issuer {
 
-    private String issuerCik;
+    private int issuerCik;
 
     private String issuerName;
 

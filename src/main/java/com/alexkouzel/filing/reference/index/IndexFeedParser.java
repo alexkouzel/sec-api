@@ -44,7 +44,7 @@ public class IndexFeedParser {
         String accNo = parts[4].substring(accNoIdx, parts[4].length() - 4);
 
         // Parse issuer CIK
-        String issuerCik = parts[0];
+        int issuerCik = Integer.parseInt(parts[0]);
 
         // Parse filing type
         FilingType type = FilingType.ofValue(parts[2]);

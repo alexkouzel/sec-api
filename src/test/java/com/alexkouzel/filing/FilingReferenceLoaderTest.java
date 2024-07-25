@@ -18,7 +18,7 @@ public class FilingReferenceLoaderTest {
 
     @Test
     public void loadByCik() throws HttpRequestException {
-        List<FilingReference> ref = loader.loadByCik("946581");
+        List<FilingReference> ref = loader.loadByCik(946581);
         assertFalse(ref.isEmpty());
         verifyRef(ref.get(0));
     }
@@ -47,12 +47,11 @@ public class FilingReferenceLoaderTest {
     private void verifyRef(FilingReference ref) {
         assertNotNull(ref);
         assertNotNull(ref.accNo());
-        assertNotNull(ref.issuerCik());
+        assertNotEquals(0, ref.issuerCik());
         assertNotNull(ref.type());
         assertNotNull(ref.filedAt());
 
         assertEquals(20, ref.accNo().length());
-        assertTrue(ref.issuerCik().length() <= 10);
     }
 
 }
