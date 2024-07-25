@@ -37,7 +37,11 @@ public class ListedCompanyLoader {
     ) {}
 
     private ListedCompany extract(String[] fields) {
-        return new ListedCompany(fields[0], fields[1], fields[2], fields[3]);
+        int id = Integer.parseInt(fields[0]);
+        String name = fields[1];
+        String ticker = fields[2];
+        String exchange = fields[3];
+        return new ListedCompany(id, name, ticker, exchange);
     }
 
 }
