@@ -8,11 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Footnote {
-
     @JacksonXmlText
     private String value;
-
     @JacksonXmlProperty(isAttribute = true)
     private String id;
-
 }

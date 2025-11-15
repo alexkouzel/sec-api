@@ -1,15 +1,13 @@
 package com.alexkouzel.filing.type.f345;
 
-import com.alexkouzel.common.exceptions.ParsingException;
-import com.alexkouzel.client.exceptions.HttpRequestException;
-import com.alexkouzel.filing.reference.FilingReference;
 import com.alexkouzel.client.HttpDataClient;
+import com.alexkouzel.client.exceptions.HttpRequestException;
+import com.alexkouzel.common.exceptions.ParsingException;
+import com.alexkouzel.filing.reference.FilingReference;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 public class OwnershipDocumentLoader {
-
     private final OwnershipDocumentParser parser;
-
     private final HttpDataClient client;
 
     public OwnershipDocumentLoader(HttpDataClient client, XmlMapper xmlMapper) {
@@ -30,5 +28,4 @@ public class OwnershipDocumentLoader {
         String data = client.loadText(ref.getTxtUrl());
         return parser.parse(data, ref);
     }
-
 }

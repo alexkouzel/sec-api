@@ -10,10 +10,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class Signature {
-
     private String signatureName;
-
     @JsonDeserialize(using = DateDeserializer.class)
     private LocalDate signatureDate;
-
 }

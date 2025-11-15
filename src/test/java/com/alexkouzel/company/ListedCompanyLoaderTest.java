@@ -10,14 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ListedCompanyLoaderTest {
-
     private static final ListedCompanyLoader loader = new ListedCompanyLoader(new TestEdgarClient());
 
     @Test
     public void test() throws HttpRequestException {
         List<ListedCompany> companies = loader.loadAll();
         assertTrue(companies.size() > 10_000);
-        verifyCompany(companies.get(0));
+        verifyCompany(companies.getFirst());
     }
 
     private void verifyCompany(ListedCompany company) {
@@ -27,5 +26,4 @@ public class ListedCompanyLoaderTest {
         assertNotNull(company.name());
         assertNotNull(company.ticker());
     }
-
 }

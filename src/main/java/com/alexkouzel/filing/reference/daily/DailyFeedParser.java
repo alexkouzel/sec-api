@@ -1,10 +1,10 @@
 package com.alexkouzel.filing.reference.daily;
 
 import com.alexkouzel.common.exceptions.ParsingException;
-import com.alexkouzel.filing.FilingType;
-import com.alexkouzel.filing.reference.FilingReference;
 import com.alexkouzel.common.utils.DateUtils;
 import com.alexkouzel.common.utils.StringUtils;
+import com.alexkouzel.filing.FilingType;
+import com.alexkouzel.filing.reference.FilingReference;
 import lombok.experimental.UtilityClass;
 
 import java.time.LocalDate;
@@ -48,5 +48,4 @@ public class DailyFeedParser {
 
         return new FilingReference(accNo, issuerCik, type, filedAt);
     }
-
 }

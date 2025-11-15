@@ -8,19 +8,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 public class RateLimiter {
-
     private final TimeUnit timeUnit;
-
     private final int rate;
-
     private final Semaphore semaphore;
-
     private final ScheduledExecutorService permitRefiller;
-
     private final AtomicInteger backoffCounter;
-
     private final Object delayLock;
-
     private boolean isDelaying;
 
     public RateLimiter(TimeUnit timeUnit, int rate) {
@@ -96,5 +89,4 @@ public class RateLimiter {
         int freshPermits = rate - semaphore.availablePermits();
         semaphore.release(freshPermits);
     }
-
 }

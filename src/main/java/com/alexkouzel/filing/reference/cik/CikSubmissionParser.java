@@ -30,5 +30,4 @@ public class CikSubmissionParser {
         }
         return refs;
     }
-
 }

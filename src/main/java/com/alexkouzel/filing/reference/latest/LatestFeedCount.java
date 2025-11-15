@@ -14,5 +14,4 @@ public enum LatestFeedCount {
     HUNDRED(100);
 
     private final int value;
-
 }

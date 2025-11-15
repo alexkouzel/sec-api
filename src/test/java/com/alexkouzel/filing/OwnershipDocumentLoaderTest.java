@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class OwnershipDocumentLoaderTest {
-
     private static final OwnershipDocumentLoader loader = new OwnershipDocumentLoader(new TestEdgarClient());
 
     @Test
@@ -39,5 +38,4 @@ public class OwnershipDocumentLoaderTest {
         assertEquals(expected.filedAt(), actual.filedAt());
         assertEquals(expected.xmlFilename(), actual.xmlFilename());
     }
-
 }

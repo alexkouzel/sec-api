@@ -7,9 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PostTransactionAmounts {
-
     private FootnoteValue<Double> sharesOwnedFollowingTransaction;
-
     private FootnoteValue<Double> valueOwnedFollowingTransaction;
-
 }

@@ -7,9 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OwnershipNature {
-
     private FootnoteValue<String> directOrIndirectOwnership;
-
     private FootnoteValue<String> natureOfOwnership;
-
 }

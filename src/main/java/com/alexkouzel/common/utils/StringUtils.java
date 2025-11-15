@@ -7,7 +7,7 @@ import java.util.Arrays;
 @UtilityClass
 public class StringUtils {
 
-    public static String removeFirstLine(String value) {
+    public String removeFirstLine(String value) {
         int nextLineIdx = value.indexOf("\n") + 1;
         return value.substring(nextLineIdx);
     }
@@ -61,5 +61,4 @@ public class StringUtils {
         Arrays.fill(chars, c);
         return new String(chars);
     }
-
 }

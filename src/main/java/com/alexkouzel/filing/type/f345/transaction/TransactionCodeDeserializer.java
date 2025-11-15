@@ -13,5 +13,4 @@ public class TransactionCodeDeserializer extends JsonDeserializer<TransactionCod
         String value = parser.getValueAsString();
         return TransactionCode.ofValue(value);
     }
-
 }

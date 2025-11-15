@@ -8,12 +8,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class EdgarClient extends HttpDataClient {
-
-    private final String userAgent;
-
     private static final int REQUEST_ATTEMPT_LIMIT = 3;
     private static final int REQUEST_TIMEOUT_IN_SECONDS = 5;
     private static final int REQUEST_RATE_LIMIT_PER_SECOND = 10;
+
+    private final String userAgent;
 
     private EdgarClient(String userAgent, Consumer<Integer> statusCodeHandler, RateLimiter rateLimiter) {
         super(REQUEST_ATTEMPT_LIMIT, handleStatusCode(statusCodeHandler, rateLimiter), rateLimiter);
@@ -41,7 +40,6 @@ public class EdgarClient extends HttpDataClient {
 
     private static Consumer<Integer> handleStatusCode(Consumer<Integer> statusCodeHandler, RateLimiter rateLimiter) {
         return (statusCode) -> {
-
             if (statusCode == 429) { // TOO_MANY_REQUESTS
                 rateLimiter.applyDelaySeq(TimeUnit.MINUTES, 30, 60, 120);
             } else if (statusCode != 200) {
@@ -54,5 +52,4 @@ public class EdgarClient extends HttpDataClient {
     private static RateLimiter buildRateLimiter() {
         return new RateLimiter(TimeUnit.SECONDS, REQUEST_RATE_LIMIT_PER_SECOND);
     }
-
 }

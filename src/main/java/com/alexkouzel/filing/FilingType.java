@@ -23,9 +23,9 @@ public enum FilingType {
 
     OTHER("-");
 
-    private final String value;
-
     private static final Map<String, FilingType> VALUE_MAP = new HashMap<>();
+
+    private final String value;
 
     static {
         for (FilingType type : values()) {
@@ -36,5 +36,4 @@ public enum FilingType {
     public static FilingType ofValue(String value) {
         return VALUE_MAP.getOrDefault(value, FilingType.OTHER);
     }
-
 }

@@ -18,5 +18,4 @@ public class DateUtils {
         ZoneId zoneId = ZoneId.of("UTC");
         return DateTimeFormatter.ofPattern(pattern).withZone(zoneId);
     }
-
 }

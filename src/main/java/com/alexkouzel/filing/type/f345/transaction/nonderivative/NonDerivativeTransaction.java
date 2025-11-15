@@ -9,7 +9,5 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 public class NonDerivativeTransaction extends Transaction {
-
     private NonDerivativeTransactionAmounts transactionAmounts;
-
 }

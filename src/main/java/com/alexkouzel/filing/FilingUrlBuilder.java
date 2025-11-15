@@ -6,9 +6,7 @@ import java.util.regex.Pattern;
 
 @UtilityClass
 public class FilingUrlBuilder {
-
     private final String URL_TEMPLATE = "https://www.sec.gov/Archives/edgar/data/%d/%s/%s";
-
     private final Pattern DASH_PATTERN = Pattern.compile("-");
 
     public String buildTxtUrl(int issuerCik, String accNo) {
@@ -24,5 +22,4 @@ public class FilingUrlBuilder {
         accNo = DASH_PATTERN.matcher(accNo).replaceAll("");
         return String.format(URL_TEMPLATE, issuerCik, accNo, filename);
     }
-
 }

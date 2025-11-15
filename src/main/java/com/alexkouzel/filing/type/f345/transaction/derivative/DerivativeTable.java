@@ -9,11 +9,8 @@ import java.util.List;
 @Getter
 @Setter
 public class DerivativeTable {
-
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<DerivativeTransaction> derivativeTransaction;
-
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<DerivativeHolding> derivativeHolding;
-
 }

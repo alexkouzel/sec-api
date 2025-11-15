@@ -36,5 +36,4 @@ public class FilingReferenceUtils {
     public static List<FilingReference> removeDups(List<FilingReference> refs) {
         return ListUtils.removeDups(refs, FilingReference::accNo);
     }
-
 }

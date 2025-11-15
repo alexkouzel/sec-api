@@ -6,9 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FootnoteValue<T> {
-
     private FootnoteID footnoteId;
-
     private T value;
 
     public FootnoteValue(T value, String id) {
@@ -22,5 +20,4 @@ public class FootnoteValue<T> {
 
     public FootnoteValue() {
     }
-
 }

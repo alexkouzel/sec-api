@@ -1,9 +1,9 @@
 package com.alexkouzel.filing.reference.latest;
 
 import com.alexkouzel.common.exceptions.ParsingException;
+import com.alexkouzel.common.utils.DateUtils;
 import com.alexkouzel.filing.FilingType;
 import com.alexkouzel.filing.reference.FilingReference;
-import com.alexkouzel.common.utils.DateUtils;
 import lombok.experimental.UtilityClass;
 
 import java.time.LocalDate;
@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 
 @UtilityClass
 public class LatestFeedParser {
-
     private final Pattern ISSUER_CIK_PATTERN = Pattern.compile("data/(\\d+)");
 
     public List<FilingReference> parse(LatestFeed feed) throws ParsingException {
@@ -51,5 +50,4 @@ public class LatestFeedParser {
 
         return new FilingReference(accNo, issuerCik, type, filedAt);
     }
-
 }

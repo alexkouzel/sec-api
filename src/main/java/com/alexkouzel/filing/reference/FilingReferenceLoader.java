@@ -1,29 +1,25 @@
 package com.alexkouzel.filing.reference;
 
+import com.alexkouzel.client.HttpDataClient;
 import com.alexkouzel.client.exceptions.HttpRequestException;
 import com.alexkouzel.common.exceptions.ParsingException;
 import com.alexkouzel.common.utils.StringUtils;
 import com.alexkouzel.filing.FilingType;
 import com.alexkouzel.filing.reference.cik.CikSubmission;
-import com.alexkouzel.filing.reference.latest.LatestFeedCount;
-import com.alexkouzel.filing.reference.latest.LatestFeedParser;
-import com.alexkouzel.client.HttpDataClient;
 import com.alexkouzel.filing.reference.cik.CikSubmissionParser;
 import com.alexkouzel.filing.reference.daily.DailyFeedParser;
 import com.alexkouzel.filing.reference.index.IndexFeedParser;
 import com.alexkouzel.filing.reference.latest.LatestFeed;
+import com.alexkouzel.filing.reference.latest.LatestFeedCount;
+import com.alexkouzel.filing.reference.latest.LatestFeedParser;
 
 import java.io.InputStream;
 import java.util.List;
 
 public class FilingReferenceLoader {
-
     private static final String DAILY_FEED_URL = "https://www.sec.gov/cgi-bin/current?q1=%s";
-
     private static final String FULL_INDEX_URL = "https://www.sec.gov/Archives/edgar/full-index/%d/QTR%d/master.idx";
-
     private static final String SUBMISSIONS_URL = "https://data.sec.gov/submissions/CIK%s.json";
-
     private static final String LATEST_FEED_URL = "https://www.sec.gov/cgi-bin/browse-edgar" +
             "?action=getcurrent" +
             "&start=%d" +
@@ -78,5 +74,4 @@ public class FilingReferenceLoader {
         CikSubmission submission = client.loadJson(url, CikSubmission.class);
         return CikSubmissionParser.parse(submission);
     }
-
 }

@@ -1,9 +1,9 @@
 package com.alexkouzel.filing.reference.index;
 
 import com.alexkouzel.common.exceptions.ParsingException;
+import com.alexkouzel.common.utils.DateUtils;
 import com.alexkouzel.filing.FilingType;
 import com.alexkouzel.filing.reference.FilingReference;
-import com.alexkouzel.common.utils.DateUtils;
 import lombok.experimental.UtilityClass;
 
 import java.io.BufferedReader;
@@ -54,5 +54,4 @@ public class IndexFeedParser {
 
         return new FilingReference(accNo, issuerCik, type, filedAt);
     }
-
 }

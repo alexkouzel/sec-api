@@ -20,17 +20,11 @@ import java.util.zip.DeflaterInputStream;
 import java.util.zip.GZIPInputStream;
 
 public abstract class HttpDataClient {
-
     private final int attemptLimit;
-
     private final Consumer<Integer> statusCodeHandler;
-
     protected final RateLimiter rateLimiter;
-
     private final ObjectMapper jsonMapper;
-
     private final XmlMapper xmlMapper;
-
     private final HttpClient client;
 
     public HttpDataClient(
@@ -86,12 +80,10 @@ public abstract class HttpDataClient {
             return loadStream(request);
         } catch (StatusCodeException | IOException e) {
             attemptsLeft--;
-
-            if (attemptsLeft == 0)
+            if (attemptsLeft == 0) {
                 throw new HttpRequestException("Last attempt error :: " + e.getMessage());
-
+            }
             return loadStream(request, attemptsLeft);
-
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new HttpRequestException("Request interrupted :: " + e.getMessage());
@@ -101,36 +93,35 @@ public abstract class HttpDataClient {
     private InputStream loadStream(HttpRequest request)
             throws InterruptedException, IOException, StatusCodeException {
 
-        if (rateLimiter != null)
+        if (rateLimiter != null) {
             rateLimiter.acquirePermit();
-
+        }
         var responseType = HttpResponse.BodyHandlers.ofInputStream();
         HttpResponse<InputStream> response = client.send(request, responseType);
 
         int statusCode = response.statusCode();
         statusCodeHandler.accept(statusCode);
 
-        if (statusCode != 200)
+        if (statusCode != 200) {
             throw new StatusCodeException("Invalid HTTP code: " + statusCode);
-
+        }
         return extractStream(response);
     }
 
     private InputStream extractStream(HttpResponse<InputStream> response) throws IOException {
-        if (rateLimiter != null)
+        if (rateLimiter != null) {
             rateLimiter.resetBackoff();
-
+        }
         Optional<String> encoding = response.headers().firstValue("Content-Encoding");
         InputStream stream = response.body();
 
-        if (encoding.isEmpty())
+        if (encoding.isEmpty()) {
             return stream;
-
+        }
         return switch (encoding.get()) {
             case "gzip" -> new GZIPInputStream(stream);
             case "deflate" -> new DeflaterInputStream(stream);
             default -> throw new UnsupportedEncodingException();
         };
     }
-
 }

@@ -14,5 +14,4 @@ public class ListUtilsTest {
         List<Integer> nums = List.of(1, 2, 2, 2, 3, 4);
         assertEquals(List.of(1, 2, 3, 4), ListUtils.removeDups(nums, i -> i));
     }
-
 }

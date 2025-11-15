@@ -10,7 +10,5 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 public class DerivativeTransactionAmounts extends TransactionAmounts {
-
     private FootnoteValue<Double> transactionTotalValue;
-
 }

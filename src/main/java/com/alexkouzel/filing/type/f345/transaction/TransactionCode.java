@@ -38,9 +38,9 @@ public enum TransactionCode {
     EQUITY_SWAP("K"),
     OTHER("J");
 
-    public final String value;
-
     private static final Map<String, TransactionCode> VALUE_MAP = new HashMap<>();
+
+    public final String value;
 
     static {
         for (TransactionCode code : values()) {
@@ -51,5 +51,4 @@ public enum TransactionCode {
     public static TransactionCode ofValue(String value) {
         return VALUE_MAP.get(value);
     }
-
 }

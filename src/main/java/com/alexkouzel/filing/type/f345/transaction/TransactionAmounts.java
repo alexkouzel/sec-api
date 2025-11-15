@@ -7,11 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TransactionAmounts {
-
     private FootnoteValue<Double> transactionShares;
-
     private FootnoteValue<Double> transactionPricePerShare;
-
     private FootnoteValue<String> transactionAcquiredDisposedCode;
-
 }

@@ -11,8 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FootnoteID {
-
     @JacksonXmlProperty(isAttribute = true)
     private String id;
-
 }

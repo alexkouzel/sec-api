@@ -13,35 +13,34 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FilingReferenceLoaderTest {
-
     private static final FilingReferenceLoader loader = new FilingReferenceLoader(new TestEdgarClient());
 
     @Test
     public void loadByCik() throws HttpRequestException {
         List<FilingReference> ref = loader.loadByCik(946581);
         assertFalse(ref.isEmpty());
-        verifyRef(ref.get(0));
+        verifyRef(ref.getFirst());
     }
 
     @Test
     public void loadByFiscalQuarter() throws HttpRequestException, ParsingException {
         List<FilingReference> ref = loader.loadByFiscalQuarter(2022, 3);
         assertFalse(ref.isEmpty());
-        verifyRef(ref.get(0));
+        verifyRef(ref.getFirst());
     }
 
     @Test
     public void loadDaysAgo() throws HttpRequestException, ParsingException {
         List<FilingReference> ref = loader.loadDaysAgo(1);
         assertFalse(ref.isEmpty());
-        verifyRef(ref.get(0));
+        verifyRef(ref.getFirst());
     }
 
     @Test
     public void loadLatest() throws HttpRequestException, ParsingException {
         List<FilingReference> ref = loader.loadLatest(0, LatestFeedCount.TEN);
         assertFalse(ref.isEmpty());
-        verifyRef(ref.get(0));
+        verifyRef(ref.getFirst());
     }
 
     private void verifyRef(FilingReference ref) {
@@ -50,8 +49,6 @@ public class FilingReferenceLoaderTest {
         assertNotEquals(0, ref.issuerCik());
         assertNotNull(ref.type());
         assertNotNull(ref.filedAt());
-
         assertEquals(20, ref.accNo().length());
     }
-
 }

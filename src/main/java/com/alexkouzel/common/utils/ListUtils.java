@@ -20,5 +20,4 @@ public class ListUtils {
     public <T> List<T> filter(List<T> list, Predicate<T> filter) {
         return list.stream().filter(filter).collect(Collectors.toList());
     }
-
 }

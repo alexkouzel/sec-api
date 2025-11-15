@@ -7,11 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UnderlyingSecurity {
-
     private FootnoteValue<String> underlyingSecurityTitle;
-
     private FootnoteValue<Double> underlyingSecurityShares;
-
     private FootnoteValue<Double> underlyingSecurityValue;
-
 }

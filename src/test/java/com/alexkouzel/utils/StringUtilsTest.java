@@ -36,5 +36,4 @@ public class StringUtilsTest {
         String result = StringUtils.generate(5, 'b');
         assertEquals("bbbbb", result);
     }
-
 }

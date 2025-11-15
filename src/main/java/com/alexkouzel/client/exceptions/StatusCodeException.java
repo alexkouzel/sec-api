@@ -8,5 +8,4 @@ public class StatusCodeException extends Exception {
 
     public StatusCodeException() {
     }
-
 }

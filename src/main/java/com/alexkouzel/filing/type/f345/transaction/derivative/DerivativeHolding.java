@@ -11,13 +11,8 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 public class DerivativeHolding extends Holding {
-
     private FootnoteValue<Double> conversionOrExercisePrice;
-
     private FootnoteEdgarDate exerciseDate;
-
     private FootnoteEdgarDate expirationDate;
-
     private UnderlyingSecurity underlyingSecurity;
-
 }

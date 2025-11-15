@@ -11,9 +11,12 @@ public class BooleanDeserializer extends JsonDeserializer<Boolean> {
     @Override
     public Boolean deserialize(JsonParser parser, DeserializationContext ctx) throws IOException {
         String value = parser.getValueAsString();
-        if ("1".equals(value) || "true".equals(value)) return true;
-        if ("0".equals(value) || "false".equals(value)) return false;
+        if ("1".equals(value) || "true".equals(value)) {
+            return true;
+        }
+        if ("0".equals(value) || "false".equals(value)) {
+            return false;
+        }
         throw new IOException("Invalid value for boolean: " + value);
     }
-    
 }

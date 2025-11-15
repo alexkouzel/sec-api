@@ -9,8 +9,6 @@ import java.util.List;
 @Getter
 @Setter
 public class FootnoteContainer {
-
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<Footnote> footnote;
-
 }
