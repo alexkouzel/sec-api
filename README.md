@@ -1,12 +1,12 @@
 # SEC API
 This API allows you to access data from the [U.S. Securities and Exchange Commission (SEC)](https://www.sec.gov/), including:
 
-- Information on listed companies in the USA.
-- Filing references for various types: 10-Q, 10-K, 4, 8-K, 13-F, etc.
+- Companies registered by SEC.
+- File references for various types: 10-Q, 10-K, 4, 8-K, 13-F, etc.
 - Ownership documents: F3, F4, and F5.
 
 ## Getting Started
-To begin, create an HTTP client to access SEC EDGAR data:
+To begin, create an HTTP client to access SEC data:
 
 ```java
 String userAgent = "TestCompany test.company@gmail.com";
@@ -21,41 +21,40 @@ Sample Company Name AdminContact@<sample company domain>.com
 
 Next, you can use this client as follows: 
 
-1. Load information about listed companies in the USA:
+1. Create data loaders:
+    ```java
+    var companyLoader = new SecCompanyLoader(client);
+    var fileRefLoader = new FileRefLoader(client);
+    var fileLoader = new FileLoader(client);
+    ```
+   
+2. Load information about companies:
+    ```java
+    List<SecCompany> companies = companyLoader.load();
+    ```
+   
+3. Load file references:
+    ```java
+    // Load file references from Q3 2023:
+    List<FileRef> fileRefs1 = fileRefLoader.loadFiscalQuarter(2023, 3);
 
-```java
-var listedCompanyLoader = new ListedCompanyLoader(client);
-List<ListedCompany> companies = listedCompanyLoader.loadAll();
-```
+    // Load today's file references:
+    List<FileRef> fileRefs2 = fileRefLoader.loadToday();
 
-2. Load filing references:
-
-```java
-var filingReferenceLoader = new FilingReferenceLoader(client);
-
-// Load filing references on Q3 2023
-List<FilingReference> refsQ3 = filingReferenceLoader.loadByFiscalQuarter(2023, 3);
-
-// Load today's filing references
-List<FilingReference> refsToday = filingReferenceLoader.loadDaysAgo(0);
-
-// Load references for the latest 80 filings, but skipping the first 20
-List<FilingReference> refsLatest = filingReferenceLoader.loadLatest(20, LatestFeedCount.EIGHTY);
-
-// Load references for Tesla's (CIK = 1318605) filings
-List<FilingReference> refsTesla = filingReferenceLoader.loadByCik(1318605);
-```
-
-3. Load ownership documents:
-
-```java
-var ownershipDocumentLoader = new OwnershipDocumentLoader(client);
-
-// Load ownership document by its reference
-FilingReference ref = refsToday.get(0);
-OwnershipDocument doc1 = ownershipDocumentLoader.loadByRef(ref);
-
-// Load ownership document by a URL that returns a .txt file
-String url = FilingUrlBuilder.buildTxtUrl("1318605", "0001972928-24-000002");
-OwnershipDocument doc2 = ownershipDocumentLoader.loadByTxtUrl(url);
-```
+    // Load the latest 80 file references:
+    List<FileRef> fileRefs3 = fileRefLoader.loadLatest(LatestFilesLimit.EIGHTY);
+    
+    // Load file references for Tesla (CIK = 1318605):
+    List<FileRef> fileRefs4 = fileRefLoader.loadCompany(1318605);
+    ```
+   
+4. Load ownership documents:
+    ```java
+    // Load ownership document by its file reference
+    FileRef fileRef = fileRefs1.get(0);
+    FileF345 file1 = fileLoader.loadF345ByRef(fileRef);
+    
+    // Load ownership document by a URL that returns a .txt file
+    String fileUrl = FileUrlBuilder.buildTxt("1318605", "0001972928-24-000002");
+    FileF345 file2 = fileLoader.loadF345ByUrl(fileUrl);
+    ```
