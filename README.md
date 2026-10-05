@@ -1,60 +1,93 @@
 # SEC API
-This API allows you to access data from the [U.S. Securities and Exchange Commission (SEC)](https://www.sec.gov/), including:
 
-- Companies registered by SEC.
-- File references for various types: 10-Q, 10-K, 4, 8-K, 13-F, etc.
-- Ownership documents: F3, F4, and F5.
+Java library for SEC EDGAR data.
 
-## Getting Started
-To begin, create an HTTP client to access SEC data:
+SEC API gives you typed Java access to data from the [U.S. Securities and Exchange Commission (SEC)](https://www.sec.gov/) through its EDGAR system: registered companies, filing references, and fully parsed insider ownership documents. It handles EDGAR's rate limits and retries for you.
+
+## Features
+
+- **Companies:** load all SEC-registered companies that have a stock ticker, with their CIK, name, ticker, and exchange.
+- **Filing references:** find filings from the latest feed, from daily indexes, for a whole fiscal quarter, or for a single company. Filter by form type: 3, 4, 5 (and their amendments), 10-Q, 10-K, and 8-K.
+- **Ownership documents:** parse insider Forms 3, 4, and 5 into Java objects, including the issuer, reporting owners, transactions, holdings, and footnotes.
+- **Built-in rate limiting:** stays within EDGAR's limit of 10 requests per second, makes up to 3 attempts per request, and backs off automatically when EDGAR throttles you.
+
+## Requirements
+
+- Java 17 or newer
+- Jackson (`jackson-databind`, `jackson-dataformat-xml`, `jackson-datatype-jsr310`)
+
+## Installation
+
+Build the JAR from source:
+
+```bash
+git clone https://github.com/alexkouzel/sec-api.git
+cd sec-api
+./gradlew jar
+```
+
+The JAR is written to `build/libs/`. Add it to your project together with the Jackson dependencies listed above.
+
+## Usage
+
+### 1. Create a client
+
+EDGAR requires every request to identify who is making it, so create a client with a user agent in the format `Company Name contact@company.com`:
 
 ```java
-String userAgent = "TestCompany test.company@gmail.com";
-EdgarClient client = new EdgarClient(userAgent);
+EdgarClient client = new EdgarClient("Sample Company admin@example.com");
 ```
 
-The `userAgent` should follow this format:
+### 2. Load companies
 
+```java
+SecCompanyLoader companyLoader = new SecCompanyLoader(client);
+
+List<SecCompany> companies = companyLoader.load();
 ```
-Sample Company Name AdminContact@<sample company domain>.com
+
+### 3. Load filing references
+
+```java
+FileRefLoader fileRefLoader = new FileRefLoader(client);
+
+// All filings from Q3 2023
+List<FileRef> quarter = fileRefLoader.loadFiscalQuarter(2023, 3);
+
+// Today's filings
+List<FileRef> today = fileRefLoader.loadToday();
+
+// Form 4 filings from 3 days ago
+List<FileRef> daysAgo = fileRefLoader.loadDaysAgo(3, FileType.F4);
+
+// The 100 latest Form 4 filings
+List<FileRef> latest = fileRefLoader.loadLatest(LatestFilesLimit.HUNDRED, FileType.F4);
+
+// All filings for Tesla (CIK 1318605)
+List<FileRef> tesla = fileRefLoader.loadCompany(1318605);
 ```
 
-Next, you can use this client as follows: 
+Each `FileRef` contains the accession number, issuer CIK, form type, and filing date.
 
-1. Create data loaders:
-    ```java
-    var companyLoader = new SecCompanyLoader(client);
-    var fileRefLoader = new FileRefLoader(client);
-    var fileLoader = new FileLoader(client);
-    ```
-   
-2. Load information about companies:
-    ```java
-    List<SecCompany> companies = companyLoader.load();
-    ```
-   
-3. Load file references:
-    ```java
-    // Load file references from Q3 2023:
-    List<FileRef> fileRefs1 = fileRefLoader.loadFiscalQuarter(2023, 3);
+### 4. Load ownership documents (Forms 3, 4, 5)
 
-    // Load today's file references:
-    List<FileRef> fileRefs2 = fileRefLoader.loadToday();
+```java
+FileLoader fileLoader = new FileLoader(client);
 
-    // Load the latest 80 file references:
-    List<FileRef> fileRefs3 = fileRefLoader.loadLatest(LatestFilesLimit.EIGHTY);
-    
-    // Load file references for Tesla (CIK = 1318605):
-    List<FileRef> fileRefs4 = fileRefLoader.loadCompany(1318605);
-    ```
-   
-4. Load ownership documents:
-    ```java
-    // Load ownership document by its file reference
-    FileRef fileRef = fileRefs1.get(0);
-    FileF345 file1 = fileLoader.loadF345ByRef(fileRef);
-    
-    // Load ownership document by a URL that returns a .txt file
-    String fileUrl = FileUrlBuilder.buildTxt("1318605", "0001972928-24-000002");
-    FileF345 file2 = fileLoader.loadF345ByUrl(fileUrl);
-    ```
+// From a filing reference
+FileF345 form = fileLoader.loadF345ByRef(latest.get(0));
+
+// From a URL
+String url = FileUrlBuilder.buildTxt(1318605, "0001972928-24-000002");
+FileF345 formByUrl = fileLoader.loadF345ByUrl(url);
+```
+
+### Error handling
+
+Loaders throw `HttpRequestException` when a request still fails after 3 attempts, and `ParsingException` when a response can't be parsed.
+
+## Running tests
+
+```bash
+./gradlew test
+```
