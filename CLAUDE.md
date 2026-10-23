@@ -1,76 +1,51 @@
 # CLAUDE.md
 
-Kotlin library for SEC EDGAR data (`com.alexkouzel:sec-api`): companies, filing references
-and insider ownership filings (Forms 3, 4, 5), behind one blocking, Java-friendly `SecClient`.
+Kotlin library for SEC EDGAR data (`com.alexkouzel:sec-api`): companies, filing references and
+insider ownership filings (Forms 3, 4, 5), behind one blocking, Java-friendly `SecClient`.
 
-## Read first
+Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (layout and design) and
+[docs/CONVENTIONS.md](docs/CONVENTIONS.md) (EDGAR glossary, naming, comments, style, tests)
+before changing code, and use the glossary's terms.
 
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): packages, public API, test layout, and how
-  unknown EDGAR fields are reported (the core of drift detection).
-- [docs/CONVENTIONS.md](docs/CONVENTIONS.md): the EDGAR glossary (CIK roles, accession
-  number, filing vs form vs document) and the naming, comment, style and test rules. Use its
-  terms in code, tests and docs.
+## Layout
 
-## Modules
-
-- `lib/` — the library. Source sets: `main`, `test` (unit, mirrors `main`), `testFixtures`
-  (`Fixtures`, `FixtureHttp`, `LocalServer`, `liveClient()`, frozen EDGAR fixtures),
-  `contractTest` (fixtures and XSDs vs the model), `liveTest` (real EDGAR, Kotlin and Java).
-- `drift/` — the drift-check application, built only on `lib`'s public API.
-- `build-logic/` — the `sec.kotlin` convention plugin (Java 21 toolchain, ktlint, detekt over
-  every source set, JUnit); versions in `gradle/libs.versions.toml`; detekt settings in
-  `config/detekt.yml`.
-- `specs/` — the SEC's Ownership XML spec and XSDs, and `specs/versions.json` (known spec and
-  `schemaVersion`s).
+- `src/main` — the library. `src/test` — offline unit tests. `src/testFixtures` — test support
+  and frozen EDGAR responses. `src/liveTest` — the library against live EDGAR.
+- `specs/` — the SEC's Ownership XML specification and XSDs.
+- `config/detekt.yml` — detekt's differences from its defaults; versions in
+  `gradle/libs.versions.toml`.
 
 ## Commands
 
-- `./gradlew check` — offline, every module: unit and contract tests, ktlint, detekt. Must
-  stay green; CI runs it on every push and pull request.
+- `./gradlew check` — offline: unit tests, ktlint, detekt. Must stay green; CI runs it on every
+  push and pull request.
 - `./gradlew ktlintFormat` — fixes formatting.
-- `./gradlew liveTest` — smoke tests against real EDGAR.
-- `./gradlew :drift:driftCheck` — samples live EDGAR and the SEC spec page; writes
-  `drift/build/drift/report.md`, saves offending responses under `drift/build/drift/raw/`, and
-  fails when it finds anything.
-- `./gradlew knownBugTest` — tests tagged `known-bug`, each naming the GitHub issue of an open
-  bug; they fail until it's fixed, then the tag goes.
-- `scripts/publish.sh <version>` — publishes `lib` to GitHub Packages (`GPR_USERNAME`,
-  `GPR_TOKEN`).
-
-Live tasks read the User-Agent from env `EDGAR_USER_AGENT` (`Name contact@domain`, as EDGAR's
-fair access policy requires). EDGAR allows 10 requests per second; `SecClient` keeps under it.
+- `./gradlew liveTest` — against live EDGAR; reads the User-Agent from env `EDGAR_USER_AGENT`
+  (`Name contact@domain`).
+- `scripts/publish.sh <version>` — publishes to GitHub Packages (`GPR_USERNAME`, `GPR_TOKEN`).
 
 ## Fixtures
 
-`lib/src/testFixtures/resources/edgar/` holds raw EDGAR responses, frozen: tests assert exact
-values, so add new files (listed in that folder's README) and never refresh one in place.
-Expected values in tests come from the raw data, extracted independently, not from the code.
+`src/testFixtures/resources/edgar/` holds raw EDGAR responses. They are frozen: tests assert
+exact values, so add new files (listed in that folder's README), never edit one. Expected
+values in tests come from the raw data, not from the code's output.
 
-## CI
+## When the live check fails
 
-- `.github/workflows/ci.yml` — `./gradlew check` on every push and pull request.
-- `.github/workflows/drift.yml` — `./gradlew :drift:driftCheck` weekly (Tuesdays) and on
-  demand; on findings it opens or updates one issue labelled `spec-drift` with the report and
-  uploads `drift/build/drift/` as the `drift-report` artifact. It never closes the issue.
-  Needs the repository secret `EDGAR_USER_AGENT`.
+`.github/workflows/live.yml` runs `./gradlew liveTest` daily (retrying once ten minutes later)
+and, on failure, opens or comments on an issue labelled `edgar-change`. It needs the repository
+secret `EDGAR_USER_AGENT`. To adapt:
 
-## Drift runbook
-
-When the drift check reports something:
-
-1. Download the run's `drift-report` artifact. Each finding names its raw response. A
-   `request failed` finding alone is usually EDGAR being down; rerun before acting on it.
-2. Add the raw response as a new fixture under `lib/src/testFixtures/resources/edgar/<source>/`
-   and list it in that folder's README.
-3. New spec version: download it from the spec page into `specs/ownership-xml-v<version>/`,
-   update `specs/README.md` and `ownershipSpec` in `specs/versions.json`. Unseen
-   `schemaVersion`: add it to `schemaVersions` once its filings parse fully.
-4. New fields or elements: add them to the wire classes (every field EDGAR sends is declared,
-   read or not) and to the model if users need them. The contract tests
-   (`OwnershipContractTest`, `FeedContractTest`) must fail on the new fixture first, then pass.
-5. Format change (parse error, layout changed): fix the parser with a test on the new fixture.
-6. Explain what changed on EDGAR in the fixing commit and on the `spec-drift` issue, run
-   `./gradlew :drift:driftCheck` until clean, then close the issue by hand.
+1. Open the run linked from the issue. Each failed test names the URL that broke and why
+   (`SecException.Parse`, or a value that came back empty).
+2. If every failure is `SecException.Http`, EDGAR was down: rerun the workflow before acting.
+3. Save that response as a new fixture, e.g.
+   `curl -A "$EDGAR_USER_AGENT" --compressed -o src/testFixtures/resources/edgar/ownership/<accession>.txt <url>`,
+   and list it in the fixtures README.
+4. Write a unit test on the new fixture that fails, then fix the parser or the model until it
+   passes. If the SEC published a new Ownership spec, add it to `specs/` (see its README) and
+   `OwnershipDocumentTest` names what's missing.
+5. Run `./gradlew check` and `./gradlew liveTest`, release, and close the issue.
 
 ## Commits
 

@@ -9,8 +9,8 @@ Kotlin library for [SEC EDGAR](https://www.sec.gov/edgar) data, usable from Java
   reporting owners, transactions, holdings and footnotes.
 - **Fair access built in:** at most 10 requests per second, retries with backoff after I/O
   errors, HTTP 429 (honouring `Retry-After`) and 5xx.
-- **Tolerant of EDGAR changes:** fields EDGAR adds are skipped and can be reported to a
-  listener; a weekly drift check in this repository watches for them.
+- **Watched against EDGAR:** fields EDGAR adds are ignored, and a daily check in this
+  repository runs the library against live EDGAR and opens an issue when a change breaks it.
 
 ## Requirements
 
@@ -37,7 +37,7 @@ dependencies {
 }
 ```
 
-Or build it: `./gradlew :lib:publishToMavenLocal`, then depend on it from `mavenLocal()`.
+Or build it: `./gradlew publishToMavenLocal`, then depend on it from `mavenLocal()`.
 
 ## Usage
 
@@ -56,7 +56,9 @@ SecClient("Sample Company admin@example.com").use { sec ->
     val filing = sec.ownership.get(latest.first())
     println("${filing.issuer.name} (${filing.issuer.ticker}), filed ${filing.filedOn}")
     for (transaction in filing.transactions) {
-        println("${transaction.date?.value} ${transaction.coding?.code} ${transaction.shares?.value} @ ${transaction.pricePerShare?.value}")
+        val shares = transaction.shares?.value
+        val price = transaction.pricePerShare?.value
+        println("${transaction.date?.value} ${transaction.coding?.code}: $shares @ $price")
     }
 }
 ```
@@ -85,26 +87,16 @@ try (SecClient sec = new SecClient("Sample Company admin@example.com")) {
 ### Errors
 
 Methods throw `SecException.Http` when a request still fails after 3 attempts and
-`SecException.Parse` when a response isn't in the expected format; both are unchecked and
-carry the `url`. Invalid arguments (a `count` the feed doesn't offer, quarter 5) throw
-`IllegalArgumentException`.
-
-### Fields EDGAR adds
-
-EDGAR adds fields from time to time. They are skipped, so parsing keeps working; to hear about
-them, pass a listener:
-
-```kotlin
-SecClient(userAgent, unknownFields = { url, field -> log.warn("EDGAR added $field ($url)") })
-```
+`SecException.Parse` when a response isn't in the expected format (EDGAR changed it); both are
+unchecked and name the URL in their message. Invalid arguments (a `count` the feed doesn't
+offer, quarter 5) throw `IllegalArgumentException`.
 
 ## Development
 
-See [CLAUDE.md](CLAUDE.md) for commands and the drift runbook, and [docs/](docs/) for the
-architecture and conventions. In short:
+See [CLAUDE.md](CLAUDE.md) for commands and what to do when the live check fails, and
+[docs/](docs/) for the architecture and conventions. In short:
 
 ```bash
-./gradlew check                # offline: unit and contract tests, ktlint, detekt
-./gradlew liveTest             # against real EDGAR; set EDGAR_USER_AGENT
-./gradlew :drift:driftCheck    # compares live EDGAR with the library
+./gradlew check       # offline: unit tests, ktlint, detekt
+./gradlew liveTest    # against live EDGAR; set EDGAR_USER_AGENT
 ```

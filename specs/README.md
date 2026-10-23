@@ -33,11 +33,10 @@ Official pages:
 - Fair access (User-Agent format, 10 requests/second): https://www.sec.gov/about/developer-resources
 - Accessing EDGAR data (indexes, archives): https://www.sec.gov/search-filings/edgar-search-assistance/accessing-edgar-data
 
-## Known versions
+## A new spec version
 
-`versions.json` lists the Ownership spec version in this folder (`ownershipSpec`) and every
-`schemaVersion` seen in filings that parse fully (`schemaVersions`). The drift check
-(`./gradlew driftCheck`) reports a newer spec on the SEC page or an unlisted
-`schemaVersion` in recent filings; update this file as part of handling that.
+Download it from the technical specifications page into `specs/ownership-xml-v<version>/`
+(the PDF and `schemas/`) and run `./gradlew test`: `OwnershipDocumentTest` reads the newest spec
+here and names every XSD element or transaction code the library doesn't have yet.
 
-Fixtures captured from these sources live in `lib/src/testFixtures/resources/edgar/`.
+Fixtures captured from these sources live in `src/testFixtures/resources/edgar/`.

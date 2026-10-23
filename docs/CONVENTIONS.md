@@ -75,7 +75,7 @@ Quarterly indexes are by calendar quarter, not fiscal quarter: `Filings.quarter(
 
 ## Structure
 
-Packages, modules and test layout are in [ARCHITECTURE.md](ARCHITECTURE.md).
+Packages and test layout are in [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Naming
 
@@ -112,8 +112,10 @@ Code should explain itself through names and structure; a comment is a last reso
   never null; missing means empty.
 - Errors: throw `SecException.Http` or `SecException.Parse` (unchecked); never return
   `null` for a failure. Messages name the URL and what was expected.
-- Expressions over statements where it reads better (`when`, `?.let`, collection
-  operations); a plain loop when it reads better.
+- Don't pack code onto one line. Give intermediate values a name instead of chaining many
+  calls or nesting expressions; a plain `if` or loop over a clever one-liner. Lines are at most
+  100 characters (ktlint and detekt enforce it).
+- Guard with `?: throw` and early `return` where it keeps the main path flat.
 - One public top-level type per file, named after the file; small related types may share
   a file named after their concept (see ARCHITECTURE.md).
 - Public API stays usable from Java: no value classes in signatures, `@JvmOverloads` on
@@ -122,9 +124,8 @@ Code should explain itself through names and structure; a comment is a last reso
 
 ## Tests
 
-- Layout and tasks: see ARCHITECTURE.md (one source set per kind of test).
-- Offline by default. Live EDGAR only in `liveTest` and `drift`. A test that documents an open
-  bug is tagged `known-bug` and names its GitHub issue; the tag goes when the fix lands.
+- Layout and tasks: see ARCHITECTURE.md.
+- Offline by default; live EDGAR only in `liveTest`.
 - Fixtures under `testFixtures/resources/edgar/<source>/` are frozen; ownership filings are
   named `<accession number>.txt`. Add new fixtures and list them in that folder's README.
 - Expected values come from the raw data (independently extracted), not from the code's
