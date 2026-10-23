@@ -25,7 +25,7 @@ the target, confirmed at the start of Phase 5.
 | Term | Meaning | Current name | Kotlin name |
 |------|---------|--------------|-------------|
 | Filing | One submission to EDGAR, identified by its accession number. Contains one or more documents. | `File`, `FileF345` | `Filing` |
-| Filing reference | A pointer to a filing from a list (index, feed, submissions): accession number, form type, date, a CIK. No content. | `FileRef` | `FilingRef` |
+| Filing reference | A pointer to a filing from a list (index, feed, submissions): accession number, form type, date, a CIK (a related CIK; its role depends on the source). No content. | `FileRef` | `FilingRef` |
 | Form type | The kind of filing: `4`, `4/A`, `10-K`, `8-K`, `424B2`, ... `/A` marks an amendment of an earlier filing. Matched exactly; EDGAR's own `type=` filters are prefix matches. | `FileType` (enum, unknown forms become `OTHER`) | `FormType` (keeps the raw value) |
 | Document | One file inside a filing (the ownership XML, an exhibit, ...). | `xmlFilename` | `document` |
 | Filed date | Date the filing was accepted for filing (`FILED AS OF DATE`, `filingDate`). | `filedAt` | `filedOn` (a `LocalDate`) |

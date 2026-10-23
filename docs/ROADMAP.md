@@ -117,6 +117,38 @@ stable detekt 1.23 doesn't support Kotlin 2.4. Verified with throwaway files: ea
 set compiles and runs under its task and sees `main`'s `internal` code; explicit API mode,
 ktlint, detekt's package-vs-directory rule and the `known-bug` split all fail as they should.
 
+Progress (2026-10-23): step 2 done except `LocalServer` and `liveClient()`, which come with
+their first users (`http`, `SecClient`). Fixtures moved to `lib/src/testFixtures/resources/edgar/`
+unchanged; `legacy` reads them from there. `Fixtures` and `FixtureHttp` are in `testFixtures`;
+`test`, `contractTest` and `liveTest` are also associated with `testFixtures`, since
+`FixtureHttp` implements the internal `Http` and so must be internal itself.
+
+Progress (2026-10-23): step 3, `filing` done, ahead of the rest of `http` and of `company`.
+It needed only a seam from `http`, which now exists: `Http` (`get(url)` → bytes, plus
+`get(url, parse)`, which adds the URL to parse errors), `Mapping.kt` (shared Jackson mappers that
+ignore unknown fields) and `SecException` (`Http`, `Parse`). Still to write for `http`:
+`EdgarHttp`, `RateLimiter`, `LocalServer`, and the ports of `EdgarClientTest`/`RateLimiterTest`.
+
+- API: `Filings.latest(count = 40, form, start)`, `daily(daysAgo = 0, form)`,
+  `quarter(year, quarter)`, `ofCompany(cik)`, each `List<FilingRef>`; `latest` accepts the
+  feed's counts (10, 20, 40, 80, 100), `quarter` 1993 onward and quarters 1–4, else
+  `IllegalArgumentException`. `FilingRef(accessionNumber, cik, formType, filedOn)`;
+  `FormType(value)` with constants `F3` … `F5_A`, `F8_K`, `F10_K`, `F10_Q` and `isAmendment`.
+- `FilingRef.cik` is neutral (fixes the known limitation below): the Issuer's or Subject's CIK
+  from the latest feed, the requested CIK from `ofCompany`, else the first one listed. A `Long`,
+  as a CIK has up to 10 digits.
+- One internal file per source (`LatestFeed`, `DailyList`, `QuarterlyIndex`, `Submissions`)
+  builds the URL and parses the response; `Filings` filters by exact form type.
+- Tests: 34 in `test/filing/`, from `FileRefLoaderTest` plus new ones (empty feed, entry without
+  an accession number, page without the list, wrong column count, submission columns of unequal
+  length, parse error names the URL). Removing the role preference or the form filter fails them.
+- detekt allows up to 5 destructured entries (regex groups, index columns).
+
+Wire classes map only the fields the library uses (the Java ones mapped every field), so
+strict parsing of them can't spot EDGAR additions. Step 4 decides how the drift check sees
+additions to the submissions JSON and the latest feed: full wire classes in `drift`, or comparing
+key sets.
+
 Renames (see the glossary): `FileRef` → `FilingRef`, `FileType` → `FormType` (keeps raw
 values), `File`/`FileF345`/`FileF3..5` → `OwnershipFiling`, `LatestFilesLimit` → a validated
 `count`, `loadFiscalQuarter` → `quarter(year, quarter)`.
@@ -181,9 +213,10 @@ Open: none.
 
 Known limitations, for the Kotlin redesign:
 
-- On the daily page and quarterly index the CIK's role is unknown; `loadCompany(cik)` sets
+- [x] On the daily page and quarterly index the CIK's role is unknown; `loadCompany(cik)` sets
   `issuerCik` to the requested CIK even when it's a reporting owner. `FileRef.issuerCik`
-  should become a role-qualified or neutral field (see `docs/CONVENTIONS.md`).
+  should become a role-qualified or neutral field (see `docs/CONVENTIONS.md`). Kotlin:
+  `FilingRef.cik` is neutral. (Phase 5)
 
 ## Findings log
 

@@ -3,3 +3,8 @@ naming:
   InvalidPackageDeclaration:
     # Directories omit the root package (see docs/ARCHITECTURE.md).
     rootPackage: com.alexkouzel.sec
+
+style:
+  DestructuringDeclarationWithTooManyEntries:
+    # Regex groups and index columns read best destructured.
+    maxDestructuringEntries: 5

@@ -49,6 +49,7 @@ lib/src/main/kotlin/
 ├── SecException.kt       sealed: Http, Parse
 ├── http/                 transport only, knows nothing about EDGAR formats
 │   ├── Http.kt           internal interface: get(url) -> bytes; the seam tests replace
+│   ├── Mapping.kt        internal: JSON and XML mappers shared by the areas, unknown fields ignored
 │   ├── EdgarHttp.kt      JDK HttpClient, User-Agent, gzip/deflate, retries
 │   └── RateLimiter.kt
 ├── company/
@@ -127,7 +128,9 @@ Rules:
 - In `test`, every file is `<Name>Test.kt` next to the package of the `<Name>.kt` it tests.
   No helpers, no test-only clients.
 - Support code is written once, in `testFixtures`. `testFixtures`, `contractTest` and
-  `liveTest` are associated with `main`, so they can use `internal` code (e.g. `Http`).
+  `liveTest` are associated with `main`, so they can use `internal` code (e.g. `Http`);
+  `test`, `contractTest` and `liveTest` are associated with `testFixtures` too, so its
+  support code can stay `internal` (e.g. `FixtureHttp`).
 - The `known-bug` tag stays for tests that document an open bug.
 
 Current Java tests → new place:
