@@ -54,7 +54,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 public class OwnershipContractTest {
     private static final Path FIXTURES = Path.of("src/test/resources/edgar/ownership");
-    private static final Path SPECS = Path.of("specs");
+    private static final Path SPECS = Path.of("../specs");
     private static final String XS = "http://www.w3.org/2001/XMLSchema";
 
     private static final XmlMapper STRICT_MAPPER = new XmlMapper();

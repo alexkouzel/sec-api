@@ -11,7 +11,7 @@ import java.util.Set;
  * Add a version there once its filings parse and the model covers it.
  */
 public record KnownVersions(String ownershipSpec, Set<String> schemaVersions) {
-    public static final Path PATH = Path.of("specs/versions.json");
+    public static final Path PATH = Path.of("../specs/versions.json");
 
     public static KnownVersions load() throws IOException {
         return new ObjectMapper().readValue(PATH.toFile(), KnownVersions.class);

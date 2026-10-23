@@ -31,14 +31,14 @@ jobs:
         env:
           # "Name contact@domain", as EDGAR requires; set under Settings > Secrets.
           EDGAR_USER_AGENT: ${{ secrets.EDGAR_USER_AGENT }}
-        run: ./gradlew driftCheck
+        run: ./gradlew :legacy:driftCheck
 
       - name: Upload report and raw responses
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: drift-report
-          path: build/drift/
+          path: legacy/build/drift/
           if-no-files-found: ignore
 
       - name: Open or update the spec-drift issue
@@ -46,18 +46,18 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          count=$(cat build/drift/findings-count 2>/dev/null || true)
+          count=$(cat legacy/build/drift/findings-count 2>/dev/null || true)
           if [ -z "$count" ]; then
             echo "::error::The drift check wrote no report; see the 'Run drift check' step."
             exit 1
           fi
-          cat build/drift/report.md >> "$GITHUB_STEP_SUMMARY"
+          cat legacy/build/drift/report.md >> "$GITHUB_STEP_SUMMARY"
           if [ "$count" = 0 ]; then
             echo "No drift found."
             exit 0
           fi
 
-          { cat build/drift/issue.md; printf '\nRun: %s\n' "$RUN_URL"; } > issue-body.md
+          { cat legacy/build/drift/issue.md; printf '\nRun: %s\n' "$RUN_URL"; } > issue-body.md
           gh label create spec-drift --color D93F0B \
             --description "EDGAR data or specs differ from the model" --force
           number=$(gh issue list --label spec-drift --state open --limit 1 --json number --jq '.[0].number // empty')

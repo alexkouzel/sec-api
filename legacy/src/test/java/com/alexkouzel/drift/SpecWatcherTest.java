@@ -47,7 +47,7 @@ public class SpecWatcherTest {
     public void knownSpecIsInSpecs() throws Exception {
         String spec = KnownVersions.load().ownershipSpec();
 
-        assertTrue(Files.isDirectory(Path.of("specs/ownership-xml-v" + spec)), "specs/ownership-xml-v" + spec);
+        assertTrue(Files.isDirectory(Path.of("../specs/ownership-xml-v" + spec)), "specs/ownership-xml-v" + spec);
         assertEquals(Optional.of(spec), SpecWatcher.currentVersion(PAGE), "fixture page and specs/versions.json disagree");
     }
 }
