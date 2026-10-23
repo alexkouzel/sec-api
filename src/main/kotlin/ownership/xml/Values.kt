@@ -2,6 +2,7 @@ package com.alexkouzel.sec.ownership.xml
 
 import com.alexkouzel.sec.SecException
 import com.alexkouzel.sec.ownership.Footnoted
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 
@@ -40,8 +41,8 @@ internal fun parseDate(text: String): LocalDate {
     }
 }
 
-internal fun number(text: String): Double =
-    text.toDoubleOrNull()
+internal fun number(text: String): BigDecimal =
+    text.toBigDecimalOrNull()
         ?: throw SecException.Parse("Invalid number in the ownership document: $text")
 
 internal fun String?.flag(): Boolean? =

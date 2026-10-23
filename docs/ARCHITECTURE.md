@@ -59,7 +59,7 @@ Notes:
 
 - `ownership/xml` mirrors the XSD element by element, because the XML is deep and awkward
   (`transactionAmounts.transactionShares.value` plus `footnoteId`s). `Conversion.kt` flattens
-  it into the model, e.g. `transaction.shares: Footnoted<Double>?`; `Values.kt` turns its text
+  it into the model, e.g. `transaction.shares: Footnoted<BigDecimal>?`; `Values.kt` turns its text
   into numbers, dates and flags and fails on a malformed one.
 - Transactions and holdings of both tables share `Transaction` and `Holding`; a derivative
   security's terms (exercise price, dates, underlying security) are in `derivative`, null for

@@ -1,12 +1,14 @@
 package com.alexkouzel.sec.ownership
 
 import com.alexkouzel.sec.filing.FormType
+import java.math.BigDecimal
 import java.time.LocalDate
 
 /**
  * A change in holdings. [derivative] holds the terms of a derivative security (an option, a
  * warrant, ...) and is null for the security itself. [acquiredOrDisposed] is `A` or `D`,
- * [directOrIndirect] `D` or `I`.
+ * [directOrIndirect] `D` or `I`. Numbers keep the digits EDGAR wrote (`3500` and `3500.00` are
+ * different `BigDecimal`s), so compare them with `compareTo`, not `equals`.
  */
 public data class Transaction(
     val securityTitle: Footnoted<String>?,
@@ -14,12 +16,12 @@ public data class Transaction(
     val deemedExecutionDate: Footnoted<LocalDate>?,
     val coding: Coding?,
     val timeliness: Footnoted<String>?,
-    val shares: Footnoted<Double>?,
-    val pricePerShare: Footnoted<Double>?,
-    val totalValue: Footnoted<Double>?,
+    val shares: Footnoted<BigDecimal>?,
+    val pricePerShare: Footnoted<BigDecimal>?,
+    val totalValue: Footnoted<BigDecimal>?,
     val acquiredOrDisposed: Footnoted<String>?,
-    val sharesOwnedAfter: Footnoted<Double>?,
-    val valueOwnedAfter: Footnoted<Double>?,
+    val sharesOwnedAfter: Footnoted<BigDecimal>?,
+    val valueOwnedAfter: Footnoted<BigDecimal>?,
     val directOrIndirect: Footnoted<String>?,
     val natureOfOwnership: Footnoted<String>?,
     val derivative: Derivative?,
@@ -29,20 +31,20 @@ public data class Transaction(
 public data class Holding(
     val securityTitle: Footnoted<String>?,
     val formType: Footnoted<FormType>?,
-    val sharesOwned: Footnoted<Double>?,
-    val valueOwned: Footnoted<Double>?,
+    val sharesOwned: Footnoted<BigDecimal>?,
+    val valueOwned: Footnoted<BigDecimal>?,
     val directOrIndirect: Footnoted<String>?,
     val natureOfOwnership: Footnoted<String>?,
     val derivative: Derivative?,
 )
 
 public data class Derivative(
-    val exercisePrice: Footnoted<Double>?,
+    val exercisePrice: Footnoted<BigDecimal>?,
     val exerciseDate: Footnoted<LocalDate>?,
     val expirationDate: Footnoted<LocalDate>?,
     val underlyingTitle: Footnoted<String>?,
-    val underlyingShares: Footnoted<Double>?,
-    val underlyingValue: Footnoted<Double>?,
+    val underlyingShares: Footnoted<BigDecimal>?,
+    val underlyingValue: Footnoted<BigDecimal>?,
 )
 
 /** [code] is null when the filing has none or one this library doesn't know; [value] keeps it. */

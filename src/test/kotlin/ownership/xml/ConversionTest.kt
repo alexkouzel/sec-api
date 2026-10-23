@@ -5,6 +5,7 @@ import com.alexkouzel.sec.filing.FormType
 import com.alexkouzel.sec.ownership.FilingText
 import com.alexkouzel.sec.ownership.Footnoted
 import com.alexkouzel.sec.ownership.TransactionCode
+import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertContains
@@ -40,10 +41,10 @@ class ConversionTest {
         assertEquals(Footnoted(date("2023-11-27")), sale.date)
         assertEquals(TransactionCode.SALE, sale.coding?.code)
         assertEquals(false, sale.coding?.isEquitySwap)
-        assertEquals(Footnoted(3500.0), sale.shares)
-        assertEquals(Footnoted(114.36, listOf("F1")), sale.pricePerShare)
+        assertEquals(Footnoted(BigDecimal("3500")), sale.shares)
+        assertEquals(Footnoted(BigDecimal("114.36"), listOf("F1")), sale.pricePerShare)
         assertEquals(Footnoted("D"), sale.acquiredOrDisposed)
-        assertEquals(Footnoted(1925.0), sale.sharesOwnedAfter)
+        assertEquals(Footnoted(BigDecimal("1925")), sale.sharesOwnedAfter)
         assertEquals(Footnoted("D"), sale.directOrIndirect)
         assertNull(sale.timeliness)
 
@@ -69,7 +70,7 @@ class ConversionTest {
 
         assertEquals(4, filing.holdings.size)
         val holding = filing.holdings.first()
-        assertEquals(Footnoted(84216.0), holding.sharesOwned)
+        assertEquals(Footnoted(BigDecimal("84216")), holding.sharesOwned)
         assertEquals(Footnoted("I"), holding.directOrIndirect)
         assertEquals(
             "By Self, as General Partner of POM Services, LLC, " +
@@ -92,23 +93,23 @@ class ConversionTest {
         assertEquals(2, stock.size)
         val exercise = stock.first()
         assertEquals(TransactionCode.OPTION_EXERCISE, exercise.coding?.code)
-        assertEquals(5000.0, exercise.shares?.value)
-        assertEquals(2.48, exercise.pricePerShare?.value)
+        assertEquals(BigDecimal("5000"), exercise.shares?.value)
+        assertEquals(BigDecimal("2.48"), exercise.pricePerShare?.value)
         assertEquals("A", exercise.acquiredOrDisposed?.value)
-        assertEquals(30000.0, exercise.sharesOwnedAfter?.value)
+        assertEquals(BigDecimal("30000"), exercise.sharesOwnedAfter?.value)
 
         val option = options.single()
         assertEquals("Stock Option (right to buy)", option.securityTitle?.value)
-        assertEquals(2.48, option.derivative?.exercisePrice?.value)
+        assertEquals(BigDecimal("2.48"), option.derivative?.exercisePrice?.value)
         assertEquals(date("2026-10-19"), option.date?.value)
         assertEquals(TransactionCode.OPTION_EXERCISE, option.coding?.code)
-        assertEquals(5000.0, option.shares?.value)
-        assertEquals(0.0, option.pricePerShare?.value)
+        assertEquals(BigDecimal("5000"), option.shares?.value)
+        assertEquals(BigDecimal("0"), option.pricePerShare?.value)
         assertEquals("D", option.acquiredOrDisposed?.value)
         assertEquals(date("2031-06-17"), option.derivative?.expirationDate?.value)
         assertEquals("Common Stock", option.derivative?.underlyingTitle?.value)
-        assertEquals(5000.0, option.derivative?.underlyingShares?.value)
-        assertEquals(101268.0, option.sharesOwnedAfter?.value)
+        assertEquals(BigDecimal("5000"), option.derivative?.underlyingShares?.value)
+        assertEquals(BigDecimal("101268"), option.sharesOwnedAfter?.value)
 
         assertEquals(listOf("F1", "F2", "F3", "F4", "F5"), filing.footnotes.map { it.id })
     }
@@ -131,12 +132,12 @@ class ConversionTest {
         assertEquals(emptyList(), filing.transactions)
         val (stock, warrants) = filing.holdings.partition { it.derivative == null }
         assertEquals(3, stock.size)
-        assertEquals(4494462.0, stock.first().sharesOwned?.value)
+        assertEquals(BigDecimal("4494462"), stock.first().sharesOwned?.value)
         assertEquals(9, warrants.size)
         val warrant = warrants.first()
         assertEquals("Pre-Funded Warrants to Purchase Common Stock", warrant.securityTitle?.value)
         assertEquals("Common Stock, $0.0001 par value", warrant.derivative?.underlyingTitle?.value)
-        assertEquals(3132723.0, warrant.derivative?.underlyingShares?.value)
+        assertEquals(BigDecimal("3132723"), warrant.derivative?.underlyingShares?.value)
 
         assertEquals(
             listOf("F1", "F2", "F3", "F4", "F5", "F6", "F7"),
@@ -172,9 +173,9 @@ class ConversionTest {
 
         val option = filing.holdings.first { it.derivative != null }
         assertEquals("Stock Option (right to buy)", option.securityTitle?.value)
-        assertEquals(0.47, option.derivative?.exercisePrice?.value)
+        assertEquals(BigDecimal("0.47"), option.derivative?.exercisePrice?.value)
         assertEquals(date("2034-09-09"), option.derivative?.expirationDate?.value)
-        assertEquals(3217784.0, option.derivative?.underlyingShares?.value)
+        assertEquals(BigDecimal("3217784"), option.derivative?.underlyingShares?.value)
     }
 
     @Test
@@ -189,8 +190,8 @@ class ConversionTest {
         val purchase = filing.transactions.first()
         assertEquals("American depositary shares", purchase.securityTitle?.value)
         assertEquals(TransactionCode.PURCHASE, purchase.coding?.code)
-        assertEquals(5505.0, purchase.shares?.value)
-        assertEquals(1.2128, purchase.pricePerShare?.value)
+        assertEquals(BigDecimal("5505"), purchase.shares?.value)
+        assertEquals(BigDecimal("1.2128"), purchase.pricePerShare?.value)
         assertNull(purchase.deemedExecutionDate)
     }
 
@@ -202,7 +203,7 @@ class ConversionTest {
         assertEquals(6, filing.transactions.count { it.derivative == null })
         assertEquals(3, filing.transactions.count { it.derivative != null })
         val first = filing.transactions.first()
-        assertEquals(Footnoted(33967.0), first.shares)
+        assertEquals(Footnoted(BigDecimal("33967")), first.shares)
         assertEquals(Footnoted(null, listOf("F1")), first.pricePerShare)
     }
 
@@ -210,7 +211,10 @@ class ConversionTest {
     fun `keeps several footnotes on one value`() {
         val filing = filing("0001000045-22-000004")
 
-        assertEquals(Footnoted(2262.0, listOf("F1", "F2")), filing.transactions.first().shares)
+        assertEquals(
+            Footnoted(BigDecimal("2262"), listOf("F1", "F2")),
+            filing.transactions.first().shares,
+        )
     }
 
     @Test
@@ -234,9 +238,9 @@ class ConversionTest {
         val first = filing.transactions.first()
         assertEquals(date("2025-10-30"), first.date?.value)
         assertEquals(TransactionCode.OTHER, first.coding?.code)
-        assertEquals(24.4, first.shares?.value)
-        assertEquals(20.68, first.pricePerShare?.value)
-        assertEquals(3794.908, first.sharesOwnedAfter?.value)
+        assertEquals(BigDecimal("24.4000"), first.shares?.value)
+        assertEquals(BigDecimal("20.6800"), first.pricePerShare?.value)
+        assertEquals(BigDecimal("3794.9080"), first.sharesOwnedAfter?.value)
     }
 
     @Test
@@ -254,6 +258,6 @@ class ConversionTest {
         val gift = filing.transactions.first()
         assertEquals(TransactionCode.GIFT, gift.coding?.code)
         assertEquals(date("2021-09-29"), gift.date?.value)
-        assertEquals(2000.0, gift.shares?.value)
+        assertEquals(BigDecimal("2000"), gift.shares?.value)
     }
 }
