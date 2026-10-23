@@ -9,6 +9,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
@@ -27,26 +30,43 @@ public class OwnershipDocumentParser {
         );
     }
 
+    /**
+     * Reads accession number, form type and filed date from the SGML header by label,
+     * so added or reordered header lines don't matter.
+     */
     public OwnershipDocument parse(String data) throws ParsingException {
-        String header = StringUtils.until(data, "\n\n");
-        String[] lines = header.split("\n");
-
-        String accNo = getHeaderValue(lines[3]);
-        String type = getHeaderValue(lines[4]);
-        String filedAt = getHeaderValue(lines[7]);
+        String header = StringUtils.substring(data, "<SEC-HEADER>", "</SEC-HEADER>");
+        if (header == null) {
+            throw new ParsingException("<SEC-HEADER> is missing");
+        }
+        String accNo = getHeaderValue(header, "ACCESSION NUMBER");
+        String type = getHeaderValue(header, "CONFORMED SUBMISSION TYPE");
+        String filedAt = getHeaderValue(header, "FILED AS OF DATE");
 
         return new OwnershipDocument(
                 accNo,
                 FileType.ofValue(type),
-                DateUtils.parse(filedAt, "yyyyMMdd"),
+                parseFiledAt(filedAt),
                 parseXmlFilename(data),
                 parseOwnershipForm(data)
         );
     }
 
-    private String getHeaderValue(String line) {
-        int valueIdx = line.lastIndexOf("\t") + 1;
-        return line.substring(valueIdx);
+    private String getHeaderValue(String header, String label) throws ParsingException {
+        Pattern pattern = Pattern.compile("^" + Pattern.quote(label) + ":[ \t]*(.+?)[ \t]*\r?$", Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(header);
+        if (!matcher.find()) {
+            throw new ParsingException("Header value is missing: " + label);
+        }
+        return matcher.group(1);
+    }
+
+    private LocalDate parseFiledAt(String value) throws ParsingException {
+        try {
+            return DateUtils.parse(value, "yyyyMMdd");
+        } catch (DateTimeParseException e) {
+            throw new ParsingException("Invalid FILED AS OF DATE: " + value);
+        }
     }
 
     private String parseXmlFilename(String data) {

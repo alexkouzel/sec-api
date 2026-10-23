@@ -1,5 +1,6 @@
 package com.alexkouzel.file.type.f345;
 
+import com.alexkouzel.common.exceptions.ParsingException;
 import com.alexkouzel.file.FileLoader;
 import com.alexkouzel.file.FileType;
 import com.alexkouzel.file.FileUrlBuilder;
@@ -14,6 +15,8 @@ import com.alexkouzel.file.type.f345.transaction.derivative.DerivativeTransactio
 import com.alexkouzel.file.type.f345.transaction.nonderivative.NonDerivativeHolding;
 import com.alexkouzel.file.type.f345.transaction.nonderivative.NonDerivativeTransaction;
 import com.alexkouzel.testing.FixtureClient;
+import com.alexkouzel.testing.Fixtures;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -25,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OwnershipDocumentLoaderTest {
@@ -76,6 +80,26 @@ public class OwnershipDocumentLoaderTest {
         assertEquals(type, form.getDocumentType());
         assertEquals(issuerCik, form.getIssuer().getIssuerCik());
         assertFalse(form.getReportingOwner().isEmpty());
+    }
+
+    @Test
+    public void headerValuesAreFoundByLabel() throws Exception {
+        String data = Fixtures.text("ownership/0001127602-23-028345.txt")
+                .replace("ACCESSION NUMBER:", "SOME NEW FIELD:\t\tvalue\nACCESSION NUMBER:");
+
+        OwnershipDocument doc = new OwnershipDocumentParser(new XmlMapper()).parse(data);
+
+        assertEquals("0001127602-23-028345", doc.accNo());
+        assertEquals(FileType.F4, doc.type());
+        assertEquals(date("2023-11-28"), doc.filedAt());
+    }
+
+    @Test
+    public void missingHeaderValueFails() {
+        String data = Fixtures.text("ownership/0001127602-23-028345.txt")
+                .replace("FILED AS OF DATE:", "FILED ON:");
+
+        assertThrows(ParsingException.class, () -> new OwnershipDocumentParser(new XmlMapper()).parse(data));
     }
 
     @Test
