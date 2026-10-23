@@ -46,7 +46,7 @@ src/main/kotlin/
 │   ├── QuarterlyIndex.kt internal: master.idx
 │   └── Submissions.kt    internal: submissions JSON and its older files
 └── ownership/
-    ├── Ownership.kt      facade: get(ref)
+    ├── Ownership.kt      facade: get(ref), get(cik, accessionNumber)
     ├── OwnershipFiling.kt
     ├── Owner.kt          Issuer, ReportingOwner, Address, Relationship, Signature
     ├── Transaction.kt    Transaction, Holding, Derivative, Coding, TransactionCode
@@ -112,8 +112,9 @@ Fields EDGAR only adds don't break anything and aren't reported.
 
 ## Build
 
-- One Gradle project; plugin and library versions in `gradle/libs.versions.toml`; detekt's
-  differences from its defaults in `config/detekt.yml`.
+- One Gradle project; plugin and library versions in `gradle/libs.versions.toml` (Dependabot
+  proposes updates); detekt's differences from its defaults in `config/detekt.yml`.
+- Releases are git tags; JitPack builds them (`jitpack.yml`) as `com.github.alexkouzel:sec-api`.
 - Jackson 3 (`tools.jackson`, with `jackson-module-kotlin`). Two of its behaviours to know:
   - it applies a property's non-null element type to nested collections too, so
     `List<List<Any?>>` rejects a `null` inside; `Tickers` reads each row as a `JsonNode`;

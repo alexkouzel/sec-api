@@ -19,25 +19,22 @@ pulled in by Gradle or Maven.
 
 ## Installation
 
-Published to GitHub Packages as `com.alexkouzel:sec-api` (reading from GitHub Packages needs
-a GitHub token with `read:packages`):
+Releases are built by [JitPack](https://jitpack.io) from this repository's tags; no account or
+token is needed. Gradle (Kotlin DSL):
 
 ```kotlin
 repositories {
-    maven("https://maven.pkg.github.com/alexkouzel/sec-api") {
-        credentials {
-            username = providers.gradleProperty("gpr.username").get()
-            password = providers.gradleProperty("gpr.token").get()
-        }
-    }
+    mavenCentral()
+    maven("https://jitpack.io")
 }
 
 dependencies {
-    implementation("com.alexkouzel:sec-api:<version>")
+    implementation("com.github.alexkouzel:sec-api:v<version>")
 }
 ```
 
-Or build it: `./gradlew publishToMavenLocal`, then depend on it from `mavenLocal()`.
+The versions are the tags on the [releases page](https://github.com/alexkouzel/sec-api/releases).
+Maven works too, with the repository `https://jitpack.io` and the same coordinates.
 
 ## Usage
 
@@ -82,7 +79,10 @@ try (SecClient sec = new SecClient("Sample Company admin@example.com")) {
   matches exactly, so `latest` may return fewer filings than `count`, or none.
 - `OwnershipFiling`: header values, `issuer`, `owners`, `transactions`, `holdings`,
   `footnotes`, `signatures`. Values that can carry footnotes are `Footnoted<T>(value,
-  footnoteIds)`; a derivative security's terms are in `derivative`.
+  footnoteIds)`; a derivative security's terms are in `derivative`. Share counts and prices
+  are `BigDecimal`s with the digits EDGAR wrote, so compare them with `compareTo`.
+- With only an accession number (from a link or a search), use
+  `sec.ownership.get(cik, accessionNumber)`, where `cik` is the issuer's or a reporting owner's.
 
 ### Errors
 
@@ -95,7 +95,7 @@ offer, quarter 5) throw `IllegalArgumentException`.
 
 See [CLAUDE.md](CLAUDE.md) for commands and [docs/](docs/) for the architecture and
 conventions. In Claude Code, `/edgar-change` adapts the library when the daily live check fails
-and `/release` publishes the next version, worked out from the commits. In short:
+and `/release` releases the next version, worked out from the commits. In short:
 
 ```bash
 ./gradlew check       # offline: unit tests, ktlint, detekt
