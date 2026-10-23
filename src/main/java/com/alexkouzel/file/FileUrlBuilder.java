@@ -13,10 +13,6 @@ public class FileUrlBuilder {
         return build(issuerCik, accNo, accNo + ".txt");
     }
 
-    public String buildF345(int issuerCik, String accNo, String filename) {
-        return build(issuerCik, accNo, "xslF345X03/" + filename);
-    }
-
     private String build(int issuerCik, String accNo, String filename) {
         accNo = DASH_PATTERN.matcher(accNo).replaceAll("");
         return String.format(URL_TEMPLATE, issuerCik, accNo, filename);
