@@ -4,6 +4,7 @@ import com.alexkouzel.client.HttpDataClient;
 import com.alexkouzel.client.exceptions.HttpRequestException;
 import com.alexkouzel.common.exceptions.ParsingException;
 import com.alexkouzel.file.reference.FileRef;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 public class OwnershipDocumentLoader {
@@ -16,7 +17,14 @@ public class OwnershipDocumentLoader {
     }
 
     public OwnershipDocumentLoader(HttpDataClient client) {
-        this(client, new XmlMapper());
+        this(client, buildXmlMapper());
+    }
+
+    // EDGAR adds schema elements over time; unknown ones must not break parsing.
+    private static XmlMapper buildXmlMapper() {
+        XmlMapper mapper = new XmlMapper();
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        return mapper;
     }
 
     public OwnershipDocument loadByUrl(String url) throws HttpRequestException, ParsingException {

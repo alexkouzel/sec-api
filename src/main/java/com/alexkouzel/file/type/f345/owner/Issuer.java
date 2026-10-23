@@ -9,4 +9,5 @@ public class Issuer {
     private int issuerCik;
     private String issuerName;
     private String issuerTradingSymbol;
+    private String issuerForeignTradingSymbol;
 }

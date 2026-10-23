@@ -23,12 +23,16 @@ public class ReportingOwner {
     @Getter
     @Setter
     public static class Address {
+        @JsonDeserialize(using = BooleanDeserializer.class)
+        private Boolean rptOwnerNonUSAddressFlag;
         private String rptOwnerStreet1;
         private String rptOwnerStreet2;
         private String rptOwnerCity;
         private String rptOwnerState;
         private String rptOwnerZipCode;
         private String rptOwnerStateDescription;
+        private String rptOwnerNonUSStateTerritory;
+        private String rptOwnerCountry;
         @JsonDeserialize(using = BooleanDeserializer.class)
         private Boolean rptOwnerGoodAddress;
     }
