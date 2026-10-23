@@ -40,4 +40,4 @@ Official pages:
 (`./gradlew driftCheck`) reports a newer spec on the SEC page or an unlisted
 `schemaVersion` in recent filings; update this file as part of handling that.
 
-Fixtures captured from these sources live in `src/test/resources/edgar/`.
+Fixtures captured from these sources live in `lib/src/testFixtures/resources/edgar/`.

@@ -53,7 +53,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * new or unmapped elements are noticed. See "Spec drift monitoring" in docs/ROADMAP.md.
  */
 public class OwnershipContractTest {
-    private static final Path FIXTURES = Path.of("src/test/resources/edgar/ownership");
+    private static final Path FIXTURES = Path.of("../lib/src/testFixtures/resources/edgar/ownership");
     private static final Path SPECS = Path.of("../specs");
     private static final String XS = "http://www.w3.org/2001/XMLSchema";
 

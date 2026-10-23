@@ -88,7 +88,7 @@ Loaders throw `HttpRequestException` when a request still fails after 3 attempts
 
 ## Running tests
 
-Offline tests, run against EDGAR responses saved in `src/test/resources/edgar/`:
+Offline tests, run against EDGAR responses saved in `lib/src/testFixtures/resources/edgar/`:
 
 ```bash
 ./gradlew test

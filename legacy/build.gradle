@@ -23,6 +23,9 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+// The EDGAR fixtures moved to lib's test fixtures; the Java tests still read them.
+sourceSets.test.resources.srcDir '../lib/src/testFixtures/resources'
+
 // Test tags:
 //   live       — hits real EDGAR; run with ./gradlew liveTest
 //   known-bug  — documents a bug from docs/ROADMAP.md and fails until it's fixed;

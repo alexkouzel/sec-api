@@ -27,7 +27,7 @@ its naming, comment and style rules and the layout in [docs/ARCHITECTURE.md](doc
   `legacy/build/drift/report.md` and saves offending responses under `legacy/build/drift/raw/`.
 - `./gradlew ktlintFormat` fixes formatting.
 - Live tasks read the User-Agent from env `EDGAR_USER_AGENT` (`Name contact@domain`).
-- Fixtures in `legacy/src/test/resources/edgar/` are frozen (see its README); add new files,
+- Fixtures in `lib/src/testFixtures/resources/edgar/` are frozen (see its README); add new files,
   don't refresh existing ones. Specs and XSDs live in `specs/`.
 
 ## CI
@@ -43,7 +43,7 @@ its naming, comment and style rules and the layout in [docs/ARCHITECTURE.md](doc
 When the drift check reports something:
 
 1. Download the run's `drift-report` artifact. Each finding names its raw response.
-2. Add the raw response as a new fixture under `legacy/src/test/resources/edgar/<source>/` and list
+2. Add the raw response as a new fixture under `lib/src/testFixtures/resources/edgar/<source>/` and list
    it in that folder's README (fixtures are never refreshed in place).
 3. New spec version: download it from the spec page into `specs/ownership-xml-v<version>/`,
    update `specs/README.md` and `ownershipSpec` in `specs/versions.json`. Unseen

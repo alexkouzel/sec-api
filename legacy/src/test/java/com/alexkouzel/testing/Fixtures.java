@@ -6,7 +6,7 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Reads EDGAR responses captured under src/test/resources/edgar (see its README).
+ * Reads EDGAR responses captured under lib/src/testFixtures/resources/edgar (see its README).
  */
 public final class Fixtures {
 
