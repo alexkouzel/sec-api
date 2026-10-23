@@ -9,8 +9,9 @@ before changing code, and use the glossary's terms.
 
 ## Layout
 
-- `src/main` — the library. `src/test` — offline unit tests. `src/testFixtures` — test support
-  and frozen EDGAR responses. `src/liveTest` — the library against live EDGAR.
+- `src/main` — the library. `src/test` — offline unit tests, their helpers (`Fixtures`,
+  `FixtureHttp`, `LocalServer`) and frozen EDGAR responses. `src/liveTest` — the library against
+  live EDGAR.
 - `specs/` — the SEC's Ownership XML specification and XSDs.
 - `config/detekt.yml` — detekt's differences from its defaults; versions in
   `gradle/libs.versions.toml`.
@@ -27,7 +28,7 @@ before changing code, and use the glossary's terms.
 
 ## Fixtures
 
-`src/testFixtures/resources/edgar/` holds raw EDGAR responses. They are frozen: tests assert
+`src/test/resources/edgar/` holds raw EDGAR responses. They are frozen: tests assert
 exact values, so add new files (listed in that folder's README), never edit one. Expected
 values in tests come from the raw data, not from the code's output.
 

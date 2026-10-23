@@ -21,15 +21,15 @@ labelled `edgar-change` when it fails. Work through these steps in order.
 
 ## 2. Save the response as a fixture
 
-Fixtures in `src/testFixtures/resources/edgar/<source>/` are frozen: add a new file, never edit
+Fixtures in `src/test/resources/edgar/<source>/` are frozen: add a new file, never edit
 one. Fetch the URL from the failure:
 
 ```bash
-curl -A "$EDGAR_USER_AGENT" --compressed -o src/testFixtures/resources/edgar/<source>/<name> <url>
+curl -A "$EDGAR_USER_AGENT" --compressed -o src/test/resources/edgar/<source>/<name> <url>
 ```
 
 Name ownership filings `<accession number>.txt`. Add a row for the file to
-`src/testFixtures/resources/edgar/README.md` saying what changed in it.
+`src/test/resources/edgar/README.md` saying what changed in it.
 
 ## 3. Fix it test-first
 

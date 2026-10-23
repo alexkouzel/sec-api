@@ -126,7 +126,7 @@ Code should explain itself through names and structure; a comment is a last reso
 
 - Layout and tasks: see ARCHITECTURE.md.
 - Offline by default; live EDGAR only in `liveTest`.
-- Fixtures under `testFixtures/resources/edgar/<source>/` are frozen; ownership filings are
+- Fixtures under `src/test/resources/edgar/<source>/` are frozen; ownership filings are
   named `<accession number>.txt`. Add new fixtures and list them in that folder's README.
 - Expected values come from the raw data (independently extracted), not from the code's
   own output.

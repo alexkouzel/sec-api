@@ -2,7 +2,7 @@
 naming:
   FunctionNaming:
     # Test names are sentences in backticks, in every test source set.
-    excludes: ['**/test/**', '**/testFixtures/**', '**/liveTest/**']
+    excludes: ['**/test/**', '**/liveTest/**']
   InvalidPackageDeclaration:
     # Directories omit the root package (see docs/ARCHITECTURE.md).
     rootPackage: com.alexkouzel.sec
@@ -11,7 +11,7 @@ style:
   MaxLineLength:
     maxLineLength: 100
   MagicNumber:
-    excludes: ['**/test/**', '**/testFixtures/**', '**/liveTest/**', '**/*.kts']
+    excludes: ['**/test/**', '**/liveTest/**', '**/*.kts']
   ThrowsCount:
     # `?: throw` checks read better than helpers that hide them.
     active: false

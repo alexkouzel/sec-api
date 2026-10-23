@@ -146,7 +146,7 @@ class OwnershipDocumentTest {
         @JvmStatic
         fun fixtures(): List<String> =
             Path
-                .of("src/testFixtures/resources/edgar/ownership")
+                .of("src/test/resources/edgar/ownership")
                 .listDirectoryEntries("*.txt")
                 .map { it.name.removeSuffix(".txt") }
                 .sorted()

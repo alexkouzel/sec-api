@@ -89,7 +89,7 @@ Calls block, so Java uses the same API: `sec.getFilings().latest(40, FormType.F4
 src/
 ├── main/
 ├── test/            unit tests, offline; mirrors main: filing/LatestFeed.kt -> filing/LatestFeedTest.kt
-├── testFixtures/    Fixtures, FixtureHttp, LocalServer, liveClient(); resources/edgar/ (frozen)
+│                    helpers at its root: Fixtures, FixtureHttp, LocalServer; resources/edgar/ (frozen)
 └── liveTest/        the library against live EDGAR, in Kotlin and Java
 ```
 
@@ -98,7 +98,7 @@ src/
 | `check` | unit tests, ktlint, detekt | no |
 | `liveTest` | `src/liveTest` | EDGAR |
 
-- `test` and `liveTest` may use `internal` code of `main` and of `testFixtures`.
+- `test` and `liveTest` may use `internal` code of `main`.
 - `ownership/xml/OwnershipDocumentTest` compares the XML classes with the newest XSDs in
   `specs/`, and the fixtures' element counts with the model.
 

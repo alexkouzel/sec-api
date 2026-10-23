@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
-    `java-test-fixtures`
     `maven-publish`
 }
 
@@ -32,22 +31,15 @@ testing {
         withType<JvmTestSuite>().configureEach {
             useJUnitJupiter(libs.versions.junit)
             dependencies {
-                implementation(testFixtures(project()))
                 implementation("org.jetbrains.kotlin:kotlin-test-junit5")
             }
         }
     }
 }
 
-// Test code may use internal declarations of main and of testFixtures.
+// The live tests may use internal declarations of main, as the unit tests do.
 kotlin.target.compilations.run {
-    val main = getByName("main")
-    val testFixtures = getByName("testFixtures")
-    val liveTest = getByName("liveTest")
-    testFixtures.associateWith(main)
-    liveTest.associateWith(main)
-    getByName("test").associateWith(testFixtures)
-    liveTest.associateWith(testFixtures)
+    getByName("liveTest").associateWith(getByName("main"))
 }
 
 tasks.withType<Test>().configureEach {
@@ -69,12 +61,6 @@ detekt {
     config.from("config/detekt.yml")
 }
 
-// Published to GitHub Packages; test fixtures stay unpublished.
-val java = components["java"] as AdhocComponentWithVariants
-listOf("testFixturesApiElements", "testFixturesRuntimeElements").forEach {
-    java.withVariantsFromConfiguration(configurations[it]) { skip() }
-}
-
 // Without -Pversion the release would be called "unspecified".
 val releaseVersion = version.toString()
 tasks.withType<PublishToMavenRepository>().configureEach {
@@ -85,7 +71,7 @@ publishing {
     publications {
         register<MavenPublication>("maven") {
             artifactId = "sec-api"
-            from(java)
+            from(components["java"])
         }
     }
     repositories {
