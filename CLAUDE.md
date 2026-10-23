@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Java library for SEC EDGAR data, being restored and rewritten in Kotlin.
+Library for SEC EDGAR data: the Java version in `legacy/`, being rewritten in Kotlin in `lib/`.
 
 **Read [docs/ROADMAP.md](docs/ROADMAP.md) first.** It holds the current phase, decisions,
 known bugs, and findings. Update it in the commit that completes or changes a phase.
@@ -9,24 +9,33 @@ known bugs, and findings. Update it in the commit that completes or changes a ph
 accession number, filing vs form vs document) in code, tests and docs. Kotlin code follows
 its naming, comment and style rules and the layout in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
+## Modules
+
+- `lib/` — the Kotlin library (Phase 5, in progress). `drift/` — the drift-check tool.
+- `legacy/` — the Java library, kept building and tested until `lib` replaces it.
+- `build-logic/` — the `sec.kotlin` convention plugin (toolchain, ktlint, detekt, JUnit);
+  versions in `gradle/libs.versions.toml`.
+
 ## Tests
 
-- `./gradlew test` — offline: fixtures, contract tests, local HTTP server. Must stay green.
-- `./gradlew liveTest` — tag `live`, hits real EDGAR.
+- `./gradlew check` — offline, all modules: unit and contract tests, ktlint, detekt. Must
+  stay green.
+- `./gradlew liveTest` — hits real EDGAR (`lib/src/liveTest`, legacy tag `live`).
 - `./gradlew knownBugTest` — tag `known-bug`, fails until each bug in the roadmap is fixed;
   remove a test's tag when its fix lands.
-- `./gradlew driftCheck` — tag `drift`, samples live EDGAR and the SEC spec page; writes
-  `build/drift/report.md` and saves offending responses under `build/drift/raw/`.
+- `./gradlew :legacy:driftCheck` — samples live EDGAR and the SEC spec page; writes
+  `legacy/build/drift/report.md` and saves offending responses under `legacy/build/drift/raw/`.
+- `./gradlew ktlintFormat` fixes formatting.
 - Live tasks read the User-Agent from env `EDGAR_USER_AGENT` (`Name contact@domain`).
-- Fixtures in `src/test/resources/edgar/` are frozen (see its README); add new files,
+- Fixtures in `legacy/src/test/resources/edgar/` are frozen (see its README); add new files,
   don't refresh existing ones. Specs and XSDs live in `specs/`.
 
 ## CI
 
-- `.github/workflows/ci.yml` runs `./gradlew test` on every push and pull request.
-- `.github/workflows/drift.yml` runs `./gradlew driftCheck` weekly (Tuesdays) and on demand;
-  on findings it opens or updates one issue labelled `spec-drift`, with the report, and
-  uploads `build/drift/` as the `drift-report` artifact. It never closes the issue.
+- `.github/workflows/ci.yml` runs `./gradlew check` on every push and pull request.
+- `.github/workflows/drift.yml` runs `./gradlew :legacy:driftCheck` weekly (Tuesdays) and on
+  demand; on findings it opens or updates one issue labelled `spec-drift`, with the report,
+  and uploads `legacy/build/drift/` as the `drift-report` artifact. It never closes the issue.
   Needs the repository secret `EDGAR_USER_AGENT`.
 
 ## Drift runbook
@@ -34,7 +43,7 @@ its naming, comment and style rules and the layout in [docs/ARCHITECTURE.md](doc
 When the drift check reports something:
 
 1. Download the run's `drift-report` artifact. Each finding names its raw response.
-2. Add the raw response as a new fixture under `src/test/resources/edgar/<source>/` and list
+2. Add the raw response as a new fixture under `legacy/src/test/resources/edgar/<source>/` and list
    it in that folder's README (fixtures are never refreshed in place).
 3. New spec version: download it from the spec page into `specs/ownership-xml-v<version>/`,
    update `specs/README.md` and `ownershipSpec` in `specs/versions.json`. Unseen

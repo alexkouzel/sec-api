@@ -17,10 +17,11 @@ jobs:
           distribution: temurin
           java-version: '21'
       - uses: gradle/actions/setup-gradle@v4
-      # Offline only: fixtures, contract tests, local HTTP server.
-      - run: ./gradlew test
+      # Offline only: unit and contract tests, ktlint, detekt; legacy Java tests too.
+      - run: ./gradlew check
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
-          path: build/reports/tests/
+          path: '*/build/reports/'
+

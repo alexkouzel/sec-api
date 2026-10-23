@@ -12,7 +12,7 @@ Update this file in the same commit that completes (or changes) a phase.
 | 2 | Automated tests (offline fixtures, mock client, opt-in live) | Done |
 | 3 | Fix known bugs in Java | Done |
 | 4 | Spec drift monitoring (CI, scheduled live check) | Done |
-| 5 | Kotlin rewrite and redesign | Not started |
+| 5 | Kotlin rewrite and redesign | In progress |
 | 6 | Final `CLAUDE.md` and README | Not started |
 
 ## Phases
@@ -108,6 +108,14 @@ Steps:
 4. Unknown-field listener on `SecClient`; port the drift check into the `drift` module on
    top of the public API; point `drift.yml` at it.
 5. Remove the Java sources and Lombok; update CI and `CLAUDE.md` commands.
+
+Progress (2026-10-23): step 1 done. The Java project moved to `legacy/` unchanged (its
+tests read `../specs`); `lib` and `drift` are empty Kotlin modules on the `sec.kotlin`
+convention plugin; CI runs `./gradlew check`. Versions: Kotlin 2.4.21, Jackson 3.2.3
+(`tools.jackson`), JUnit 6.1.3, ktlint 1.8.0 (plugin 14.2.0), detekt 2.0.0-alpha.6; the
+stable detekt 1.23 doesn't support Kotlin 2.4. Verified with throwaway files: each source
+set compiles and runs under its task and sees `main`'s `internal` code; explicit API mode,
+ktlint, detekt's package-vs-directory rule and the `known-bug` split all fail as they should.
 
 Renames (see the glossary): `FileRef` → `FilingRef`, `FileType` → `FormType` (keeps raw
 values), `File`/`FileF345`/`FileF3..5` → `OwnershipFiling`, `LatestFilesLimit` → a validated
