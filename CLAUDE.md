@@ -31,22 +31,15 @@ before changing code, and use the glossary's terms.
 exact values, so add new files (listed in that folder's README), never edit one. Expected
 values in tests come from the raw data, not from the code's output.
 
-## When the live check fails
+## Managing the project
 
-`.github/workflows/live.yml` runs `./gradlew liveTest` daily (retrying once ten minutes later)
-and, on failure, opens or comments on an issue labelled `edgar-change`. It needs the repository
-secret `EDGAR_USER_AGENT`. To adapt:
+Two project skills (`.claude/skills/`) cover the recurring jobs:
 
-1. Open the run linked from the issue. Each failed test names the URL that broke and why
-   (`SecException.Parse`, or a value that came back empty).
-2. If every failure is `SecException.Http`, EDGAR was down: rerun the workflow before acting.
-3. Save that response as a new fixture, e.g.
-   `curl -A "$EDGAR_USER_AGENT" --compressed -o src/testFixtures/resources/edgar/ownership/<accession>.txt <url>`,
-   and list it in the fixtures README.
-4. Write a unit test on the new fixture that fails, then fix the parser or the model until it
-   passes. If the SEC published a new Ownership spec, add it to `specs/` (see its README) and
-   `OwnershipDocumentTest` names what's missing.
-5. Run `./gradlew check` and `./gradlew liveTest`, release, and close the issue.
+- `/edgar-change` — the daily `.github/workflows/live.yml` run failed (an issue labelled
+  `edgar-change` opened): find what broke, save the response as a fixture, fix it test-first.
+  The workflow needs the repository secret `EDGAR_USER_AGENT`.
+- `/release <version>` — verify against live EDGAR, publish to GitHub Packages, tag, and create
+  a GitHub release.
 
 ## Commits
 

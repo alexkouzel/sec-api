@@ -2,7 +2,7 @@ name: Live EDGAR check
 
 # Daily: runs the library against live EDGAR. When it fails, EDGAR has probably changed a
 # format the library reads; this opens an issue (or comments on the open one) so you hear
-# about it. See "When the live check fails" in CLAUDE.md.
+# about it. To adapt, see .claude/skills/edgar-change/SKILL.md.
 on:
   schedule:
     - cron: '17 6 * * *'
@@ -49,5 +49,5 @@ jobs:
             gh issue comment "$number" --body "Still failing: $RUN_URL"
           else
             gh issue create --label edgar-change --title "Live EDGAR check failed" \
-              --body "The library failed against live EDGAR: $RUN_URL. The failed tests name the URL of each response that broke; see \"When the live check fails\" in CLAUDE.md."
+              --body "The library failed against live EDGAR: $RUN_URL. The failed tests name the URL of each response that broke; run /edgar-change in Claude Code, or follow .claude/skills/edgar-change/SKILL.md."
           fi
