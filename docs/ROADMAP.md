@@ -92,32 +92,33 @@ findings log. Before the workflows run on GitHub: push `main` and add the
 
 ### Phase 5 — Kotlin rewrite and redesign
 
-Redesign rather than port line by line, porting the Phase 2 and 4 tests first and keeping them green.
+Redesign rather than port line by line. Target structure: [ARCHITECTURE.md](ARCHITECTURE.md);
+code rules: [CONVENTIONS.md](CONVENTIONS.md) (naming, comments, Kotlin style, tests).
 
-First step — conventions, before any Kotlin code:
+Steps:
 
-- Confirm the glossary's Kotlin names in `docs/CONVENTIONS.md` (the glossary itself
-  applies from Phase 3 on).
-- Write its Structure and Kotlin style sections together with the API design.
-- Tooling, wired into the Phase 4 CI: `.editorconfig`, ktlint (formatting), detekt (lint),
-  Kotlin explicit API mode (every public declaration is a deliberate choice).
+1. Build skeleton: modules `lib` and `drift`, Kotlin DSL, version catalog, `build-logic`
+   convention plugin, source sets `test`, `testFixtures`, `contractTest`, `liveTest`;
+   ktlint, detekt, explicit API mode, wired into CI.
+2. Move fixtures to `lib/src/testFixtures/resources/edgar/` (as is, still frozen) and write
+   `testFixtures` (`Fixtures`, `FixtureHttp`, `LocalServer`, `liveClient()`).
+3. Port the tests area by area, then the code to make them pass: `http`, `company`,
+   `filing`, `ownership` (model plus `ownership/xml`), then `SecClient`. Contract tests
+   follow `ownership`.
+4. Unknown-field listener on `SecClient`; port the drift check into the `drift` module on
+   top of the public API; point `drift.yml` at it.
+5. Remove the Java sources and Lombok; update CI and `CLAUDE.md` commands.
 
-Then:
+Renames (see the glossary): `FileRef` → `FilingRef`, `FileType` → `FormType` (keeps raw
+values), `File`/`FileF345`/`FileF3..5` → `OwnershipFiling`, `LatestFilesLimit` → a validated
+`count`, `loadFiscalQuarter` → `quarter(year, quarter)`.
 
-- Packages by area: `client`, `company`, `filing`, `ownership`.
-- Renames: `FileRef` → `FilingRef`, `FileType` → `FormType`, drop `File`/`FileF345`
-  for a plain `OwnershipFiling`, replace `LatestFilesLimit` with a validated count.
-- Single entry point (e.g. `SecClient` with `.companies`, `.filings`, `.ownership`).
-- Token-bucket rate limiter, exponential backoff, 429 handling per SEC guidance,
-  closeable client.
-- Sealed error type instead of checked exceptions; keep the API usable from Java.
-- Optional unknown-field listener on the client, so library users see drift in production
-  too (tolerant parsing stays the default).
-- Port the Phase 4 drift check along with the tests.
-- Remove Lombok.
+Open questions, defaults assumed in ARCHITECTURE.md until decided:
 
-Open questions before starting: must Java callers stay first-class? Expand scope
-(XBRL company facts, 13F, 10-K) or keep the current one?
+- Java callers first-class? Default: yes, blocking API usable from Java.
+- Scope: keep the current sources, or add XBRL company facts, 13F, 10-K? Default: keep;
+  the area packages leave room to add them.
+- Coroutines (`suspend`) alongside the blocking API? Default: no.
 
 ### Phase 6 — Documentation
 
@@ -130,9 +131,14 @@ Write the full `CLAUDE.md` and README for the Kotlin code.
 - **Tests before fixes and before the rewrite.** Fixture tests are the behavioural spec.
 - **Tolerant at runtime, strict in tests.** The library ignores unknown EDGAR fields so users
   don't break; contract tests and the scheduled drift check parse strictly so we notice.
-- **Conventions are set for Kotlin, not retrofitted to Java.** `docs/CONVENTIONS.md` holds
-  the EDGAR glossary now; structure and style rules are written at the start of Phase 5 and
-  enforced by tools where possible, prose only for what tools can't check.
+- **Conventions are set for Kotlin, not retrofitted to Java.** `docs/ARCHITECTURE.md` and
+  `docs/CONVENTIONS.md` define the target; the Java code isn't restructured to match, since
+  Phase 5 replaces it. Tools enforce what they can, prose covers the rest.
+- **One source set per kind of test.** Unit tests mirror `main`; support code lives only in
+  `testFixtures`; contract and live tests have their own folders; the drift check is a
+  separate module, not a test.
+- **Comments are a last resort.** Names and structure carry the meaning; comments only for
+  EDGAR quirks and reasons, KDoc only where a public signature leaves a question.
 - **Commits follow the Angular convention**: `type(scope): subject` with types
   `build`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `test`, `chore`.
 

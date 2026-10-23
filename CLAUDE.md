@@ -6,7 +6,8 @@ Java library for SEC EDGAR data, being restored and rewritten in Kotlin.
 known bugs, and findings. Update it in the commit that completes or changes a phase.
 
 **Use the terms in [docs/CONVENTIONS.md](docs/CONVENTIONS.md)** (EDGAR glossary: CIK roles,
-accession number, filing vs form vs document) in code, tests and docs.
+accession number, filing vs form vs document) in code, tests and docs. Kotlin code follows
+its naming, comment and style rules and the layout in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Tests
 

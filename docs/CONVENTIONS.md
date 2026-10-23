@@ -3,9 +3,8 @@
 How code in this repository is named, structured and written. Tools enforce what they can
 (formatting, lint, public API); this file covers what they can't.
 
-Status: the glossary applies now. The other sections are written at the start of
-Phase 5 (Kotlin rewrite), together with the API design; until then the Java code stays
-consistent with itself and is not restyled.
+Status: the glossary applies now; the other sections apply to the Kotlin code (Phase 5).
+The Java code stays consistent with itself and is not restyled.
 
 ## Glossary
 
@@ -27,7 +26,7 @@ the target, confirmed at the start of Phase 5.
 |------|---------|--------------|-------------|
 | Filing | One submission to EDGAR, identified by its accession number. Contains one or more documents. | `File`, `FileF345` | `Filing` |
 | Filing reference | A pointer to a filing from a list (index, feed, submissions): accession number, form type, date, a CIK. No content. | `FileRef` | `FilingRef` |
-| Form type | The kind of filing: `4`, `4/A`, `10-K`, `8-K`, `424B2`, ... `/A` marks an amendment of an earlier filing. Matched exactly; EDGAR's own `type=` filters are prefix matches. | `FileType` | `FormType` |
+| Form type | The kind of filing: `4`, `4/A`, `10-K`, `8-K`, `424B2`, ... `/A` marks an amendment of an earlier filing. Matched exactly; EDGAR's own `type=` filters are prefix matches. | `FileType` (enum, unknown forms become `OTHER`) | `FormType` (keeps the raw value) |
 | Document | One file inside a filing (the ownership XML, an exhibit, ...). | `xmlFilename` | `document` |
 | Filed date | Date the filing was accepted for filing (`FILED AS OF DATE`, `filingDate`). | `filedAt` | `filedOn` (a `LocalDate`) |
 | Period of report | Date the filing reports on; for Form 4, the transaction date that triggered it. | `periodOfReport` | `periodOfReport` |
@@ -81,22 +80,59 @@ indexes are by calendar quarter. Kotlin name: `quarterlyIndex(year, quarter)`.
 
 ## Structure
 
-Written at the start of Phase 5: packages by area (`client`, `company`, `filing`,
-`ownership`), public API vs internal, where models, parsers and HTTP code live.
+Packages, modules and test layout are in [ARCHITECTURE.md](ARCHITECTURE.md).
+
+## Naming
+
+- Names say what a thing is in the glossary's words: `FilingRef`, `formType`, `issuerCik`.
+- Short and specific. A type is one to three words; a local is usually one (`refs`,
+  `filing`, `owner`). The package already gives context: `filing.LatestFeed`, not
+  `filing.LatestFilingFeedParser`.
+- No role suffixes that say nothing: no `Utils`, `Helper`, `Manager`, `Impl`, `Data`, `Info`.
+  A parser is named after what it reads (`LatestFeed.parse(...)`), a facade after its area
+  in plural (`Filings`).
+- No type names in variable names: `refs`, not `refList` or `fileRefArray`.
+- Abbreviations only from the glossary (`cik`); everything else spelled out.
+- Booleans read as questions: `isAmendment`, `hasFootnotes`.
+- Tests: `FooTest` for `Foo.kt`; methods in backticks as a sentence:
+  `` `type filter keeps exact matches only`() ``.
+
+## Comments
+
+Code should explain itself through names and structure; a comment is a last resort.
+
+- Write one only for what the code can't say: an EDGAR quirk, a reason, a non-obvious
+  constraint. `// EDGAR's type filter is a prefix match: "4" also returns "424B2".`
+- Never restate the code, label sections, or keep commented-out code.
+- KDoc only on public API, and only where name and signature leave a question:
+  units, request cost, EDGAR behaviour. A function named `latest(count, form)` needs none.
+- No file headers, no `@author`, no `@param` that repeats the parameter's name.
 
 ## Kotlin style
 
-Written at the start of Phase 5: data classes and immutability, nullability (absent vs
-empty EDGAR values), the sealed error type, KDoc on public API.
+- Formatting by ktlint, lint by detekt, public API by explicit API mode. Rules in tools
+  where possible; this file holds only what they can't check.
+- Data classes of `val`s; `List`/`Map` (read-only) in signatures. No `lateinit`, no `!!`.
+- Nullability means absence: a field EDGAR leaves out or empty is `null`. Collections are
+  never null; missing means empty.
+- Errors: throw `SecException.Http` or `SecException.Parse` (unchecked); never return
+  `null` for a failure. Messages name the URL and what was expected.
+- Expressions over statements where it reads better (`when`, `?.let`, collection
+  operations); a plain loop when it reads better.
+- One public top-level type per file, named after the file; small related types may share
+  a file named after their concept (see ARCHITECTURE.md).
+- Public API stays usable from Java: no value classes in signatures, `@JvmOverloads` on
+  functions with default arguments, `@JvmField`/`@JvmStatic` for constants. A Java test in
+  `liveTest` calls the main paths.
 
 ## Tests
 
-Applies now (see also `CLAUDE.md`):
-
-- Mirror the main package of the code under test; shared helpers live in `testing/`.
-- Offline by default. Tags: `live` (real EDGAR), `known-bug` (fails until fixed), `drift`
-  (samples live EDGAR, reports differences from the model).
-- Fixtures under `src/test/resources/edgar/<source>/` are frozen; ownership filings are
+- Layout and tasks: see ARCHITECTURE.md (one source set per kind of test).
+- Offline by default. Live EDGAR only in `liveTest` and `drift`; tag `known-bug` for tests
+  that fail until a roadmap bug is fixed.
+- Fixtures under `testFixtures/resources/edgar/<source>/` are frozen; ownership filings are
   named `<accession number>.txt`. Add new fixtures and list them in that folder's README.
 - Expected values come from the raw data (independently extracted), not from the code's
   own output.
+- One behaviour per test, named as a sentence; arrange, act, assert separated by a blank
+  line, no comments needed.
