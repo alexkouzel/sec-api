@@ -10,7 +10,7 @@ Update this file in the same commit that completes (or changes) a phase.
 | 0 | Build compiles on a current JDK | Done |
 | 1 | Verify against live EDGAR, refresh specs | Done |
 | 2 | Automated tests (offline fixtures, mock client, opt-in live) | Done |
-| 3 | Fix known bugs in Java | Not started |
+| 3 | Fix known bugs in Java | In progress |
 | 4 | Spec drift monitoring (CI, scheduled live check) | Not started |
 | 5 | Kotlin rewrite and redesign | Not started |
 | 6 | Final `CLAUDE.md` and README | Not started |
@@ -56,6 +56,46 @@ Update this file in the same commit that completes (or changes) a phase.
 Make `./gradlew knownBugTest` pass, removing each test's `known-bug` tag as its fix lands, and
 write the tests that need an API change alongside their fixes. Behaviour fixes only;
 renaming and restructuring wait for Phase 5.
+
+Progress (2026-10-23): every `known-bug` test passes and no tags remain; `./gradlew test`
+runs 107 offline tests, all green. Commits `c839732` (client), `4cec510` (filings),
+`d4634d9` (ownership).
+
+Remaining, in order:
+
+1. `loadCompany` loads older filings too: for each `filings.files[].name`, load
+   `https://data.sec.gov/submissions/<name>` (same shape as `CikSubmissionFilings.Recent`)
+   and append. Refactor `CikSubmissionParser.parse` to take a `Recent` plus the CIK.
+   Fixture `submissions/CIK0000946581-submissions-001.json` (first 30 of 1,105) is saved;
+   route it in `FileRefLoaderTest.Company` and expect 70 refs, the 41st being
+   `0001104659-15-011425` (OTHER, 2015-02-17), the last `0001104659-14-078955` (F4,
+   2014-11-10). Javadoc: one extra request per older file.
+2. Move `TestEdgarClient` from `src/main` to `src/test` (same package); read the user agent
+   from env `EDGAR_USER_AGENT`, falling back to the current string (Phase 4 CI needs it).
+3. `OwnershipDocumentParser.parse(String)`: read accession number, form type and filed date
+   from the SGML header by label (`ACCESSION NUMBER:`, `CONFORMED SUBMISSION TYPE:`,
+   `FILED AS OF DATE:`) instead of lines 3/4/7; add a test with an extra header line.
+4. Remove `FileUrlBuilder.buildF345` (unused, stale stylesheet path).
+5. Run `./gradlew test liveTest`, then mark Phase 3 done here, update the known-bugs list,
+   and add a Phase 3 entry to the findings log (behaviour changes below).
+
+Behaviour changes so far, for the findings log and README:
+
+- Retries: I/O errors, 429 and 5xx, exponential backoff (1 s base, 1 min cap, configurable
+  via `EdgarClient(userAgent, handler, baseRetryDelay, maxRetryDelay)`); other 4xx fail at
+  once. 429 honours `Retry-After` (capped) and pauses the rate limiter.
+- `RateLimiter` is a thread-free sliding window (≤ 10 requests in any 1 s); `HttpDataClient`
+  is `AutoCloseable`. `StatusCodeException` removed.
+- `loadJson`/`loadXml`/`SecCompanyLoader.load`/`loadCompany` throw `ParsingException` on
+  mapping errors.
+- Type-filtered loaders return exactly that type (may be fewer than `count`); results are
+  unique per accession number; latest feed keeps the Issuer's/Subject's CIK.
+- Feed parsers match patterns and fail loudly on unrecognized rows; the index parser finds
+  rows after the dashed separator.
+- `FootnoteValue`/`FootnoteEdgarDate`/coding classes expose `getFootnoteIds()` (list)
+  instead of `getFootnoteId()`; empty date elements map to `null`.
+- JDK `HttpClient` silently retries a dropped connection once by itself; tests account
+  for it.
 
 ### Phase 4 — Spec drift monitoring
 
@@ -128,48 +168,39 @@ Write the full `CLAUDE.md` and README for the Kotlin code.
 
 ## Known bugs
 
-Each open bug has a test tagged `known-bug` (excluded from `./gradlew test`; run
+Each open bug gets a test tagged `known-bug` (excluded from `./gradlew test`; run
 `./gradlew knownBugTest`). Fixing one means making its test pass and removing the tag.
 
 Fixed:
 
-- [x] Gradle 8.5 cannot run on JDK 25; tests use `List.getFirst()` (Java 21) while the
-      README claims Java 17; no toolchain pinned. (Phase 0)
+- [x] Gradle 8.5 cannot run on JDK 25; no toolchain pinned. (Phase 0)
 - [x] Mappers fail on unknown properties, so any new EDGAR field breaks parsing. (Phase 1)
 - [x] Tests depended on live data and only checked the first result. (Phase 2)
+- [x] `deflate` responses were re-compressed instead of inflated. (Phase 3)
+- [x] HTTP 429 slept 30–120 min on the calling thread. (Phase 3)
+- [x] No backoff after I/O errors; every non-200 status was retried. (Phase 3)
+- [x] Mapping errors surfaced as `HttpRequestException`. (Phase 3)
+- [x] Each `RateLimiter` leaked a scheduler thread; client not closeable. (Phase 3)
+- [x] Type filters were EDGAR prefix matches (2 Form 4s in 100 "type=4" entries). (Phase 3)
+- [x] Latest feed and daily page returned a filing once per related CIK. (Phase 3)
+- [x] `FileRef.issuerCik` could be the reporting owner's CIK on the latest feed. (Phase 3)
+- [x] Interleaved repeated XML elements dropped all but the last group. (Phase 3)
+- [x] Only one `footnoteId` per value kept; `transactionCoding` footnotes lost. (Phase 3)
+- [x] `ListUtils.removeDups` reordered by hash code. (Phase 3)
+- [x] Positional parsing of the latest feed, daily page and quarterly index. (Phase 3)
 
-Open, with a failing test:
+Open (see Phase 3 "Remaining"):
 
-| Bug | Test |
-|-----|------|
-| `deflate` responses go through `DeflaterInputStream` (compresses instead of inflating) | `EdgarClientTest.decodesDeflateBody` |
-| HTTP 429 sleeps 30–120 min on the calling thread; the SEC doesn't publish a lockout duration, so use a shorter, configurable backoff | `EdgarClientTest.recoversFromTooManyRequestsWithoutHanging` |
-| Retries after I/O errors happen immediately, with no backoff | `EdgarClientTest.backsOffBeforeRetryingDroppedConnection` |
-| `loadJson`/`loadXml` report mapping errors as `HttpRequestException`, not `ParsingException` | `EdgarClientTest.reportsInvalidJsonAsParsingError` |
-| Type filters are EDGAR prefix matches (`type=4` also returns 424B2, 497, ...): 2 Form 4s in 100 latest entries, 434 of 1,231 on the daily page | `FileRefLoaderTest.Latest/DaysAgo.typeFilterReturnsOnlyThatType` |
-| Latest feed and daily page list a filing once per related CIK (100 entries, 66 filings) | `FileRefLoaderTest.Latest/DaysAgo.returnsEachFilingOnce` |
-| `FileRef.issuerCik` can be the reporting owner's CIK (the latest feed labels entries `(Issuer)`/`(Reporting)`; the daily page doesn't, so there the field is really "a related CIK") | `FileRefLoaderTest.Latest.issuerCikComesFromIssuerEntry` |
-| Non-contiguous repeated XML elements (e.g. holding, transaction, holding — valid per XSD) keep only the last group, silently dropping data; seen in 1 of 14 fixtures | `OwnershipDocumentLoaderTest.interleavedHoldingsAreAllKept`, `OwnershipContractTest.modelKeepsEveryRepeatedElementWhenInterleaved` |
-| `ListUtils.removeDups` (and public `FileRefUtils.removeDups`) reorders by hash code | `ListUtilsTest.removeDupsKeepsFirstSeenOrder` |
-
-Open, test comes with the fix (needs an API change):
-
-- [ ] A value can carry up to 99 `footnoteId`s (XSD), but `FootnoteValue` holds one; the rest
-      are dropped. Fixture: `0001000045-22-000004` (`transactionShares` has F1 and F2).
-- [ ] Each `RateLimiter` starts a scheduler thread that is never shut down; the client isn't
-      closeable.
-- [ ] `loadCompany` returns only `filings.recent` (up to 1,000); older filings listed in
-      `filings.files` are ignored (the fixture lists 1,105 of them).
-
-Open, no test (refactor or remove):
-
-- [ ] Position-based parsing breaks silently on format changes: `DailyFeedParser` (HTML
-      scraping), `IndexFeedParser` (skips 11 lines), `LatestFeedParser` (`split(" ")[4]`),
-      `OwnershipDocumentParser` (header lines 3/4/7). Formats are covered by fixture tests,
-      so a rewrite can be checked against them.
+- [ ] `loadCompany` returns only `filings.recent`; older filings in `filings.files` ignored.
+- [ ] `OwnershipDocumentParser` reads header lines 3/4/7 by position.
 - [ ] `TestEdgarClient` lives in `src/main` and ships with the library.
-- [ ] `FileUrlBuilder.buildF345` hard-codes the `xslF345X03` stylesheet path (spec v5.5 ships
-      `X06`–`X09`); nothing calls it.
+- [ ] `FileUrlBuilder.buildF345` hard-codes a stale stylesheet path; nothing calls it.
+
+Known limitations, for the Kotlin redesign:
+
+- On the daily page and quarterly index the CIK's role is unknown; `loadCompany(cik)` sets
+  `issuerCik` to the requested CIK even when it's a reporting owner. `FileRef.issuerCik`
+  should become a role-qualified or neutral field (see `docs/CONVENTIONS.md`).
 
 ## Findings log
 
