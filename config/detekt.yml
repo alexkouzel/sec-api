@@ -1,0 +1,5 @@
+# Only differences from detekt's default config.
+naming:
+  InvalidPackageDeclaration:
+    # Directories omit the root package (see docs/ARCHITECTURE.md).
+    rootPackage: com.alexkouzel.sec
