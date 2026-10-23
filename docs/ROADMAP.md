@@ -10,7 +10,7 @@ Update this file in the same commit that completes (or changes) a phase.
 | 0 | Build compiles on a current JDK | Done |
 | 1 | Verify against live EDGAR, refresh specs | Done |
 | 2 | Automated tests (offline fixtures, mock client, opt-in live) | Done |
-| 3 | Fix known bugs in Java | In progress |
+| 3 | Fix known bugs in Java | Done |
 | 4 | Spec drift monitoring (CI, scheduled live check) | Not started |
 | 5 | Kotlin rewrite and redesign | Not started |
 | 6 | Final `CLAUDE.md` and README | Not started |
@@ -57,45 +57,9 @@ Make `./gradlew knownBugTest` pass, removing each test's `known-bug` tag as its 
 write the tests that need an API change alongside their fixes. Behaviour fixes only;
 renaming and restructuring wait for Phase 5.
 
-Progress (2026-10-23): every `known-bug` test passes and no tags remain; `./gradlew test`
-runs 107 offline tests, all green. Commits `c839732` (client), `4cec510` (filings),
-`d4634d9` (ownership).
-
-Remaining, in order:
-
-1. `loadCompany` loads older filings too: for each `filings.files[].name`, load
-   `https://data.sec.gov/submissions/<name>` (same shape as `CikSubmissionFilings.Recent`)
-   and append. Refactor `CikSubmissionParser.parse` to take a `Recent` plus the CIK.
-   Fixture `submissions/CIK0000946581-submissions-001.json` (first 30 of 1,105) is saved;
-   route it in `FileRefLoaderTest.Company` and expect 70 refs, the 41st being
-   `0001104659-15-011425` (OTHER, 2015-02-17), the last `0001104659-14-078955` (F4,
-   2014-11-10). Javadoc: one extra request per older file.
-2. Move `TestEdgarClient` from `src/main` to `src/test` (same package); read the user agent
-   from env `EDGAR_USER_AGENT`, falling back to the current string (Phase 4 CI needs it).
-3. `OwnershipDocumentParser.parse(String)`: read accession number, form type and filed date
-   from the SGML header by label (`ACCESSION NUMBER:`, `CONFORMED SUBMISSION TYPE:`,
-   `FILED AS OF DATE:`) instead of lines 3/4/7; add a test with an extra header line.
-4. Remove `FileUrlBuilder.buildF345` (unused, stale stylesheet path).
-5. Run `./gradlew test liveTest`, then mark Phase 3 done here, update the known-bugs list,
-   and add a Phase 3 entry to the findings log (behaviour changes below).
-
-Behaviour changes so far, for the findings log and README:
-
-- Retries: I/O errors, 429 and 5xx, exponential backoff (1 s base, 1 min cap, configurable
-  via `EdgarClient(userAgent, handler, baseRetryDelay, maxRetryDelay)`); other 4xx fail at
-  once. 429 honours `Retry-After` (capped) and pauses the rate limiter.
-- `RateLimiter` is a thread-free sliding window (≤ 10 requests in any 1 s); `HttpDataClient`
-  is `AutoCloseable`. `StatusCodeException` removed.
-- `loadJson`/`loadXml`/`SecCompanyLoader.load`/`loadCompany` throw `ParsingException` on
-  mapping errors.
-- Type-filtered loaders return exactly that type (may be fewer than `count`); results are
-  unique per accession number; latest feed keeps the Issuer's/Subject's CIK.
-- Feed parsers match patterns and fail loudly on unrecognized rows; the index parser finds
-  rows after the dashed separator.
-- `FootnoteValue`/`FootnoteEdgarDate`/coding classes expose `getFootnoteIds()` (list)
-  instead of `getFootnoteId()`; empty date elements map to `null`.
-- JDK `HttpClient` silently retries a dropped connection once by itself; tests account
-  for it.
+Result: every known bug is fixed and no `known-bug` tags remain; `./gradlew test` runs
+111 offline tests, `./gradlew liveTest` 6, all green. Behaviour changes are listed in the
+findings log (Phase 3).
 
 ### Phase 4 — Spec drift monitoring
 
@@ -188,13 +152,12 @@ Fixed:
 - [x] Only one `footnoteId` per value kept; `transactionCoding` footnotes lost. (Phase 3)
 - [x] `ListUtils.removeDups` reordered by hash code. (Phase 3)
 - [x] Positional parsing of the latest feed, daily page and quarterly index. (Phase 3)
+- [x] `loadCompany` returned only `filings.recent`; older filings in `filings.files` ignored. (Phase 3)
+- [x] `OwnershipDocumentParser` read header lines 3/4/7 by position. (Phase 3)
+- [x] `TestEdgarClient` lived in `src/main` and shipped with the library. (Phase 3)
+- [x] `FileUrlBuilder.buildF345` hard-coded a stale stylesheet path; nothing called it. (Phase 3)
 
-Open (see Phase 3 "Remaining"):
-
-- [ ] `loadCompany` returns only `filings.recent`; older filings in `filings.files` ignored.
-- [ ] `OwnershipDocumentParser` reads header lines 3/4/7 by position.
-- [ ] `TestEdgarClient` lives in `src/main` and ships with the library.
-- [ ] `FileUrlBuilder.buildF345` hard-codes a stale stylesheet path; nothing calls it.
+Open: none.
 
 Known limitations, for the Kotlin redesign:
 
@@ -246,3 +209,31 @@ New bugs found while writing tests: interleaved repeated elements lose data, mul
 One suspected bug was disproved (an empty daily page parses to an empty list).
 
 JUnit upgraded 5.8.1 → 6.1.3.
+
+### Phase 3 — 2026-10-23
+
+Commits `c839732` (client), `4cec510` (filings), `d4634d9` (ownership), `29ad583` (older
+submissions), `8cf1b7c` (test client), `ca75ae4` (header labels), `f38b239` (cleanup).
+Behaviour changes, for the README and the Kotlin port:
+
+- Retries: I/O errors, 429 and 5xx, exponential backoff (1 s base, 1 min cap, configurable
+  via `EdgarClient(userAgent, handler, baseRetryDelay, maxRetryDelay)`); other 4xx fail at
+  once. 429 honours `Retry-After` (capped) and pauses the rate limiter.
+- `RateLimiter` is a thread-free sliding window (≤ 10 requests in any 1 s); `HttpDataClient`
+  is `AutoCloseable`. `StatusCodeException` removed.
+- `loadJson`/`loadXml`/`SecCompanyLoader.load`/`loadCompany` throw `ParsingException` on
+  mapping errors.
+- Type-filtered loaders return exactly that type (may be fewer than `count`); results are
+  unique per accession number; latest feed keeps the Issuer's/Subject's CIK.
+- Feed parsers match patterns and fail loudly on unrecognized rows; the index parser finds
+  rows after the dashed separator.
+- `FootnoteValue`/`FootnoteEdgarDate`/coding classes expose `getFootnoteIds()` (list)
+  instead of `getFootnoteId()`; empty date elements map to `null`.
+- `loadCompany` returns every filing: `filings.recent`, then each older file in
+  `filings.files` (one extra request per file; Apple has one, 1,268 filings).
+- `OwnershipDocumentParser.parse(String)` finds header values by label inside
+  `<SEC-HEADER>` and throws `ParsingException` when one is missing.
+- `TestEdgarClient` moved to the test sources; it reads `EDGAR_USER_AGENT`.
+- `FileUrlBuilder.buildF345` removed.
+- JDK `HttpClient` silently retries a dropped connection once by itself; tests account
+  for it.
