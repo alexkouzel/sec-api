@@ -155,7 +155,18 @@ and the URL in parse errors. Behaviour is the Java client's after Phase 3, excep
   can add a listener if users need one;
 - no `Content-Type` header on GET requests.
 
-Next in step 3: `company`, then `ownership`, then `SecClient` with `liveClient()`.
+Progress (2026-10-23): step 3, `company` done: `Companies.all()` returns
+`Company(cik, name, ticker, exchange)`, `exchange` null where EDGAR gives none (the Java
+model allowed it too; not checked against live data, as this session can't reach sec.gov).
+`Tickers` finds columns by the names in `fields`, so a reordered or renamed field fails with
+`SecException.Parse` instead of being misread. 6 tests, from `SecCompanyLoaderTest` plus
+field order, null exchange, missing field, non-numeric CIK.
+
+jackson-module-kotlin applies a property's non-null element type to nested collections too:
+`List<List<Any?>>` rejects a `null` inside an inner list. `Tickers` reads each row as a
+`JsonNode` instead; keep this in mind for `ownership/xml`.
+
+Next in step 3: `ownership`, then `SecClient` with `liveClient()`.
 
 Wire classes map only the fields the library uses (the Java ones mapped every field), so
 strict parsing of them can't spot EDGAR additions. Step 4 decides how the drift check sees
