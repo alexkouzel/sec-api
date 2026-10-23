@@ -5,7 +5,8 @@ plugins {
     `maven-publish`
 }
 
-group = "com.alexkouzel"
+// JitPack builds releases from git tags and serves them under this group.
+group = "com.github.alexkouzel"
 
 kotlin {
     jvmToolchain(21)
@@ -61,27 +62,11 @@ detekt {
     config.from("config/detekt.yml")
 }
 
-// Without -Pversion the release would be called "unspecified".
-val releaseVersion = version.toString()
-tasks.withType<PublishToMavenRepository>().configureEach {
-    doFirst { check(releaseVersion != "unspecified") { "Set the version: -Pversion=<version>" } }
-}
-
 publishing {
     publications {
         register<MavenPublication>("maven") {
             artifactId = "sec-api"
             from(components["java"])
-        }
-    }
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/alexkouzel/sec-api")
-            credentials {
-                username = findProperty("gpr.username") as String? ?: System.getenv("GPR_USERNAME")
-                password = findProperty("gpr.token") as String? ?: System.getenv("GPR_TOKEN")
-            }
         }
     }
 }

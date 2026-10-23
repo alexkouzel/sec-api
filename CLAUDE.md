@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Kotlin library for SEC EDGAR data (`com.alexkouzel:sec-api`): companies, filing references and
+Kotlin library for SEC EDGAR data (`com.github.alexkouzel:sec-api` on JitPack): companies, filing references and
 insider ownership filings (Forms 3, 4, 5), behind one blocking, Java-friendly `SecClient`.
 
 Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (layout and design) and
@@ -14,7 +14,8 @@ before changing code, and use the glossary's terms.
   live EDGAR.
 - `specs/` — the SEC's Ownership XML specification and XSDs.
 - `config/detekt.yml` — detekt's differences from its defaults; versions in
-  `gradle/libs.versions.toml`.
+  `gradle/libs.versions.toml`, kept current by Dependabot (`.github/dependabot.yml`).
+- `jitpack.yml` — JitPack builds each release from its git tag; there is no publish step.
 
 ## Commands
 
@@ -23,8 +24,6 @@ before changing code, and use the glossary's terms.
 - `./gradlew ktlintFormat` — fixes formatting.
 - `./gradlew liveTest` — against live EDGAR; reads the User-Agent from env `EDGAR_USER_AGENT`
   (`Name contact@domain`).
-- `./gradlew -Pversion=<version> publish` — publishes to GitHub Packages (`GPR_USERNAME`,
-  `GPR_TOKEN`).
 
 ## Fixtures
 
@@ -40,7 +39,7 @@ Two project skills (`.claude/skills/`) cover the recurring jobs:
   `edgar-change` opened): find what broke, save the response as a fixture, fix it test-first.
   The workflow needs the repository secret `EDGAR_USER_AGENT`.
 - `/release` — work out the next version from the commits since the last release, verify
-  against live EDGAR, publish to GitHub Packages, tag, and create a GitHub release.
+  against live EDGAR, tag it, create a GitHub release, and check that JitPack builds it.
 
 ## Commits
 

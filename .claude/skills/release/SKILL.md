@@ -1,6 +1,6 @@
 ---
 name: release
-description: Release the next version of the library to GitHub Packages ("/release"). Works out the version from the commits since the last release, verifies against live EDGAR, publishes, tags and creates a GitHub release.
+description: Release the next version of the library ("/release"). Works out the version from the commits since the last release, verifies against live EDGAR, tags it, creates a GitHub release and checks that JitPack builds it.
 ---
 
 # Release the next version
@@ -26,7 +26,8 @@ Versions are semantic (`MAJOR.MINOR.PATCH`) and tagged `v<version>`.
 4. Only `build`, `ci`, `docs`, `test` or `chore` commits change nothing users get: say so and
    ask whether to release anyway (as a patch).
 5. No tag yet: this is the first release of the Kotlin library, which replaces the Java API
-   entirely, so it is a major release. Find the highest version already published:
+   entirely, so it is a major release. The Java versions were published to GitHub Packages as
+   `com.alexkouzel:sec-api`; find the highest:
    `gh api /users/alexkouzel/packages/maven/com.alexkouzel.sec-api/versions --jq '.[].name'`,
    and use the next major above it (`1.4.2` → `2.0.0`). If nothing was published, use `1.0.0`;
    if the command fails, ask the user for the last published version.
@@ -38,19 +39,10 @@ Versions are semantic (`MAJOR.MINOR.PATCH`) and tagged `v<version>`.
 
 Stop and report if either fails.
 
-## 4. Publish
+## 4. Release
 
-Publishing can't be undone. Show the user the version, why (the commit that decided the bump)
-and the commits going in, and wait for their go-ahead. Then:
-
-```bash
-./gradlew -Pversion=<version> publish
-```
-
-It needs `GPR_USERNAME` and `GPR_TOKEN` (a GitHub token with `write:packages`), as env
-variables or as `gpr.username`/`gpr.token` in `~/.gradle/gradle.properties`.
-
-## 5. Tag and announce
+A release can't be taken back once someone depends on it. Show the user the version, why (the
+commit that decided the bump) and the commits going in, and wait for their go-ahead. Then:
 
 ```bash
 git tag v<version>
@@ -58,4 +50,18 @@ git push origin v<version>
 gh release create v<version> --generate-notes
 ```
 
-Report the release URL.
+## 5. Check that JitPack builds it
+
+JitPack builds the release from its tag (see `jitpack.yml`) when it is first requested.
+Request it, which starts the build, and wait for it, retrying for up to 10 minutes:
+
+```bash
+curl -sf https://jitpack.io/com/github/alexkouzel/sec-api/v<version>/sec-api-v<version>.pom
+```
+
+If it doesn't appear, read the build log at
+`https://jitpack.io/com/github/alexkouzel/sec-api/v<version>/build.log`, report what failed and
+fix it in a patch release.
+
+Report the GitHub release URL and the dependency:
+`implementation("com.github.alexkouzel:sec-api:v<version>")` from `maven("https://jitpack.io")`.
