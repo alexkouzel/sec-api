@@ -8,7 +8,7 @@ Update this file in the same commit that completes (or changes) a phase.
 | Phase | Goal | Status |
 |-------|------|--------|
 | 0 | Build compiles on a current JDK | Done |
-| 1 | Verify against live EDGAR, refresh specs | Not started |
+| 1 | Verify against live EDGAR, refresh specs | Done |
 | 2 | Automated tests (offline fixtures, mock client, opt-in live) | Not started |
 | 3 | Fix known bugs in Java | Not started |
 | 4 | Kotlin rewrite and redesign | Not started |
@@ -83,17 +83,54 @@ Found by reading the code (2026-10-23); confirm with tests in Phase 2.
       README claims Java 17; no toolchain pinned.
 - [ ] `HttpDataClient` decodes `deflate` with `DeflaterInputStream` (compresses);
       should be `InflaterInputStream`.
-- [ ] HTTP 429 sleeps 30–120 minutes on the calling thread; SEC guidance is ~10 minutes.
+- [ ] HTTP 429 sleeps 30–120 minutes on the calling thread. The SEC's fair-access pages
+      don't publish a lockout duration; pick a shorter, configurable backoff.
 - [ ] Each `RateLimiter` starts a scheduler thread that is never shut down.
 - [ ] Retries have no backoff except after non-200 status codes (none after I/O errors).
 - [ ] Position-based parsing breaks silently on format changes:
       `DailyFeedParser` (HTML scraping), `IndexFeedParser` (skips 11 lines),
       `LatestFeedParser` (`split(" ")[4]`), `OwnershipDocumentParser` (header lines 3/4/7).
-- [ ] `XmlMapper` fails on unknown properties, so any new Form 3/4/5 schema element breaks parsing.
+- [x] Mappers fail on unknown properties, so any new EDGAR field breaks parsing.
+      Fixed in Phase 1 (blocker): see findings log.
 - [ ] `TestEdgarClient` lives in `src/main` and ships with the library.
-- [ ] Tests depend on live data (`loadDaysAgo(1)` fails on weekends) and have no offline fixtures.
-- [ ] `FileUrlBuilder.buildF345` hard-codes the `xslF345X03` stylesheet path.
+- [ ] Tests depend on live data and only check the first result's fields. Fixtures now exist
+      (`src/test/resources/edgar/`); tests don't use them yet. Weekend behaviour of
+      `loadDaysAgo` is unverified.
+- [ ] `FileUrlBuilder.buildF345` hard-codes the `xslF345X03` stylesheet path; spec v5.5 ships
+      `X06`–`X09` stylesheets.
+- [ ] Form type filters are EDGAR prefix matches: `loadLatest(..., F4)` returned 2 Form 4s out
+      of 100 entries (rest 424B2, 497, ...); `loadDaysAgo(1, F4)` returned 434 of 1231.
+      Filter by exact type client-side.
+- [ ] The latest feed and daily page list a filing once per related CIK (Filer, Issuer,
+      Reporting): 100 entries held 66 unique filings. Results contain duplicates, and
+      `FileRef.issuerCik` is sometimes the reporting owner's CIK.
+- [ ] `HttpDataClient.loadType` reports JSON/XML mapping errors as `HttpRequestException`
+      instead of `ParsingException`.
 
 ## Findings log
 
-Filled in during Phase 1.
+### Phase 1 — 2026-10-23
+
+All endpoints still exist and return 200. Formats checked against the parsers:
+
+| Source | Status | Notes |
+|--------|--------|-------|
+| Company tickers | OK | Format unchanged. |
+| Submissions JSON | **Broke, fixed** | EDGAR added `filings.recent.isXBRLNumeric`; strict mapping failed. |
+| Latest Atom feed | Works, wrong results | Prefix type filter and per-CIK duplicates (see known bugs). |
+| Daily page | Works, wrong results | Same as latest feed. `<hr>` layout unchanged. |
+| Quarterly `master.idx` | OK | Still 11 header lines; 2026 Q4 (57,414 rows) and 2022 Q3 (237,784) parse. |
+| Filing `.txt` header | OK | Accession/type/filed-date lines still at positions 3/4/7. |
+| Form 3/4/5 XML | **Broke, fixed** | Every 2026 filing failed: schemas `X0607` (Form 3) / `X0609` (Forms 4, 5) added `issuerForeignTradingSymbol`, `rptOwnerNonUSAddressFlag`, `rptOwnerNonUSStateTerritory`, `rptOwnerCountry`. 2022 filings parsed fine. |
+
+Cause: EDGAR changed (new fields), not code drift. The old spec in `specs/` predated
+schema X06xx; replaced with Ownership XML Technical Specification v5.5 (March 2026).
+Diffing its XSDs against the model showed exactly the four new elements, nothing else missing.
+
+Blocker fixes applied:
+- Added the four ownership elements and `isXBRLNumeric` to the model.
+- Disabled `FAIL_ON_UNKNOWN_PROPERTIES` on all mappers so future additions don't break parsing.
+
+Verification: existing suite 12/12 green; a throwaway probe parsed 204 sampled Form 3, 3/A, 4,
+4/A, 5, 5/A filings (2022 Q3 and 2026 Q4) with a strict mapper and matching header fields.
+Phase 2 should keep a strict-mapper fixture test so new schema elements are noticed.
