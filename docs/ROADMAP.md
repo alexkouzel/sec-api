@@ -195,7 +195,17 @@ amendment) with `IllegalArgumentException`.
 - Tests: 35 in `test/ownership/`, from `OwnershipDocumentLoaderTest` plus the URL, the form
   type check, a missing `<XML>` block, unknown transaction codes and footnote line breaks.
 
-Next in step 3: the contract tests, then `SecClient` with `liveClient()`.
+Progress (2026-10-23): ownership contract tests done (`contractTest/ownership/`, 30 tests,
+from `OwnershipContractTest`): every fixture parses strictly; XML element counts match the
+model (owners, signatures, footnotes, both tables, footnote IDs); every XSD element is a
+property of `ownership/xml` (removing `rptOwnerCcc` fails it, naming the element); every XSD
+transaction code is in `TransactionCode`. `FeedContractTest` waits for step 4 (see below).
+
+Build fixes found on the way: `check`'s detekt only analysed `main` and `test` (it now reads
+all of `src/`, and test names and magic numbers are allowed in every test source set), and
+the test suites name `kotlin-test-junit5`, which the Kotlin plugin infers for `test` only.
+
+Next in step 3: `SecClient` with `liveClient()`.
 
 Wire classes map only the fields the library uses (the Java ones mapped every field), so
 strict parsing of them can't spot EDGAR additions. Step 4 decides how the drift check sees
