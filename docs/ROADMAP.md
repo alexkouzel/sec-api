@@ -9,7 +9,7 @@ Update this file in the same commit that completes (or changes) a phase.
 |-------|------|--------|
 | 0 | Build compiles on a current JDK | Done |
 | 1 | Verify against live EDGAR, refresh specs | Done |
-| 2 | Automated tests (offline fixtures, mock client, opt-in live) | Not started |
+| 2 | Automated tests (offline fixtures, mock client, opt-in live) | Done |
 | 3 | Fix known bugs in Java | Not started |
 | 4 | Spec drift monitoring (CI, scheduled live check) | Not started |
 | 5 | Kotlin rewrite and redesign | Not started |
@@ -47,10 +47,15 @@ Update this file in the same commit that completes (or changes) a phase.
   - compare the element names in `specs/ownership-xml-*/schemas` with the model's fields,
     so dropping in a new spec version shows exactly what to add.
 - These tests specify behaviour for the Kotlin rewrite.
+- Result: `./gradlew test` runs 80 offline tests in ~7 s; `./gradlew liveTest` runs 6 smoke
+  tests; `./gradlew knownBugTest` runs 12 tests that fail until Phase 3. Details in the
+  findings log.
 
 ### Phase 3 — Fix bugs (Java)
 
-Make the Phase 2 suite pass. Behaviour fixes only; renaming and restructuring wait for Phase 5.
+Make `./gradlew knownBugTest` pass, removing each test's `known-bug` tag as its fix lands, and
+write the tests that need an API change alongside their fixes. Behaviour fixes only;
+renaming and restructuring wait for Phase 5.
 
 ### Phase 4 — Spec drift monitoring
 
@@ -110,35 +115,48 @@ Write the full `CLAUDE.md` and README for the Kotlin code.
 
 ## Known bugs
 
-Found by reading the code (2026-10-23); confirm with tests in Phase 2.
+Each open bug has a test tagged `known-bug` (excluded from `./gradlew test`; run
+`./gradlew knownBugTest`). Fixing one means making its test pass and removing the tag.
+
+Fixed:
 
 - [x] Gradle 8.5 cannot run on JDK 25; tests use `List.getFirst()` (Java 21) while the
-      README claims Java 17; no toolchain pinned.
-- [ ] `HttpDataClient` decodes `deflate` with `DeflaterInputStream` (compresses);
-      should be `InflaterInputStream`.
-- [ ] HTTP 429 sleeps 30–120 minutes on the calling thread. The SEC's fair-access pages
-      don't publish a lockout duration; pick a shorter, configurable backoff.
-- [ ] Each `RateLimiter` starts a scheduler thread that is never shut down.
-- [ ] Retries have no backoff except after non-200 status codes (none after I/O errors).
-- [ ] Position-based parsing breaks silently on format changes:
-      `DailyFeedParser` (HTML scraping), `IndexFeedParser` (skips 11 lines),
-      `LatestFeedParser` (`split(" ")[4]`), `OwnershipDocumentParser` (header lines 3/4/7).
-- [x] Mappers fail on unknown properties, so any new EDGAR field breaks parsing.
-      Fixed in Phase 1 (blocker): see findings log.
+      README claims Java 17; no toolchain pinned. (Phase 0)
+- [x] Mappers fail on unknown properties, so any new EDGAR field breaks parsing. (Phase 1)
+- [x] Tests depended on live data and only checked the first result. (Phase 2)
+
+Open, with a failing test:
+
+| Bug | Test |
+|-----|------|
+| `deflate` responses go through `DeflaterInputStream` (compresses instead of inflating) | `EdgarClientTest.decodesDeflateBody` |
+| HTTP 429 sleeps 30–120 min on the calling thread; the SEC doesn't publish a lockout duration, so use a shorter, configurable backoff | `EdgarClientTest.recoversFromTooManyRequestsWithoutHanging` |
+| Retries after I/O errors happen immediately, with no backoff | `EdgarClientTest.backsOffBeforeRetryingDroppedConnection` |
+| `loadJson`/`loadXml` report mapping errors as `HttpRequestException`, not `ParsingException` | `EdgarClientTest.reportsInvalidJsonAsParsingError` |
+| Type filters are EDGAR prefix matches (`type=4` also returns 424B2, 497, ...): 2 Form 4s in 100 latest entries, 434 of 1,231 on the daily page | `FileRefLoaderTest.Latest/DaysAgo.typeFilterReturnsOnlyThatType` |
+| Latest feed and daily page list a filing once per related CIK (100 entries, 66 filings) | `FileRefLoaderTest.Latest/DaysAgo.returnsEachFilingOnce` |
+| `FileRef.issuerCik` can be the reporting owner's CIK (the latest feed labels entries `(Issuer)`/`(Reporting)`; the daily page doesn't, so there the field is really "a related CIK") | `FileRefLoaderTest.Latest.issuerCikComesFromIssuerEntry` |
+| Non-contiguous repeated XML elements (e.g. holding, transaction, holding — valid per XSD) keep only the last group, silently dropping data; seen in 1 of 14 fixtures | `OwnershipDocumentLoaderTest.interleavedHoldingsAreAllKept`, `OwnershipContractTest.modelKeepsEveryRepeatedElementWhenInterleaved` |
+| `ListUtils.removeDups` (and public `FileRefUtils.removeDups`) reorders by hash code | `ListUtilsTest.removeDupsKeepsFirstSeenOrder` |
+
+Open, test comes with the fix (needs an API change):
+
+- [ ] A value can carry up to 99 `footnoteId`s (XSD), but `FootnoteValue` holds one; the rest
+      are dropped. Fixture: `0001000045-22-000004` (`transactionShares` has F1 and F2).
+- [ ] Each `RateLimiter` starts a scheduler thread that is never shut down; the client isn't
+      closeable.
+- [ ] `loadCompany` returns only `filings.recent` (up to 1,000); older filings listed in
+      `filings.files` are ignored (the fixture lists 1,105 of them).
+
+Open, no test (refactor or remove):
+
+- [ ] Position-based parsing breaks silently on format changes: `DailyFeedParser` (HTML
+      scraping), `IndexFeedParser` (skips 11 lines), `LatestFeedParser` (`split(" ")[4]`),
+      `OwnershipDocumentParser` (header lines 3/4/7). Formats are covered by fixture tests,
+      so a rewrite can be checked against them.
 - [ ] `TestEdgarClient` lives in `src/main` and ships with the library.
-- [ ] Tests depend on live data and only check the first result's fields. Fixtures now exist
-      (`src/test/resources/edgar/`); tests don't use them yet. Weekend behaviour of
-      `loadDaysAgo` is unverified.
-- [ ] `FileUrlBuilder.buildF345` hard-codes the `xslF345X03` stylesheet path; spec v5.5 ships
-      `X06`–`X09` stylesheets.
-- [ ] Form type filters are EDGAR prefix matches: `loadLatest(..., F4)` returned 2 Form 4s out
-      of 100 entries (rest 424B2, 497, ...); `loadDaysAgo(1, F4)` returned 434 of 1231.
-      Filter by exact type client-side.
-- [ ] The latest feed and daily page list a filing once per related CIK (Filer, Issuer,
-      Reporting): 100 entries held 66 unique filings. Results contain duplicates, and
-      `FileRef.issuerCik` is sometimes the reporting owner's CIK.
-- [ ] `HttpDataClient.loadType` reports JSON/XML mapping errors as `HttpRequestException`
-      instead of `ParsingException`.
+- [ ] `FileUrlBuilder.buildF345` hard-codes the `xslF345X03` stylesheet path (spec v5.5 ships
+      `X06`–`X09`); nothing calls it.
 
 ## Findings log
 
@@ -167,3 +185,20 @@ Blocker fixes applied:
 Verification: existing suite 12/12 green; a throwaway probe parsed 204 sampled Form 3, 3/A, 4,
 4/A, 5, 5/A filings (2022 Q3 and 2026 Q4) with a strict mapper and matching header fields.
 Phase 2 should keep a strict-mapper fixture test so new schema elements are noticed.
+
+### Phase 2 — 2026-10-23
+
+Test layout (`src/test/java/com/alexkouzel/`):
+
+| Area | Classes | How |
+|------|---------|-----|
+| Loaders and parsers | `company/`, `file/reference/`, `file/type/f345/` | `testing.FixtureClient` serves fixtures by exact URL, so URL building is checked too. Expected values were extracted with an independent Python parser, not from the Java output. |
+| Contracts | `contract/OwnershipContractTest`, `contract/FeedContractTest` | Strict parsing of every fixture; XML element counts vs model; XSD elements vs Jackson's view of the model; XSD transaction codes vs `TransactionCode`. Checked that removing a model field fails with the element's name. |
+| HTTP client | `client/EdgarClientTest` | `testing.LocalHttpServer` (JDK `HttpServer`, no extra dependency): headers, gzip, JSON/XML mapping, retries, dropped connections, 10 requests/second. |
+| Live | `live/EdgarLiveTest` (tag `live`) | Every source answers and parses. |
+
+New bugs found while writing tests: interleaved repeated elements lose data, multiple
+`footnoteId`s collapse to one, `removeDups` reorders, `loadCompany` ignores older filings.
+One suspected bug was disproved (an empty daily page parses to an empty list).
+
+JUnit upgraded 5.8.1 → 6.1.3.

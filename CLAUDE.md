@@ -5,6 +5,15 @@ Java library for SEC EDGAR data, being restored and rewritten in Kotlin.
 **Read [docs/ROADMAP.md](docs/ROADMAP.md) first.** It holds the current phase, decisions,
 known bugs, and findings. Update it in the commit that completes or changes a phase.
 
+## Tests
+
+- `./gradlew test` — offline: fixtures, contract tests, local HTTP server. Must stay green.
+- `./gradlew liveTest` — tag `live`, hits real EDGAR.
+- `./gradlew knownBugTest` — tag `known-bug`, fails until each bug in the roadmap is fixed;
+  remove a test's tag when its fix lands.
+- Fixtures in `src/test/resources/edgar/` are frozen (see its README); add new files,
+  don't refresh existing ones. Specs and XSDs live in `specs/`.
+
 ## Commits
 
 Angular convention: `type(scope): subject`, imperative, lowercase, no trailing period.
