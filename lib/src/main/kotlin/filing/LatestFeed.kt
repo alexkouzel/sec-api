@@ -61,23 +61,39 @@ internal object LatestFeed {
         val role: String?,
     )
 
+    // Every element and attribute EDGAR sends, so a new one is reported as unknown; only some are read.
     internal data class Feed(
+        val title: Any? = null,
+        val link: List<Link> = emptyList(),
+        val id: Any? = null,
+        val author: Author? = null,
+        val updated: Any? = null,
         val entry: List<Entry> = emptyList(),
+    )
+
+    internal data class Author(
+        val name: Any? = null,
+        val email: Any? = null,
     )
 
     internal data class Entry(
         val title: String? = null,
-        val summary: String? = null,
-        val id: String? = null,
         val link: Link? = null,
+        val summary: String? = null,
+        val updated: Any? = null,
         val category: Category? = null,
+        val id: String? = null,
     )
 
     internal data class Link(
+        val rel: Any? = null,
+        val type: Any? = null,
         val href: String? = null,
     )
 
     internal data class Category(
+        val scheme: Any? = null,
+        val label: Any? = null,
         val term: String? = null,
     )
 }

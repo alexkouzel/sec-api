@@ -50,7 +50,7 @@ internal object FilingText {
 
     private fun filedOn(value: String): LocalDate =
         runCatching { LocalDate.parse(value, basicDate) }
-            .getOrElse { throw SecException.Parse("Invalid FILED AS OF DATE: $value", it) }
+            .getOrElse { throw SecException.Parse("Invalid FILED AS OF DATE: $value", cause = it) }
 
     private fun String.between(
         open: String,

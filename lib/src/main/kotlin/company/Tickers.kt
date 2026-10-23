@@ -3,6 +3,7 @@ package com.alexkouzel.sec.company
 import com.alexkouzel.sec.SecException
 import com.alexkouzel.sec.http.json
 import com.alexkouzel.sec.http.map
+import com.alexkouzel.sec.http.unknownField
 import tools.jackson.databind.JsonNode
 
 // company_tickers_exchange.json: a list of field names, then one array of values per row.
@@ -18,6 +19,7 @@ internal object Tickers {
         val missing = columns.filterValues { it == -1 }.keys
         if (missing.isNotEmpty()) throw SecException.Parse("Company tickers lack the fields $missing: ${table.fields}")
 
+        (table.fields - fields.toSet()).forEach { unknownField("Tickers.fields.$it") }
         return table.data.map { company(it, columns) }
     }
 

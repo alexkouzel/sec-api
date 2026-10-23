@@ -1,13 +1,13 @@
 package com.alexkouzel.sec.ownership
 
 import com.alexkouzel.sec.Fixtures
+import com.alexkouzel.sec.http.collectingUnknownFields
 import com.alexkouzel.sec.http.xml
 import com.alexkouzel.sec.ownership.xml.OwnershipDocument
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.w3c.dom.Document
 import org.w3c.dom.Element
-import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.JavaType
 import java.lang.reflect.Modifier
 import java.nio.file.Files
@@ -22,17 +22,16 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 // Checks ownership/xml and the model against EDGAR's own definitions: the XSDs in specs/ and
-// the filings in the fixtures. Parsing is strict here, unlike in the library, so new or
-// unmapped elements are noticed.
+// the filings in the fixtures. Unknown elements, which the library skips, fail here.
 class OwnershipContractTest {
-    private val strict = xml.rebuild().enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).build()
-
     @ParameterizedTest(name = "{0}")
     @MethodSource("fixtures")
-    fun `every fixture parses strictly`(accessionNumber: String) {
-        val block = xmlBlock(accessionNumber)
+    fun `every fixture has only known elements`(accessionNumber: String) {
+        val unknown = mutableListOf<String>()
 
-        assertNotNull(strict.readValue(block, OwnershipDocument::class.java).issuer)
+        collectingUnknownFields(unknown::add) { FilingText.parse(Fixtures.bytes("ownership/$accessionNumber.txt")) }
+
+        assertEquals(emptyList(), unknown)
     }
 
     @ParameterizedTest(name = "{0}")
@@ -70,7 +69,7 @@ class OwnershipContractTest {
                 .filter { it.isNotEmpty() && it != "ownershipDocument" }
                 .toSortedSet()
         val properties = mutableSetOf<String>()
-        collectProperties(strict.constructType(OwnershipDocument::class.java), properties, mutableSetOf())
+        collectProperties(xml.constructType(OwnershipDocument::class.java), properties, mutableSetOf())
 
         assertEquals(sortedSetOf(), elements - properties, "XSD elements without a property")
     }
@@ -99,7 +98,7 @@ class OwnershipContractTest {
         val raw = type.rawClass
         if (raw.isPrimitive || raw.name.startsWith("java.") || !seen.add(type)) return
 
-        val description = strict._deserializationContext().introspectBeanDescriptionForCreation(type)
+        val description = xml._deserializationContext().introspectBeanDescriptionForCreation(type)
         description.findProperties().filter { it.couldDeserialize() }.forEach {
             names += it.name
             collectProperties(it.primaryType, names, seen)

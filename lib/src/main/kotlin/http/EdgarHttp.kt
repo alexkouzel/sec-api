@@ -1,6 +1,7 @@
 package com.alexkouzel.sec.http
 
 import com.alexkouzel.sec.SecException
+import com.alexkouzel.sec.UnknownFieldListener
 import java.io.BufferedInputStream
 import java.io.IOException
 import java.io.InputStream
@@ -25,6 +26,7 @@ internal class EdgarHttp(
     private val userAgent: String,
     private val baseRetryDelay: Duration = Duration.ofSeconds(1),
     private val maxRetryDelay: Duration = Duration.ofMinutes(1),
+    override val unknownFields: UnknownFieldListener? = null,
 ) : Http,
     AutoCloseable {
     private val client = HttpClient.newHttpClient()
@@ -35,7 +37,7 @@ internal class EdgarHttp(
     private var isClosed = false
 
     override fun get(url: String): ByteArray {
-        if (isClosed) throw SecException.Http("Client is closed: $url")
+        if (isClosed) throw SecException.Http("Client is closed: $url", url)
         val request =
             HttpRequest
                 .newBuilder(URI.create(url))
@@ -47,7 +49,7 @@ internal class EdgarHttp(
             send(request)
         } catch (e: InterruptedException) {
             Thread.currentThread().interrupt()
-            throw SecException.Http("Interrupted: $url", e)
+            throw SecException.Http("Interrupted: $url", url, e)
         }
     }
 
@@ -70,7 +72,7 @@ internal class EdgarHttp(
                 }
             }
         }
-        throw SecException.Http("Failed after $ATTEMPTS attempts ($reason): ${request.uri()}")
+        throw SecException.Http("Failed after $ATTEMPTS attempts ($reason): ${request.uri()}", request.uri().toString())
     }
 
     private fun attempt(
@@ -107,7 +109,7 @@ internal class EdgarHttp(
                 }
 
                 else -> {
-                    throw SecException.Http("HTTP $status for ${response.uri()}")
+                    throw SecException.Http("HTTP $status for ${response.uri()}", response.uri().toString())
                 }
             }
         }

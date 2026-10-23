@@ -11,7 +11,8 @@ import java.time.Duration
  * The way into EDGAR. [userAgent] identifies you, as EDGAR's fair access policy requires:
  * `"Name contact@domain"`. Calls block; requests are kept under 10 per second per client and
  * retried after I/O errors, HTTP 429 and 5xx, waiting [baseRetryDelay], then twice that, and
- * so on up to [maxRetryDelay]. Close the client when done.
+ * so on up to [maxRetryDelay]. [unknownFields] hears about fields EDGAR added that this library
+ * doesn't read yet. Close the client when done.
  */
 public class SecClient internal constructor(
     private val http: Http,
@@ -21,7 +22,8 @@ public class SecClient internal constructor(
         userAgent: String,
         baseRetryDelay: Duration = Duration.ofSeconds(1),
         maxRetryDelay: Duration = Duration.ofMinutes(1),
-    ) : this(EdgarHttp(validUserAgent(userAgent), baseRetryDelay, maxRetryDelay))
+        unknownFields: UnknownFieldListener? = null,
+    ) : this(EdgarHttp(validUserAgent(userAgent), baseRetryDelay, maxRetryDelay, unknownFields))
 
     public val companies: Companies = Companies(http)
     public val filings: Filings = Filings(http)

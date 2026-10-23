@@ -12,6 +12,8 @@ internal class FixtureHttp(
 
     val requestedUrls: List<String> get() = requests.toList()
 
+    override var unknownFields: UnknownFieldListener? = null
+
     fun route(
         url: String,
         path: String,
@@ -19,7 +21,7 @@ internal class FixtureHttp(
 
     override fun get(url: String): ByteArray {
         requests += url
-        val path = routes[url] ?: throw SecException.Http("No fixture routed for $url")
+        val path = routes[url] ?: throw SecException.Http("No fixture routed for $url", url)
         return Fixtures.bytes(path)
     }
 }

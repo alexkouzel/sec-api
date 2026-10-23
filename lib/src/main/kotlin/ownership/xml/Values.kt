@@ -28,7 +28,7 @@ internal fun parseDate(text: String): LocalDate =
     try {
         LocalDate.parse(text.take(ISO_DATE_LENGTH))
     } catch (e: DateTimeParseException) {
-        throw SecException.Parse("Invalid date in the ownership document: $text", e)
+        throw SecException.Parse("Invalid date in the ownership document: $text", cause = e)
     }
 
 internal fun number(text: String): Double =

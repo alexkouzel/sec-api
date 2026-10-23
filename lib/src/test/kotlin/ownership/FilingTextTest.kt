@@ -4,6 +4,7 @@ import com.alexkouzel.sec.Fixtures
 import com.alexkouzel.sec.SecException
 import com.alexkouzel.sec.filing.FilingRef
 import com.alexkouzel.sec.filing.FormType
+import com.alexkouzel.sec.http.collectingUnknownFields
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.time.LocalDate
@@ -61,6 +62,20 @@ class FilingTextTest {
         assertEquals("0001127602-23-028345", filing.accessionNumber)
         assertEquals(FormType.F4, filing.formType)
         assertEquals(LocalDate.parse("2023-11-28"), filing.filedOn)
+    }
+
+    @Test
+    fun `reports unknown elements and keeps parsing`() {
+        val text =
+            text("0001315098-26-000186")
+                .replace("<rptOwnerCik>", "<rptOwnerNewThing><a>1</a></rptOwnerNewThing><rptOwnerCik>")
+                .replace("<issuerCik>", "<issuerNewThing>x</issuerNewThing><issuerCik>")
+        val unknown = mutableListOf<String>()
+
+        val filing = collectingUnknownFields(unknown::add) { FilingText.parse(text.toByteArray()) }
+
+        assertEquals(setOf("Issuer.issuerNewThing", "ReportingOwnerId.rptOwnerNewThing"), unknown.toSet())
+        assertTrue(filing.owners.first().cik > 0)
     }
 
     @Test
