@@ -4,6 +4,7 @@ import com.alexkouzel.file.FileUrlBuilder;
 import com.alexkouzel.file.type.f345.OwnershipDocumentLoader;
 import com.alexkouzel.file.type.f345.OwnershipDocumentParser;
 import com.alexkouzel.file.type.f345.OwnershipForm;
+import com.alexkouzel.file.type.f345.footnote.FootnoteID;
 import com.alexkouzel.file.type.f345.transaction.TransactionCode;
 import com.alexkouzel.testing.FixtureClient;
 import com.alexkouzel.testing.Fixtures;
@@ -12,7 +13,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -23,13 +23,17 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,9 +57,6 @@ public class OwnershipContractTest {
     private static final Path SPECS = Path.of("specs");
     private static final String XS = "http://www.w3.org/2001/XMLSchema";
 
-    // Fixtures whose element counts don't match yet; each has a known-bug test below.
-    private static final Set<String> COUNT_MISMATCH_FIXTURES = Set.of("0001127602-23-028345");
-
     private static final XmlMapper STRICT_MAPPER = new XmlMapper();
 
     static {
@@ -73,10 +74,6 @@ public class OwnershipContractTest {
         }
     }
 
-    static Stream<String> fixturesWithMatchingCounts() throws IOException {
-        return fixtures().filter(accNo -> !COUNT_MISMATCH_FIXTURES.contains(accNo));
-    }
-
     @ParameterizedTest(name = "{0}")
     @MethodSource("fixtures")
     public void fixtureParsesStrictly(String accNo) throws Exception {
@@ -86,18 +83,9 @@ public class OwnershipContractTest {
     }
 
     @ParameterizedTest(name = "{0}")
-    @MethodSource("fixturesWithMatchingCounts")
+    @MethodSource("fixtures")
     public void modelKeepsEveryRepeatedElement(String accNo) throws Exception {
         assertCountsMatch(accNo);
-    }
-
-    // Known bug: interleaved holdings/transactions lose all but the last group.
-    @Test
-    @Tag("known-bug")
-    public void modelKeepsEveryRepeatedElementWhenInterleaved() throws Exception {
-        for (String accNo : COUNT_MISMATCH_FIXTURES) {
-            assertCountsMatch(accNo);
-        }
     }
 
     @Test
@@ -153,6 +141,8 @@ public class OwnershipContractTest {
         count(expected, actual, xml, "nonDerivativeHolding", form.getNonDerivativeTable(), t -> t.getNonDerivativeHolding());
         count(expected, actual, xml, "derivativeTransaction", form.getDerivativeTable(), t -> t.getDerivativeTransaction());
         count(expected, actual, xml, "derivativeHolding", form.getDerivativeTable(), t -> t.getDerivativeHolding());
+        expected.put("footnoteId", xml.getElementsByTagName("footnoteId").getLength());
+        actual.put("footnoteId", countFootnoteRefs(form, Collections.newSetFromMap(new IdentityHashMap<>())));
 
         assertEquals(expected, actual, "element counts in XML vs model");
     }
@@ -166,6 +156,40 @@ public class OwnershipContractTest {
     private static <T> void count(Map<String, Integer> expected, Map<String, Integer> actual,
                                   Document xml, String element, T parent, Function<T, Collection<?>> list) {
         count(expected, actual, xml, element, parent == null ? null : list.apply(parent));
+    }
+
+    // Walks the model's fields and counts every FootnoteID reachable from it.
+    private static int countFootnoteRefs(Object node, Set<Object> visited) throws IllegalAccessException {
+        if (node == null || !visited.add(node)) {
+            return 0;
+        }
+        if (node instanceof FootnoteID) {
+            return 1;
+        }
+        if (node instanceof Enum<?>) {
+            return 0;
+        }
+        if (node instanceof Collection<?> items) {
+            int count = 0;
+            for (Object item : items) {
+                count += countFootnoteRefs(item, visited);
+            }
+            return count;
+        }
+        if (!node.getClass().getName().startsWith("com.alexkouzel.")) {
+            return 0;
+        }
+        int count = 0;
+        for (Class<?> type = node.getClass(); type != Object.class; type = type.getSuperclass()) {
+            for (Field field : type.getDeclaredFields()) {
+                if (Modifier.isStatic(field.getModifiers()) || field.getType().isPrimitive()) {
+                    continue;
+                }
+                field.setAccessible(true);
+                count += countFootnoteRefs(field.get(node), visited);
+            }
+        }
+        return count;
     }
 
     private static void collectProperties(JavaType type, Set<String> names, Set<JavaType> seen) {

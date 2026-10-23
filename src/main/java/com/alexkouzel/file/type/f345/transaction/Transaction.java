@@ -2,11 +2,16 @@ package com.alexkouzel.file.type.f345.transaction;
 
 import com.alexkouzel.common.deserializers.BooleanDeserializer;
 import com.alexkouzel.file.type.f345.footnote.FootnoteEdgarDate;
+import com.alexkouzel.file.type.f345.footnote.FootnoteID;
 import com.alexkouzel.file.type.f345.footnote.FootnoteValue;
+import com.fasterxml.jackson.annotation.JsonMerge;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,7 +32,9 @@ public class Transaction {
         private TransactionCode transactionCode;
         @JsonDeserialize(using = BooleanDeserializer.class)
         private boolean equitySwapInvolved;
-        @JacksonXmlProperty(isAttribute = true)
-        private Integer footnoteId;
+        @JacksonXmlElementWrapper(useWrapping = false)
+        @JacksonXmlProperty(localName = "footnoteId")
+        @JsonMerge
+        private List<FootnoteID> footnoteIds;
     }
 }

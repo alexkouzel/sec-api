@@ -5,6 +5,8 @@ import com.alexkouzel.file.FileType;
 import com.alexkouzel.file.FileUrlBuilder;
 import com.alexkouzel.file.reference.FileRef;
 import com.alexkouzel.file.type.f345.footnote.Footnote;
+import com.alexkouzel.file.type.f345.footnote.FootnoteID;
+import com.alexkouzel.file.type.f345.footnote.FootnoteValue;
 import com.alexkouzel.file.type.f345.owner.ReportingOwner;
 import com.alexkouzel.file.type.f345.transaction.TransactionCode;
 import com.alexkouzel.file.type.f345.transaction.derivative.DerivativeHolding;
@@ -12,7 +14,6 @@ import com.alexkouzel.file.type.f345.transaction.derivative.DerivativeTransactio
 import com.alexkouzel.file.type.f345.transaction.nonderivative.NonDerivativeHolding;
 import com.alexkouzel.file.type.f345.transaction.nonderivative.NonDerivativeTransaction;
 import com.alexkouzel.testing.FixtureClient;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -135,11 +136,9 @@ public class OwnershipDocumentLoaderTest {
         assertEquals(date("2023-11-28"), form.getOwnerSignature().getFirst().getSignatureDate());
     }
 
-    // Known bug: this filing interleaves holdings and a transaction (holding x3, transaction,
-    // holding), which the XSD allows. Jackson's unwrapped lists keep only the last group,
-    // so three holdings are silently dropped.
+    // This filing interleaves holdings and a transaction (holding x3, transaction, holding),
+    // which the XSD allows.
     @Test
-    @Tag("known-bug")
     public void interleavedHoldingsAreAllKept() throws Exception {
         OwnershipForm form = loadForm(1000753, "0001127602-23-028345");
 
@@ -265,6 +264,8 @@ public class OwnershipDocumentLoaderTest {
         assertEquals(TransactionCode.PURCHASE, purchase.getTransactionCoding().getTransactionCode());
         assertEquals(5505.0, purchase.getTransactionAmounts().getTransactionShares().getValue());
         assertEquals(1.2128, purchase.getTransactionAmounts().getTransactionPricePerShare().getValue());
+        // <deemedExecutionDate></deemedExecutionDate> means absent.
+        assertNull(purchase.getDeemedExecutionDate());
     }
 
     @Test
@@ -278,7 +279,26 @@ public class OwnershipDocumentLoaderTest {
         NonDerivativeTransaction first = form.getNonDerivativeTable().getNonDerivativeTransaction().getFirst();
         assertEquals(33967.0, first.getTransactionAmounts().getTransactionShares().getValue());
         assertNull(first.getTransactionAmounts().getTransactionPricePerShare().getValue());
-        assertEquals("F1", first.getTransactionAmounts().getTransactionPricePerShare().getFootnoteId().getId());
+        assertEquals(FootnoteID.of("F1"), first.getTransactionAmounts().getTransactionPricePerShare().getFootnoteIds());
+    }
+
+    @Test
+    public void valueWithSeveralFootnotes() throws Exception {
+        OwnershipForm form = loadForm(1000045, "0001000045-22-000004");
+
+        FootnoteValue<Double> shares = form.getNonDerivativeTable().getNonDerivativeTransaction().getFirst()
+                .getTransactionAmounts().getTransactionShares();
+        assertEquals(2262.0, shares.getValue());
+        assertEquals(FootnoteID.of("F1", "F2"), shares.getFootnoteIds());
+    }
+
+    @Test
+    public void transactionCodingFootnote() throws Exception {
+        OwnershipForm form = loadForm(1315098, "0001315098-26-000186");
+
+        NonDerivativeTransaction sale = form.getNonDerivativeTable().getNonDerivativeTransaction().getFirst();
+        assertEquals(TransactionCode.SALE, sale.getTransactionCoding().getTransactionCode());
+        assertEquals(FootnoteID.of("F1"), sale.getTransactionCoding().getFootnoteIds());
     }
 
     @Test
