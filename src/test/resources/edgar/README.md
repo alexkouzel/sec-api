@@ -16,6 +16,7 @@ Frozen on purpose: tests assert exact values, so do not refresh in place — add
 | `full-index/master-2022-QTR3.idx` | quarterly index | header + 200 rows |
 | `full-index/master-2026-QTR4.idx` | quarterly index | header + 200 rows |
 | `ownership/<accNo>.txt` | filing text | no |
+| `spec-page/technical-specifications-ownership.html` | SEC technical specifications page (not EDGAR data), for the spec watcher | Ownership section heading and two change-log entries |
 
 Ownership filings:
 

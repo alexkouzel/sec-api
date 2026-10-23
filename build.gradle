@@ -29,9 +29,11 @@ dependencies {
 //   live       — hits real EDGAR; run with ./gradlew liveTest
 //   known-bug  — documents a bug from docs/ROADMAP.md and fails until it's fixed;
 //                run with ./gradlew knownBugTest, drop the tag once the fix lands
+//   drift      — samples live EDGAR and reports differences from the model;
+//                run with ./gradlew driftCheck, report in build/drift/
 test {
     useJUnitPlatform {
-        excludeTags 'live', 'known-bug'
+        excludeTags 'live', 'known-bug', 'drift'
     }
 }
 
@@ -54,6 +56,20 @@ tasks.register('knownBugTest', Test) {
     useJUnitPlatform {
         includeTags 'known-bug'
     }
+    outputs.upToDateWhen { false }
+}
+
+tasks.register('driftCheck', Test) {
+    description = 'Checks live EDGAR data and spec versions against the model; writes build/drift/report.md.'
+    group = 'verification'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform {
+        includeTags 'drift'
+    }
+    def driftDir = layout.buildDirectory.dir('drift')
+    systemProperty 'drift.dir', driftDir.get().asFile.path
+    doFirst { delete driftDir }
     outputs.upToDateWhen { false }
 }
 
