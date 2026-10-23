@@ -38,11 +38,15 @@ Two project skills (`.claude/skills/`) cover the recurring jobs:
 - `/edgar-change` — the daily `.github/workflows/live.yml` run failed (an issue labelled
   `edgar-change` opened): find what broke, save the response as a fixture, fix it test-first.
   The workflow needs the repository secret `EDGAR_USER_AGENT`.
-- `/release <version>` — verify against live EDGAR, publish to GitHub Packages, tag, and create
-  a GitHub release.
+- `/release` — work out the next version from the commits since the last release, verify
+  against live EDGAR, publish to GitHub Packages, tag, and create a GitHub release.
 
 ## Commits
 
 Angular convention: `type(scope): subject`, imperative, lowercase, no trailing period.
 Types: `build`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `test`, `chore`.
 Example: `fix(http): inflate deflate-encoded responses`.
+
+`/release` derives the version from these: `feat` is a minor release, everything else a patch.
+Mark a change that breaks the public API with `!` (`feat(filing)!: rename latest to recent`)
+or a `BREAKING CHANGE:` line in the body; it makes the next release major.
