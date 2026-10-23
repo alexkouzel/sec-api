@@ -1,0 +1,154 @@
+<SEC-DOCUMENT>0001000045-22-000004.txt : 20220901
+<SEC-HEADER>0001000045-22-000004.hdr.sgml : 20220901
+<ACCEPTANCE-DATETIME>20220901120923
+ACCESSION NUMBER:		0001000045-22-000004
+CONFORMED SUBMISSION TYPE:	4
+PUBLIC DOCUMENT COUNT:		1
+CONFORMED PERIOD OF REPORT:	20220830
+FILED AS OF DATE:		20220901
+DATE AS OF CHANGE:		20220901
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			Keating Brendan Joseph
+		CENTRAL INDEX KEY:			0001689627
+
+	FILING VALUES:
+		FORM TYPE:		4
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	000-26680
+		FILM NUMBER:		221220224
+
+	MAIL ADDRESS:	
+		STREET 1:		8918 SPANISH RIDGE AVENUE, SUITE 100
+		CITY:			LAS VEGAS
+		STATE:			NV
+		ZIP:			89148
+
+ISSUER:		
+
+	COMPANY DATA:	
+		COMPANY CONFORMED NAME:			NICHOLAS FINANCIAL INC
+		CENTRAL INDEX KEY:			0001000045
+		STANDARD INDUSTRIAL CLASSIFICATION:	SHORT-TERM BUSINESS CREDIT INSTITUTIONS [6153]
+		IRS NUMBER:				593019317
+		STATE OF INCORPORATION:			FL
+		FISCAL YEAR END:			0331
+
+	BUSINESS ADDRESS:	
+		STREET 1:		2454 MCMULLEN BOOTH RD
+		STREET 2:		BLDG C SUITE 501B
+		CITY:			CLEARWATER
+		STATE:			FL
+		ZIP:			33759
+		BUSINESS PHONE:		7277260763
+
+	MAIL ADDRESS:	
+		STREET 1:		2454 MCMULLEN BOOTH RD
+		STREET 2:		BLDG C SUITE 501B
+		CITY:			CLEARWATER
+		STATE:			FL
+		ZIP:			33759
+</SEC-HEADER>
+<DOCUMENT>
+<TYPE>4
+<SEQUENCE>1
+<FILENAME>primary_doc.xml
+<DESCRIPTION>PRIMARY DOCUMENT
+<TEXT>
+<XML>
+<?xml version="1.0"?>
+<ownershipDocument>
+
+    <schemaVersion>X0306</schemaVersion>
+
+    <documentType>4</documentType>
+
+    <periodOfReport>2022-08-30</periodOfReport>
+
+    <notSubjectToSection16>0</notSubjectToSection16>
+
+    <issuer>
+        <issuerCik>0001000045</issuerCik>
+        <issuerName>NICHOLAS FINANCIAL INC</issuerName>
+        <issuerTradingSymbol>nick</issuerTradingSymbol>
+    </issuer>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001689627</rptOwnerCik>
+            <rptOwnerName>Keating Brendan Joseph</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>8918 SPANISH RIDGE AVENUE, SUITE 100</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>LAS VEGAS</rptOwnerCity>
+            <rptOwnerState>NV</rptOwnerState>
+            <rptOwnerZipCode>89148</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>1</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>0</isTenPercentOwner>
+            <isOther>0</isOther>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <nonDerivativeTable>
+        <nonDerivativeTransaction>
+            <securityTitle>
+                <value>common stock</value>
+            </securityTitle>
+            <transactionDate>
+                <value>2022-08-30</value>
+            </transactionDate>
+            <transactionCoding>
+                <transactionFormType>4</transactionFormType>
+                <transactionCode>A</transactionCode>
+                <equitySwapInvolved>0</equitySwapInvolved>
+            </transactionCoding>
+            <transactionTimeliness>
+                <value></value>
+            </transactionTimeliness>
+            <transactionAmounts>
+                <transactionShares>
+                    <value>2262</value>
+                    <footnoteId id="F1"/>
+                    <footnoteId id="F2"/>
+                </transactionShares>
+                <transactionPricePerShare>
+                    <value>0</value>
+                </transactionPricePerShare>
+                <transactionAcquiredDisposedCode>
+                    <value>A</value>
+                </transactionAcquiredDisposedCode>
+            </transactionAmounts>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>23755</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </nonDerivativeTransaction>
+    </nonDerivativeTable>
+
+    <footnotes>
+        <footnote id="F1">Award of restricted stock vesting on the one year anniversary of the date of grant. The closing price of the issuer's common stock on NASDAQ on such date was $8.84.</footnote>
+        <footnote id="F2">The reported shares are directly owned by Rosecrest Trust, of which Brendan J Keating is the Trustee. Mr. Keating could be deemed to have indirect beneficial ownership of the shares.</footnote>
+    </footnotes>
+
+    <ownerSignature>
+        <signatureName>/s/ Brendan J. Keating</signatureName>
+        <signatureDate>2022-08-30</signatureDate>
+    </ownerSignature>
+</ownershipDocument>
+</XML>
+</TEXT>
+</DOCUMENT>
+</SEC-DOCUMENT>

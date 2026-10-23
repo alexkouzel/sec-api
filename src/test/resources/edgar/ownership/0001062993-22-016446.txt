@@ -1,0 +1,134 @@
+<SEC-DOCUMENT>0001062993-22-016446.txt : 20220718
+<SEC-HEADER>0001062993-22-016446.hdr.sgml : 20220718
+<ACCEPTANCE-DATETIME>20220718180127
+ACCESSION NUMBER:		0001062993-22-016446
+CONFORMED SUBMISSION TYPE:	3
+PUBLIC DOCUMENT COUNT:		1
+CONFORMED PERIOD OF REPORT:	20220706
+FILED AS OF DATE:		20220718
+DATE AS OF CHANGE:		20220718
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			Singhal Shruti
+		CENTRAL INDEX KEY:			0001698686
+
+	FILING VALUES:
+		FORM TYPE:		3
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	001-13948
+		FILM NUMBER:		221090000
+
+	MAIL ADDRESS:	
+		STREET 1:		4 TESSENEER DRIVE
+		CITY:			HIGHLAND HEIGHTS
+		STATE:			KY
+		ZIP:			41076
+
+ISSUER:		
+
+	COMPANY DATA:	
+		COMPANY CONFORMED NAME:			Mativ Holdings, Inc.
+		CENTRAL INDEX KEY:			0001000623
+		STANDARD INDUSTRIAL CLASSIFICATION:	PAPER MILLS [2621]
+		IRS NUMBER:				621612879
+		STATE OF INCORPORATION:			DE
+		FISCAL YEAR END:			1231
+
+	BUSINESS ADDRESS:	
+		STREET 1:		100 NORTH POINT CENTER EAST
+		STREET 2:		SUITE 600
+		CITY:			ALPHARETTA
+		STATE:			GA
+		ZIP:			30022-8246
+		BUSINESS PHONE:		8005140186
+
+	MAIL ADDRESS:	
+		STREET 1:		100 NORTH POINT CENTER EAST
+		STREET 2:		SUITE 600
+		CITY:			ALPHARETTA
+		STATE:			GA
+		ZIP:			30022-8246
+
+	FORMER COMPANY:	
+		FORMER CONFORMED NAME:	SCHWEITZER MAUDUIT INTERNATIONAL INC
+		DATE OF NAME CHANGE:	19950914
+</SEC-HEADER>
+<DOCUMENT>
+<TYPE>3
+<SEQUENCE>1
+<FILENAME>form3.xml
+<DESCRIPTION>INITIAL STATEMENT OF BENEFICIAL OWNERSHIP OF SECURITIES
+<TEXT>
+<XML>
+<?xml version="1.0"?>
+<ownershipDocument>
+
+    <schemaVersion>X0206</schemaVersion>
+
+    <documentType>3</documentType>
+
+    <periodOfReport>2022-07-06</periodOfReport>
+
+    <noSecuritiesOwned>0</noSecuritiesOwned>
+
+    <issuer>
+        <issuerCik>0001000623</issuerCik>
+        <issuerName>Mativ Holdings, Inc.</issuerName>
+        <issuerTradingSymbol>MATV</issuerTradingSymbol>
+    </issuer>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001698686</rptOwnerCik>
+            <rptOwnerName>Singhal Shruti</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>C/O MATIV HOLDINGS</rptOwnerStreet1>
+            <rptOwnerStreet2>100 NORTH POINT CENTER EAST, STE 600</rptOwnerStreet2>
+            <rptOwnerCity>ALPHARETTA</rptOwnerCity>
+            <rptOwnerState>GA</rptOwnerState>
+            <rptOwnerZipCode>30022</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>1</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>0</isTenPercentOwner>
+            <isOther>0</isOther>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <nonDerivativeTable>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Mativ Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>945</value>
+                    <footnoteId id="F1"/>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+    </nonDerivativeTable>
+
+    <footnotes>
+        <footnote id="F1">945 shares received for the 3rd quarter director retainer for service as a Mativ director.</footnote>
+    </footnotes>
+
+    <ownerSignature>
+        <signatureName>Honor Winks as Attorney-in-Fact for Shruti Singhal</signatureName>
+        <signatureDate>2022-07-18</signatureDate>
+    </ownerSignature>
+</ownershipDocument>
+</XML>
+</TEXT>
+</DOCUMENT>
+</SEC-DOCUMENT>

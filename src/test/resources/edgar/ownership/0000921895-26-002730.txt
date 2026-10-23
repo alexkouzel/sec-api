@@ -1,0 +1,964 @@
+<SEC-DOCUMENT>0000921895-26-002730.txt : 20261005
+<SEC-HEADER>0000921895-26-002730.hdr.sgml : 20261005
+<ACCEPTANCE-DATETIME>20261005162827
+ACCESSION NUMBER:		0000921895-26-002730
+CONFORMED SUBMISSION TYPE:	3
+PUBLIC DOCUMENT COUNT:		1
+CONFORMED PERIOD OF REPORT:	20261001
+FILED AS OF DATE:		20261005
+DATE AS OF CHANGE:		20261005
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			BIOTECHNOLOGY VALUE FUND L P
+		CENTRAL INDEX KEY:			0000918923
+		STANDARD INDUSTRIAL CLASSIFICATION:	INVESTMENT ADVICE [6282]
+		ORGANIZATION NAME:           	02 Finance
+		STATE OF INCORPORATION:			DE
+		FISCAL YEAR END:			1231
+
+	FILING VALUES:
+		FORM TYPE:		3
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	001-39634
+		FILM NUMBER:		261440737
+
+	BUSINESS ADDRESS:	
+		STREET 1:		44 MONTGOMERY STREET
+		STREET 2:		40TH FL
+		CITY:			SAN FRANCISCO
+		STATE:			CA
+		ZIP:			94104
+		BUSINESS PHONE:		3125066500
+
+	MAIL ADDRESS:	
+		STREET 1:		44 MONTGOMERY STREET
+		STREET 2:		40TH FL
+		CITY:			SAN FRANCISCO
+		STATE:			CA
+		ZIP:			94104
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			BVF PARTNERS L P/IL
+		CENTRAL INDEX KEY:			0001055947
+		ORGANIZATION NAME:           	
+
+	FILING VALUES:
+		FORM TYPE:		3
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	001-39634
+		FILM NUMBER:		261440738
+
+	BUSINESS ADDRESS:	
+		STREET 1:		44 MONTGOMERY ST.
+		STREET 2:		40TH FLOOR
+		CITY:			SAN FRANCISCO
+		STATE:			CA
+		ZIP:			94104
+		BUSINESS PHONE:		3125066500
+
+	MAIL ADDRESS:	
+		STREET 1:		44 MONTGOMERY ST.
+		STREET 2:		40TH FLOOR
+		CITY:			SAN FRANCISCO
+		STATE:			CA
+		ZIP:			94104
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			BVF INC/IL
+		CENTRAL INDEX KEY:			0001056807
+		ORGANIZATION NAME:           	
+		STATE OF INCORPORATION:			DE
+		FISCAL YEAR END:			1231
+
+	FILING VALUES:
+		FORM TYPE:		3
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	001-39634
+		FILM NUMBER:		261440730
+
+	BUSINESS ADDRESS:	
+		STREET 1:		44 MONTGOMERY STREET
+		STREET 2:		40TH FL
+		CITY:			SAN FRANCISCO
+		STATE:			CA
+		ZIP:			94104
+		BUSINESS PHONE:		3125066500
+
+	MAIL ADDRESS:	
+		STREET 1:		44 MONTGOMERY STREET
+		STREET 2:		40TH FL
+		CITY:			SAN FRANCISCO
+		STATE:			CA
+		ZIP:			94104
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			BIOTECHNOLOGY VALUE FUND II LP
+		CENTRAL INDEX KEY:			0001102444
+		ORGANIZATION NAME:           	
+		STATE OF INCORPORATION:			DE
+		FISCAL YEAR END:			1231
+
+	FILING VALUES:
+		FORM TYPE:		3
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	001-39634
+		FILM NUMBER:		261440735
+
+	BUSINESS ADDRESS:	
+		STREET 1:		44 MONTGOMERY STREET
+		STREET 2:		40TH FL
+		CITY:			SAN FRANCISCO
+		STATE:			CA
+		ZIP:			94104
+		BUSINESS PHONE:		3125066500
+
+	MAIL ADDRESS:	
+		STREET 1:		44 MONTGOMERY STREET
+		STREET 2:		40TH FL
+		CITY:			SAN FRANCISCO
+		STATE:			CA
+		ZIP:			94104
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			LAMPERT MARK N
+		CENTRAL INDEX KEY:			0001233840
+		ORGANIZATION NAME:           	
+
+	FILING VALUES:
+		FORM TYPE:		3
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	001-39634
+		FILM NUMBER:		261440729
+
+	MAIL ADDRESS:	
+		STREET 1:		44 MONTGOMERY ST.
+		STREET 2:		40TH FLOOR
+		CITY:			SAN FRANCISCO
+		STATE:			CA
+		ZIP:			94104
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			Biotechnology Value Trading Fund OS LP
+		CENTRAL INDEX KEY:			0001660683
+		ORGANIZATION NAME:           	
+		STATE OF INCORPORATION:			E9
+		FISCAL YEAR END:			1231
+
+	FILING VALUES:
+		FORM TYPE:		3
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	001-39634
+		FILM NUMBER:		261440733
+
+	BUSINESS ADDRESS:	
+		STREET 1:		P.O. BOX 309 UGLAND HOUSE
+		CITY:			GRAND CAYMAN
+		STATE:			E9
+		ZIP:			KY1-1104
+		BUSINESS PHONE:		(415) 525-8890
+
+	MAIL ADDRESS:	
+		STREET 1:		P.O. BOX 309 UGLAND HOUSE
+		CITY:			GRAND CAYMAN
+		STATE:			E9
+		ZIP:			KY1-1104
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			BVF Partners OS Ltd.
+		CENTRAL INDEX KEY:			0001660684
+		ORGANIZATION NAME:           	
+		STATE OF INCORPORATION:			E9
+		FISCAL YEAR END:			1231
+
+	FILING VALUES:
+		FORM TYPE:		3
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	001-39634
+		FILM NUMBER:		261440732
+
+	BUSINESS ADDRESS:	
+		STREET 1:		P.O. BOX 309 UGLAND HOUSE
+		CITY:			GRAND CAYMAN
+		STATE:			E9
+		ZIP:			KY1-1104
+		BUSINESS PHONE:		(415) 525-8890
+
+	MAIL ADDRESS:	
+		STREET 1:		P.O. BOX 309 UGLAND HOUSE
+		CITY:			GRAND CAYMAN
+		STATE:			E9
+		ZIP:			KY1-1104
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			BVF I GP LLC
+		CENTRAL INDEX KEY:			0001803805
+		ORGANIZATION NAME:           	
+		STATE OF INCORPORATION:			DE
+		FISCAL YEAR END:			1231
+
+	FILING VALUES:
+		FORM TYPE:		3
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	001-39634
+		FILM NUMBER:		261440736
+
+	BUSINESS ADDRESS:	
+		STREET 1:		44 MONTGOMERY ST., 40TH FLOOR
+		CITY:			SAN FRANCISCO
+		STATE:			CA
+		ZIP:			94104
+		BUSINESS PHONE:		415-525-8830
+
+	MAIL ADDRESS:	
+		STREET 1:		44 MONTGOMERY ST., 40TH FLOOR
+		CITY:			SAN FRANCISCO
+		STATE:			CA
+		ZIP:			94104
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			BVF II GP LLC
+		CENTRAL INDEX KEY:			0001803806
+		ORGANIZATION NAME:           	
+		STATE OF INCORPORATION:			DE
+		FISCAL YEAR END:			1231
+
+	FILING VALUES:
+		FORM TYPE:		3
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	001-39634
+		FILM NUMBER:		261440734
+
+	BUSINESS ADDRESS:	
+		STREET 1:		44 MONTGOMERY ST., 40TH FLOOR
+		CITY:			SAN FRANCISCO
+		STATE:			CA
+		ZIP:			94104
+		BUSINESS PHONE:		415-525-8830
+
+	MAIL ADDRESS:	
+		STREET 1:		44 MONTGOMERY ST., 40TH FLOOR
+		CITY:			SAN FRANCISCO
+		STATE:			CA
+		ZIP:			94104
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			BVF GP HOLDINGS LLC
+		CENTRAL INDEX KEY:			0001803809
+		ORGANIZATION NAME:           	
+		STATE OF INCORPORATION:			DE
+		FISCAL YEAR END:			1231
+
+	FILING VALUES:
+		FORM TYPE:		3
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	001-39634
+		FILM NUMBER:		261440731
+
+	BUSINESS ADDRESS:	
+		STREET 1:		44 MONTGOMERY ST., 40TH FLOOR
+		CITY:			SAN FRANCISCO
+		STATE:			CA
+		ZIP:			94104
+		BUSINESS PHONE:		415-525-8830
+
+	MAIL ADDRESS:	
+		STREET 1:		44 MONTGOMERY ST., 40TH FLOOR
+		CITY:			SAN FRANCISCO
+		STATE:			CA
+		ZIP:			94104
+
+ISSUER:		
+
+	COMPANY DATA:	
+		COMPANY CONFORMED NAME:			Foghorn Therapeutics Inc.
+		CENTRAL INDEX KEY:			0001822462
+		STANDARD INDUSTRIAL CLASSIFICATION:	PHARMACEUTICAL PREPARATIONS [2834]
+		ORGANIZATION NAME:           	03 Life Sciences
+		EIN:				000000000
+		STATE OF INCORPORATION:			DE
+		FISCAL YEAR END:			1231
+
+	BUSINESS ADDRESS:	
+		STREET 1:		500 TECHNOLOGY SQUARE
+		STREET 2:		SUITE 700
+		CITY:			CAMBRIDGE
+		STATE:			MA
+		ZIP:			02139
+		BUSINESS PHONE:		617-586-3100
+
+	MAIL ADDRESS:	
+		STREET 1:		500 TECHNOLOGY SQUARE
+		STREET 2:		SUITE 700
+		CITY:			CAMBRIDGE
+		STATE:			MA
+		ZIP:			02139
+</SEC-HEADER>
+<DOCUMENT>
+<TYPE>3
+<SEQUENCE>1
+<FILENAME>form307422fhtx_10052026.xml
+<DESCRIPTION>OWNERSHIP DOCUMENT
+<TEXT>
+<XML>
+<?xml version="1.0"?>
+<ownershipDocument>
+
+    <schemaVersion>X0607</schemaVersion>
+
+    <documentType>3</documentType>
+
+    <periodOfReport>2026-10-01</periodOfReport>
+
+    <noSecuritiesOwned>0</noSecuritiesOwned>
+
+    <issuer>
+        <issuerCik>0001822462</issuerCik>
+        <issuerName>Foghorn Therapeutics Inc.</issuerName>
+        <issuerTradingSymbol>FHTX</issuerTradingSymbol>
+        <issuerForeignTradingSymbol></issuerForeignTradingSymbol>
+    </issuer>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001055947</rptOwnerCik>
+            <rptOwnerName>BVF PARTNERS L P/IL</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerNonUSAddressFlag>false</rptOwnerNonUSAddressFlag>
+            <rptOwnerStreet1>44 MONTGOMERY ST.</rptOwnerStreet1>
+            <rptOwnerStreet2>40TH FLOOR</rptOwnerStreet2>
+            <rptOwnerCity>SAN FRANCISCO</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94104</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+            <officerTitle></officerTitle>
+            <otherText></otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0000918923</rptOwnerCik>
+            <rptOwnerName>BIOTECHNOLOGY VALUE FUND L P</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerNonUSAddressFlag>false</rptOwnerNonUSAddressFlag>
+            <rptOwnerStreet1>44 MONTGOMERY ST.</rptOwnerStreet1>
+            <rptOwnerStreet2>40TH FLOOR</rptOwnerStreet2>
+            <rptOwnerCity>SAN FRANCISCO</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94104</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+            <officerTitle></officerTitle>
+            <otherText></otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001803805</rptOwnerCik>
+            <rptOwnerName>BVF I GP LLC</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerNonUSAddressFlag>false</rptOwnerNonUSAddressFlag>
+            <rptOwnerStreet1>44 MONTGOMERY ST.</rptOwnerStreet1>
+            <rptOwnerStreet2>40TH FLOOR</rptOwnerStreet2>
+            <rptOwnerCity>SAN FRANCISCO</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94104</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+            <officerTitle></officerTitle>
+            <otherText></otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001102444</rptOwnerCik>
+            <rptOwnerName>BIOTECHNOLOGY VALUE FUND II LP</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerNonUSAddressFlag>false</rptOwnerNonUSAddressFlag>
+            <rptOwnerStreet1>44 MONTGOMERY ST.</rptOwnerStreet1>
+            <rptOwnerStreet2>40TH FLOOR</rptOwnerStreet2>
+            <rptOwnerCity>SAN FRANCISCO</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94104</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+            <officerTitle></officerTitle>
+            <otherText></otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001803806</rptOwnerCik>
+            <rptOwnerName>BVF II GP LLC</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerNonUSAddressFlag>false</rptOwnerNonUSAddressFlag>
+            <rptOwnerStreet1>44 MONTGOMERY ST.</rptOwnerStreet1>
+            <rptOwnerStreet2>40TH FLOOR</rptOwnerStreet2>
+            <rptOwnerCity>SAN FRANCISCO</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94104</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+            <officerTitle></officerTitle>
+            <otherText></otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001660683</rptOwnerCik>
+            <rptOwnerName>Biotechnology Value Trading Fund OS LP</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerNonUSAddressFlag>true</rptOwnerNonUSAddressFlag>
+            <rptOwnerStreet1>P.O. BOX 309 UGLAND HOUSE</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>GRAND CAYMAN</rptOwnerCity>
+            <rptOwnerNonUSStateTerritory></rptOwnerNonUSStateTerritory>
+            <rptOwnerCountry>E9</rptOwnerCountry>
+            <rptOwnerZipCode>KY1-1104</rptOwnerZipCode>
+            <rptOwnerStateDescription>CAYMAN ISLANDS</rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+            <officerTitle></officerTitle>
+            <otherText></otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001660684</rptOwnerCik>
+            <rptOwnerName>BVF Partners OS Ltd.</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerNonUSAddressFlag>true</rptOwnerNonUSAddressFlag>
+            <rptOwnerStreet1>P.O. BOX 309 UGLAND HOUSE</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>GRAND CAYMAN</rptOwnerCity>
+            <rptOwnerNonUSStateTerritory></rptOwnerNonUSStateTerritory>
+            <rptOwnerCountry>E9</rptOwnerCountry>
+            <rptOwnerZipCode>KY1-1104</rptOwnerZipCode>
+            <rptOwnerStateDescription>CAYMAN ISLANDS</rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+            <officerTitle></officerTitle>
+            <otherText></otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001803809</rptOwnerCik>
+            <rptOwnerName>BVF GP HOLDINGS LLC</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerNonUSAddressFlag>false</rptOwnerNonUSAddressFlag>
+            <rptOwnerStreet1>44 MONTGOMERY ST.</rptOwnerStreet1>
+            <rptOwnerStreet2>40TH FLOOR</rptOwnerStreet2>
+            <rptOwnerCity>SAN FRANCISCO</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94104</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+            <officerTitle></officerTitle>
+            <otherText></otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001056807</rptOwnerCik>
+            <rptOwnerName>BVF INC/IL</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerNonUSAddressFlag>false</rptOwnerNonUSAddressFlag>
+            <rptOwnerStreet1>44 MONTGOMERY ST.</rptOwnerStreet1>
+            <rptOwnerStreet2>40TH FLOOR</rptOwnerStreet2>
+            <rptOwnerCity>SAN FRANCISCO</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94104</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+            <officerTitle></officerTitle>
+            <otherText></otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001233840</rptOwnerCik>
+            <rptOwnerName>LAMPERT MARK N</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerNonUSAddressFlag>false</rptOwnerNonUSAddressFlag>
+            <rptOwnerStreet1>44 MONTGOMERY ST.</rptOwnerStreet1>
+            <rptOwnerStreet2>40TH FLOOR</rptOwnerStreet2>
+            <rptOwnerCity>SAN FRANCISCO</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94104</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+            <officerTitle></officerTitle>
+            <otherText></otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <nonDerivativeTable>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Common Stock, $0.0001 par value per share</value>
+                <footnoteId id="F1"/>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>4494462</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                    <footnoteId id="F2"/>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Common Stock, $0.0001 par value per share</value>
+                <footnoteId id="F1"/>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>3232448</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                    <footnoteId id="F3"/>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Common Stock, $0.0001 par value per share</value>
+                <footnoteId id="F1"/>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>619258</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                    <footnoteId id="F4"/>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+    </nonDerivativeTable>
+
+    <derivativeTable>
+        <derivativeHolding>
+            <securityTitle>
+                <value>Pre-Funded Warrants to Purchase Common Stock</value>
+                <footnoteId id="F1"/>
+            </securityTitle>
+            <conversionOrExercisePrice>
+                <footnoteId id="F5"/>
+            </conversionOrExercisePrice>
+            <exerciseDate>
+                <footnoteId id="F5"/>
+            </exerciseDate>
+            <expirationDate>
+                <footnoteId id="F5"/>
+            </expirationDate>
+            <underlyingSecurity>
+                <underlyingSecurityTitle>
+                    <value>Common Stock, $0.0001 par value</value>
+                </underlyingSecurityTitle>
+                <underlyingSecurityShares>
+                    <value>3132723</value>
+                </underlyingSecurityShares>
+            </underlyingSecurity>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                    <footnoteId id="F2"/>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </derivativeHolding>
+        <derivativeHolding>
+            <securityTitle>
+                <value>Pre-Funded Warrants to Purchase Common Stock</value>
+                <footnoteId id="F1"/>
+            </securityTitle>
+            <conversionOrExercisePrice>
+                <footnoteId id="F5"/>
+            </conversionOrExercisePrice>
+            <exerciseDate>
+                <footnoteId id="F5"/>
+            </exerciseDate>
+            <expirationDate>
+                <footnoteId id="F5"/>
+            </expirationDate>
+            <underlyingSecurity>
+                <underlyingSecurityTitle>
+                    <value>Common Stock, $0.0001 par value</value>
+                </underlyingSecurityTitle>
+                <underlyingSecurityShares>
+                    <value>2394331</value>
+                </underlyingSecurityShares>
+            </underlyingSecurity>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                    <footnoteId id="F3"/>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </derivativeHolding>
+        <derivativeHolding>
+            <securityTitle>
+                <value>Pre-Funded Warrants to Purchase Common Stock</value>
+                <footnoteId id="F1"/>
+            </securityTitle>
+            <conversionOrExercisePrice>
+                <footnoteId id="F5"/>
+            </conversionOrExercisePrice>
+            <exerciseDate>
+                <footnoteId id="F5"/>
+            </exerciseDate>
+            <expirationDate>
+                <footnoteId id="F5"/>
+            </expirationDate>
+            <underlyingSecurity>
+                <underlyingSecurityTitle>
+                    <value>Common Stock, $0.0001 par value</value>
+                </underlyingSecurityTitle>
+                <underlyingSecurityShares>
+                    <value>313925</value>
+                </underlyingSecurityShares>
+            </underlyingSecurity>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                    <footnoteId id="F4"/>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </derivativeHolding>
+        <derivativeHolding>
+            <securityTitle>
+                <value>Series 1 Warrants to Purchase Common Stock</value>
+                <footnoteId id="F1"/>
+            </securityTitle>
+            <conversionOrExercisePrice>
+                <footnoteId id="F6"/>
+            </conversionOrExercisePrice>
+            <exerciseDate>
+                <footnoteId id="F6"/>
+            </exerciseDate>
+            <expirationDate>
+                <footnoteId id="F6"/>
+            </expirationDate>
+            <underlyingSecurity>
+                <underlyingSecurityTitle>
+                    <value>Common Stock, $0.0001 par value</value>
+                </underlyingSecurityTitle>
+                <underlyingSecurityShares>
+                    <value>1022635</value>
+                </underlyingSecurityShares>
+            </underlyingSecurity>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                    <footnoteId id="F2"/>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </derivativeHolding>
+        <derivativeHolding>
+            <securityTitle>
+                <value>Series 1 Warrants to Purchase Common Stock</value>
+                <footnoteId id="F1"/>
+            </securityTitle>
+            <conversionOrExercisePrice>
+                <footnoteId id="F6"/>
+            </conversionOrExercisePrice>
+            <exerciseDate>
+                <footnoteId id="F6"/>
+            </exerciseDate>
+            <expirationDate>
+                <footnoteId id="F6"/>
+            </expirationDate>
+            <underlyingSecurity>
+                <underlyingSecurityTitle>
+                    <value>Common Stock, $0.0001 par value</value>
+                </underlyingSecurityTitle>
+                <underlyingSecurityShares>
+                    <value>703630</value>
+                </underlyingSecurityShares>
+            </underlyingSecurity>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                    <footnoteId id="F3"/>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </derivativeHolding>
+        <derivativeHolding>
+            <securityTitle>
+                <value>Series 1 Warrants to Purchase Common Stock</value>
+                <footnoteId id="F1"/>
+            </securityTitle>
+            <conversionOrExercisePrice>
+                <footnoteId id="F6"/>
+            </conversionOrExercisePrice>
+            <exerciseDate>
+                <footnoteId id="F6"/>
+            </exerciseDate>
+            <expirationDate>
+                <footnoteId id="F6"/>
+            </expirationDate>
+            <underlyingSecurity>
+                <underlyingSecurityTitle>
+                    <value>Common Stock, $0.0001 par value</value>
+                </underlyingSecurityTitle>
+                <underlyingSecurityShares>
+                    <value>109394</value>
+                </underlyingSecurityShares>
+            </underlyingSecurity>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                    <footnoteId id="F4"/>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </derivativeHolding>
+        <derivativeHolding>
+            <securityTitle>
+                <value>Series 2 Warrants to Purchase Common Stock</value>
+                <footnoteId id="F1"/>
+            </securityTitle>
+            <conversionOrExercisePrice>
+                <footnoteId id="F7"/>
+            </conversionOrExercisePrice>
+            <exerciseDate>
+                <footnoteId id="F7"/>
+            </exerciseDate>
+            <expirationDate>
+                <footnoteId id="F7"/>
+            </expirationDate>
+            <underlyingSecurity>
+                <underlyingSecurityTitle>
+                    <value>Common Stock, $0.0001 par value</value>
+                </underlyingSecurityTitle>
+                <underlyingSecurityShares>
+                    <value>1022635</value>
+                </underlyingSecurityShares>
+            </underlyingSecurity>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                    <footnoteId id="F2"/>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </derivativeHolding>
+        <derivativeHolding>
+            <securityTitle>
+                <value>Series 2 Warrants to Purchase Common Stock</value>
+                <footnoteId id="F1"/>
+            </securityTitle>
+            <conversionOrExercisePrice>
+                <footnoteId id="F7"/>
+            </conversionOrExercisePrice>
+            <exerciseDate>
+                <footnoteId id="F7"/>
+            </exerciseDate>
+            <expirationDate>
+                <footnoteId id="F7"/>
+            </expirationDate>
+            <underlyingSecurity>
+                <underlyingSecurityTitle>
+                    <value>Common Stock, $0.0001 par value</value>
+                </underlyingSecurityTitle>
+                <underlyingSecurityShares>
+                    <value>703630</value>
+                </underlyingSecurityShares>
+            </underlyingSecurity>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                    <footnoteId id="F3"/>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </derivativeHolding>
+        <derivativeHolding>
+            <securityTitle>
+                <value>Series 2 Warrants to Purchase Common Stock</value>
+                <footnoteId id="F1"/>
+            </securityTitle>
+            <conversionOrExercisePrice>
+                <footnoteId id="F7"/>
+            </conversionOrExercisePrice>
+            <exerciseDate>
+                <footnoteId id="F7"/>
+            </exerciseDate>
+            <expirationDate>
+                <footnoteId id="F7"/>
+            </expirationDate>
+            <underlyingSecurity>
+                <underlyingSecurityTitle>
+                    <value>Common Stock, $0.0001 par value</value>
+                </underlyingSecurityTitle>
+                <underlyingSecurityShares>
+                    <value>109394</value>
+                </underlyingSecurityShares>
+            </underlyingSecurity>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                    <footnoteId id="F4"/>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </derivativeHolding>
+    </derivativeTable>
+
+    <footnotes>
+        <footnote id="F1">This Form 3 is filed jointly by Biotechnology Value Fund, L.P. (&quot;BVF&quot;), Biotechnology Value Fund II, L.P. (&quot;BVF2&quot;), Biotechnology Value Trading Fund OS LP (&quot;Trading Fund OS&quot;), BVF Partners OS Ltd. (&quot;Partners OS&quot;), BVF I GP LLC (&quot;BVF GP&quot;), BVF II GP LLC (&quot;BVF2 GP&quot;), BVF GP Holdings LLC (&quot;BVF GPH&quot;), BVF Partners L.P. (&quot;Partners&quot;), BVF Inc. and Mark N. Lampert (collectively, the &quot;Reporting Persons&quot;). Each of the Reporting Persons is a member of a Section 13(d) group that collectively beneficially owns more than 10% of the Issuer's outstanding shares of Common Stock. Each of the Reporting Persons disclaims beneficial ownership of the securities reported herein except to the extent of his or its pecuniary interest therein.</footnote>
+        <footnote id="F2">Securities owned directly by BVF. As the general partner of BVF, BVF GP may be deemed to beneficially own the securities owned directly by BVF. As the sole member of BVF GP, BVF GPH may be deemed to beneficially own the securities owned directly by BVF. As the investment manager of BVF, Partners may be deemed to beneficially own the securities owned directly by BVF. As the general parter of Partners, BVF Inc. may be deemed to beneficially own the securities owned directly by BVF. As a director and officer of BVF Inc., Mr. Lampert may be deemed to beneficially own the securities owned directly by BVF.</footnote>
+        <footnote id="F3">Securities owned directly by BVF2. As the general partner of BVF2, BVF2 GP may be deemed to beneficially own the securities owned directly by BVF2. As the sole member of BVF2 GP, BVF GPH may be deemed to beneficially own the securities owned directly by BVF2. As the investment manager of BVF2, Partners may be deemed to beneficially own the securities owned directly by BVF2. As the general partner of Partners, BVF Inc. may be deemed to beneficially own the securities owned directly by BVF2. As a director and officer of BVF Inc., Mr. Lampert may be deemed to beneficially own the securities owned directly by BVF2.</footnote>
+        <footnote id="F4">Securities owned directly by Trading Fund OS. As the general partner of Trading Fund OS, Partners OS may be deemed to beneficially own the securities owned directly by Trading Fund OS. As the investment manager of Trading Fund OS and the sole member of Partners OS, Partners may be deemed to beneficially own the securities owned directly by Trading Fund OS. As the general partner of Partners, BVF Inc. may be deemed to beneficially own the securities owned directly by Trading Fund OS. As a director and officer of BVF Inc., Mr. Lampert may be deemed to beneficially own the securities owned directly by Trading Fund OS.</footnote>
+        <footnote id="F5">The Reporting Persons hold certain Pre-Funded Warrants (the &quot;Pre-Funded Warrants&quot;) exercisable for an aggregate of 5,840,979 shares of Common Stock. The Pre-Funded Warrants do not expire and have an exercise price of $0.0001 per share. The Pre-Funded Warrants are exercisable immediately, except that the Pre-Funded Warrants may not be exercised if, after such exercise, the Reporting Persons would beneficially own more than 9.99% of the shares of Common Stock outstanding.</footnote>
+        <footnote id="F6">The Reporting Persons hold certain Series 1 Warrants (the &quot;Series 1 Warrants&quot;) exercisable for an aggregate of 1,835,659 shares of Common Stock. The Series 1 Warrants expire on June 30, 2027 and have an exercise price of $13.4200 per share. The Series 1 Warrants are exercisable immediately, except that the Series 1 Warrants may not be exercised if, after such exercise, the Reporting Persons would beneficially own more than 9.99% of the shares of Common Stock outstanding.</footnote>
+        <footnote id="F7">The Reporting Persons hold certain Series 2 Warrants (the &quot;Series 2 Warrants&quot;) exercisable for an aggregate of 1,835,659 shares of Common Stock. The Series 2 Warrants expire on December 31, 2030 and have an exercise price of $20.1300 per share. The Series 2 Warrants are exercisable immediately, except that the Series 2 Warrants may not be exercised if, after such exercise, the Reporting Persons would beneficially own more than 9.99% of the shares of Common Stock outstanding.</footnote>
+    </footnotes>
+
+    <ownerSignature>
+        <signatureName>BVF Partners L.P., By: BVF Inc., its general partner, By: /s/ Mark N. Lampert, President</signatureName>
+        <signatureDate>2026-10-05</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>Biotechnology Value Fund, L.P., By: BVF I GP LLC, its general partner, By: /s/ Mark N. Lampert, Chief Executive Officer</signatureName>
+        <signatureDate>2026-10-05</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>BVF I GP LLC, By: /s/ Mark N. Lampert, Chief Executive Officer</signatureName>
+        <signatureDate>2026-10-05</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>Biotechnology Value Fund II, L.P., By: BVF II GP LLC, its general partner, By: /s/ Mark N. Lampert, Chief Executive Officer</signatureName>
+        <signatureDate>2026-10-05</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>BVF II GP LLC, By: /s/ Mark N. Lampert, Chief Executive Officer</signatureName>
+        <signatureDate>2026-10-05</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>BVF Partners OS Ltd., By: BVF Partners L.P., its sole member, By: BVF Inc., its general partner, By: /s/ Mark N. Lampert, President</signatureName>
+        <signatureDate>2026-10-05</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>Biotechnology Value Trading Fund OS LP, By: BVF Partners L.P., its investment manager, BVF Inc., its general partner, By: /s/ Mark N. Lampert, President</signatureName>
+        <signatureDate>2026-10-05</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>BVF GP Holdings LLC, By: /s/ Mark N. Lampert, Chief Executive Officer</signatureName>
+        <signatureDate>2026-10-05</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>BVF Inc., By: /s/ Mark N. Lampert, President</signatureName>
+        <signatureDate>2026-10-05</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>/s/ Mark N. Lampert</signatureName>
+        <signatureDate>2026-10-05</signatureDate>
+    </ownerSignature>
+</ownershipDocument>
+</XML>
+</TEXT>
+</DOCUMENT>
+</SEC-DOCUMENT>

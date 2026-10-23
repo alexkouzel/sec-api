@@ -1,0 +1,119 @@
+<SEC-DOCUMENT>0000929638-26-003820.txt : 20261002
+<SEC-HEADER>0000929638-26-003820.hdr.sgml : 20261002
+<ACCEPTANCE-DATETIME>20261002171152
+ACCESSION NUMBER:		0000929638-26-003820
+CONFORMED SUBMISSION TYPE:	3
+PUBLIC DOCUMENT COUNT:		1
+CONFORMED PERIOD OF REPORT:	20260701
+FILED AS OF DATE:		20261002
+DATE AS OF CHANGE:		20261002
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			Coyne Declan Thomas
+		CENTRAL INDEX KEY:			0002152354
+		ORGANIZATION NAME:           	
+
+	FILING VALUES:
+		FORM TYPE:		3
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	811-24143
+		FILM NUMBER:		261437815
+
+	MAIL ADDRESS:	
+		STREET 1:		140 BROADWAY
+		CITY:			NEW YORK
+		STATE:			NY
+		ZIP:			10005
+
+ISSUER:		
+
+	COMPANY DATA:	
+		COMPANY CONFORMED NAME:			AMG BBH Asset-Backed Credit Fund, LLC
+		CENTRAL INDEX KEY:			0002097545
+		ORGANIZATION NAME:           	
+		EIN:				000000000
+		STATE OF INCORPORATION:			DE
+		FISCAL YEAR END:			0331
+
+	BUSINESS ADDRESS:	
+		STREET 1:		THE CORPORATION TRUST COMPANY
+		STREET 2:		1209 ORANGE STREET
+		CITY:			WILMINGTON
+		STATE:			DE
+		ZIP:			19801
+		BUSINESS PHONE:		203-299-3500
+
+	MAIL ADDRESS:	
+		STREET 1:		THE CORPORATION TRUST COMPANY
+		STREET 2:		1209 ORANGE STREET
+		CITY:			WILMINGTON
+		STATE:			DE
+		ZIP:			19801
+
+	FORMER COMPANY:	
+		FORMER CONFORMED NAME:	AMG BBH Asset-Backed Fund, LLC
+		DATE OF NAME CHANGE:	20251119
+</SEC-HEADER>
+<DOCUMENT>
+<TYPE>3
+<SEQUENCE>1
+<FILENAME>form3.xml
+<DESCRIPTION>FORM 3
+<TEXT>
+<XML>
+<?xml version="1.0"?>
+<ownershipDocument>
+
+    <schemaVersion>X0607</schemaVersion>
+
+    <documentType>3</documentType>
+
+    <periodOfReport>2026-07-01</periodOfReport>
+
+    <noSecuritiesOwned>1</noSecuritiesOwned>
+
+    <issuer>
+        <issuerCik>0002097545</issuerCik>
+        <issuerName>AMG BBH Asset-Backed Credit Fund, LLC</issuerName>
+        <issuerTradingSymbol>BBASX</issuerTradingSymbol>
+        <issuerForeignTradingSymbol></issuerForeignTradingSymbol>
+    </issuer>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0002152354</rptOwnerCik>
+            <rptOwnerName>Coyne Declan Thomas</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerNonUSAddressFlag>false</rptOwnerNonUSAddressFlag>
+            <rptOwnerStreet1>C/O BROWN BROTHERS HARRIMAN</rptOwnerStreet1>
+            <rptOwnerStreet2>CREDIT PARTNERS, LLC 140 BROADWAY</rptOwnerStreet2>
+            <rptOwnerCity>NEW YORK</rptOwnerCity>
+            <rptOwnerState>NY</rptOwnerState>
+            <rptOwnerZipCode>10005</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>false</isDirector>
+            <isOfficer>false</isOfficer>
+            <isTenPercentOwner>false</isTenPercentOwner>
+            <isOther>true</isOther>
+            <otherText>See Footnote (1)</otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <derivativeTable></derivativeTable>
+
+    <remarks>1. The Reporting Person is the Head of Funds Finance of Brown Brothers Harriman Credit Partners, LLC (the &quot;Investment Adviser&quot;), the investment adviser to the Issuer. The Reporting Person disclaims beneficial ownership of any shares deemed beneficially owned by the Investment Adviser except to the extent of his pecuniary interest therein, and the inclusion of such securities in any report filed by the Investment Adviser shall not be deemed an admission of beneficial ownership for purposes of Section 16 or for any other purpose.</remarks>
+
+    <ownerSignature>
+        <signatureName>/s/ Declan Coyne</signatureName>
+        <signatureDate>2026-10-01</signatureDate>
+    </ownerSignature>
+</ownershipDocument>
+</XML>
+</TEXT>
+</DOCUMENT>
+</SEC-DOCUMENT>

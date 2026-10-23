@@ -1,0 +1,199 @@
+<SEC-DOCUMENT>0001193125-26-427843.txt : 20261021
+<SEC-HEADER>0001193125-26-427843.hdr.sgml : 20261021
+<ACCEPTANCE-DATETIME>20261021161503
+ACCESSION NUMBER:		0001193125-26-427843
+CONFORMED SUBMISSION TYPE:	3/A
+PUBLIC DOCUMENT COUNT:		1
+CONFORMED PERIOD OF REPORT:	20260903
+FILED AS OF DATE:		20261021
+DATE AS OF CHANGE:		20261021
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			Liani Reuven
+		CENTRAL INDEX KEY:			0002140179
+		ORGANIZATION NAME:           	
+
+	FILING VALUES:
+		FORM TYPE:		3/A
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	001-43471
+		FILM NUMBER:		261475843
+
+	MAIL ADDRESS:	
+		STREET 1:		5247 CROSSROADS PARK DRIVE
+		STREET 2:		C/O XTEND AI ROBOTICS, INC.
+		CITY:			TAMPA
+		STATE:			FL
+		ZIP:			33610
+
+ISSUER:		
+
+	COMPANY DATA:	
+		COMPANY CONFORMED NAME:			Xtend AI Robotics, Inc.
+		CENTRAL INDEX KEY:			0002111860
+		STANDARD INDUSTRIAL CLASSIFICATION:	GUIDED MISSILES & SPACE VEHICLES & PARTS [3760]
+		ORGANIZATION NAME:           	04 Manufacturing
+		EIN:				000000000
+		STATE OF INCORPORATION:			DE
+		FISCAL YEAR END:			1231
+
+	BUSINESS ADDRESS:	
+		STREET 1:		5247 CROSSROADS PARK DRIVE
+		CITY:			TAMPA
+		STATE:			FL
+		ZIP:			33610
+		BUSINESS PHONE:		000-000-0000
+
+	MAIL ADDRESS:	
+		STREET 1:		5247 CROSSROADS PARK DRIVE
+		CITY:			TAMPA
+		STATE:			FL
+		ZIP:			33610
+</SEC-HEADER>
+<DOCUMENT>
+<TYPE>3/A
+<SEQUENCE>1
+<FILENAME>ownership.xml
+<DESCRIPTION>3/A
+<TEXT>
+<XML>
+<?xml version="1.0"?>
+<ownershipDocument>
+
+    <schemaVersion>X0607</schemaVersion>
+
+    <documentType>3/A</documentType>
+
+    <periodOfReport>2026-09-03</periodOfReport>
+
+    <dateOfOriginalSubmission>2026-09-03</dateOfOriginalSubmission>
+
+    <noSecuritiesOwned>0</noSecuritiesOwned>
+
+    <issuer>
+        <issuerCik>0002111860</issuerCik>
+        <issuerName>Xtend AI Robotics, Inc.</issuerName>
+        <issuerTradingSymbol>XTND</issuerTradingSymbol>
+        <issuerForeignTradingSymbol></issuerForeignTradingSymbol>
+    </issuer>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0002140179</rptOwnerCik>
+            <rptOwnerName>Liani Reuven</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerNonUSAddressFlag>false</rptOwnerNonUSAddressFlag>
+            <rptOwnerStreet1>C/O XTEND AI ROBOTICS, INC.</rptOwnerStreet1>
+            <rptOwnerStreet2>5247 CROSSROADS PARK DRIVE</rptOwnerStreet2>
+            <rptOwnerCity>TAMPA</rptOwnerCity>
+            <rptOwnerState>FL</rptOwnerState>
+            <rptOwnerZipCode>33610</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>true</isDirector>
+            <isOfficer>true</isOfficer>
+            <isTenPercentOwner>false</isTenPercentOwner>
+            <isOther>false</isOther>
+            <officerTitle>Chief Technology Officer</officerTitle>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <nonDerivativeTable>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>3356978</value>
+                    <footnoteId id="F1"/>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+    </nonDerivativeTable>
+
+    <derivativeTable>
+        <derivativeHolding>
+            <securityTitle>
+                <value>Stock Option (right to buy)</value>
+            </securityTitle>
+            <conversionOrExercisePrice>
+                <value>0.47</value>
+            </conversionOrExercisePrice>
+            <exerciseDate>
+                <footnoteId id="F2"/>
+            </exerciseDate>
+            <expirationDate>
+                <value>2034-09-09</value>
+            </expirationDate>
+            <underlyingSecurity>
+                <underlyingSecurityTitle>
+                    <value>Common Stock</value>
+                </underlyingSecurityTitle>
+                <underlyingSecurityShares>
+                    <value>3217784</value>
+                    <footnoteId id="F1"/>
+                </underlyingSecurityShares>
+            </underlyingSecurity>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </derivativeHolding>
+        <derivativeHolding>
+            <securityTitle>
+                <value>Stock Option (right to buy)</value>
+            </securityTitle>
+            <conversionOrExercisePrice>
+                <value>0.47</value>
+            </conversionOrExercisePrice>
+            <exerciseDate>
+                <footnoteId id="F3"/>
+            </exerciseDate>
+            <expirationDate>
+                <value>2035-08-27</value>
+            </expirationDate>
+            <underlyingSecurity>
+                <underlyingSecurityTitle>
+                    <value>Common Stock</value>
+                </underlyingSecurityTitle>
+                <underlyingSecurityShares>
+                    <value>7191592</value>
+                    <footnoteId id="F1"/>
+                </underlyingSecurityShares>
+            </underlyingSecurity>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </derivativeHolding>
+    </derivativeTable>
+
+    <footnotes>
+        <footnote id="F1">The shares were acquired at the closing of the transactions contemplated by that certain Agreement and Plan of Merger, dated as of February 13, 2026 as amended by Amendment No. 1 dated March 21, 2026 and Amendment No. 2 dated July 16, 2026 (the &quot;Merger Agreement&quot;), by and among Xtend AI Robotics, Inc., XT Merger Sub 2, Inc., JFB Construction Holdings and Xtend Reality Expansion Ltd. The closing of the Merger Agreement occurred on September 3, 2026.</footnote>
+        <footnote id="F2">Shares subject to the stock option vest and become exercisable ratably on each monthly anniversary of September 9, 2024 (the &quot;2024 Vesting Commencement Date&quot;) over a period of 36 consecutive months until fully vested and exercisable on the third anniversary of the 2024 Vesting Commencement Date, subject to the Reporting Person's continued service.</footnote>
+        <footnote id="F3">Shares subject to the stock option vest and become exercisable ratably on each monthly anniversary of August 27, 2025 (the &quot;2025 Vesting Commencement Date&quot;) over a period of 36 consecutive months until fully vested and exercisable on the third anniversary of the 2025 Vesting Commencement Date, subject to the Reporting Person's continued service.</footnote>
+    </footnotes>
+
+    <remarks>This Form 3/A is being filed to correct the number of shares of common stock reported in Table I of the original Form 3 filed on September 3, 2026, for certain rounding errors which resulted in the Reporting Person inadvertently reporting beneficial ownership of 3,356,974 shares of common stock beneficially instead of the 3,356,978 shares reported herein. No other information in the original Form 3 has been changed.</remarks>
+
+    <ownerSignature>
+        <signatureName>/s/ Aviv Shapira, as attorney-in-fact for Reuven Liani</signatureName>
+        <signatureDate>2026-10-21</signatureDate>
+    </ownerSignature>
+</ownershipDocument>
+</XML>
+</TEXT>
+</DOCUMENT>
+</SEC-DOCUMENT>

@@ -1,0 +1,159 @@
+<SEC-DOCUMENT>0001437749-22-017271.txt : 20220718
+<SEC-HEADER>0001437749-22-017271.hdr.sgml : 20220718
+<ACCEPTANCE-DATETIME>20220718171104
+ACCESSION NUMBER:		0001437749-22-017271
+CONFORMED SUBMISSION TYPE:	5/A
+PUBLIC DOCUMENT COUNT:		1
+CONFORMED PERIOD OF REPORT:	20220430
+FILED AS OF DATE:		20220718
+DATE AS OF CHANGE:		20220718
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			CONLEE CECIL D
+		CENTRAL INDEX KEY:			0001024406
+		STANDARD INDUSTRIAL CLASSIFICATION:	SERVICES-AUTOMOTIVE REPAIR, SERVICES & PARKING [7500]
+		STATE OF INCORPORATION:			TN
+		FISCAL YEAR END:			1231
+
+	FILING VALUES:
+		FORM TYPE:		5/A
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	001-14170
+		FILM NUMBER:		221089808
+
+	MAIL ADDRESS:	
+		STREET 1:		950 E PACES FERRY RD
+		STREET 2:		SUITE 2275
+		CITY:			ATLANTA
+		STATE:			GA
+		ZIP:			30326
+
+ISSUER:		
+
+	COMPANY DATA:	
+		COMPANY CONFORMED NAME:			NATIONAL BEVERAGE CORP
+		CENTRAL INDEX KEY:			0000069891
+		STANDARD INDUSTRIAL CLASSIFICATION:	BOTTLED & CANNED SOFT DRINKS CARBONATED WATERS [2086]
+		IRS NUMBER:				592605822
+		STATE OF INCORPORATION:			DE
+		FISCAL YEAR END:			0430
+
+	BUSINESS ADDRESS:	
+		STREET 1:		8100 SW 10TH STREET
+		STREET 2:		SUITE 4000
+		CITY:			FT. LAUDERDALE
+		STATE:			FL
+		ZIP:			33324
+		BUSINESS PHONE:		9545810922
+
+	MAIL ADDRESS:	
+		STREET 1:		8100 SW 10TH STREET
+		STREET 2:		SUITE 4000
+		CITY:			FT. LAUDERDALE
+		STATE:			FL
+		ZIP:			33324
+</SEC-HEADER>
+<DOCUMENT>
+<TYPE>5/A
+<SEQUENCE>1
+<FILENAME>rdgdoc.xml
+<DESCRIPTION>FORM 5/A
+<TEXT>
+<XML>
+<?xml version="1.0"?>
+<ownershipDocument>
+
+    <schemaVersion>X0306</schemaVersion>
+
+    <documentType>5/A</documentType>
+
+    <periodOfReport>2022-04-30</periodOfReport>
+
+    <dateOfOriginalSubmission>2022-06-14</dateOfOriginalSubmission>
+
+    <form3HoldingsReported>0</form3HoldingsReported>
+
+    <form4TransactionsReported>0</form4TransactionsReported>
+
+    <issuer>
+        <issuerCik>0000069891</issuerCik>
+        <issuerName>NATIONAL BEVERAGE CORP</issuerName>
+        <issuerTradingSymbol>FIZZ</issuerTradingSymbol>
+    </issuer>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001024406</rptOwnerCik>
+            <rptOwnerName>CONLEE CECIL D</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>8100 SW 10TH STREET</rptOwnerStreet1>
+            <rptOwnerStreet2>SUITE 4000</rptOwnerStreet2>
+            <rptOwnerCity>PLANTATION</rptOwnerCity>
+            <rptOwnerState>FL</rptOwnerState>
+            <rptOwnerZipCode>33324</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>1</isDirector>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <nonDerivativeTable>
+        <nonDerivativeTransaction>
+            <securityTitle>
+                <value>COMMON STOCK</value>
+            </securityTitle>
+            <transactionDate>
+                <value>2021-09-29</value>
+            </transactionDate>
+            <transactionCoding>
+                <transactionFormType>5</transactionFormType>
+                <transactionCode>G</transactionCode>
+                <equitySwapInvolved>0</equitySwapInvolved>
+                <footnoteId id="F1"/>
+            </transactionCoding>
+            <transactionAmounts>
+                <transactionShares>
+                    <value>2000</value>
+                </transactionShares>
+                <transactionPricePerShare>
+                    <value>52.53</value>
+                    <footnoteId id="F2"/>
+                </transactionPricePerShare>
+                <transactionAcquiredDisposedCode>
+                    <value>D</value>
+                </transactionAcquiredDisposedCode>
+            </transactionAmounts>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>78680</value>
+                    <footnoteId id="F3"/>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </nonDerivativeTransaction>
+    </nonDerivativeTable>
+
+    <footnotes>
+        <footnote id="F1">Shares of National Beverage Corp. common stock gifted to charitable organization.</footnote>
+        <footnote id="F2">Price per share is the closing price of National Beverage Corp. common stock on the date of the gift.</footnote>
+        <footnote id="F3">This Form 5 amends the Form 5 filed by the reporting person on June 14, 2022 (the &quot;Original Form 5&quot;) to report a gift that was inadvertently left off the Original Form 5. This Form 5 also has the effect of
+correcting the Form 4 filed on July 13, 2022 by reducing the amount of securities reported in Column 5 by 2,000 shares.</footnote>
+    </footnotes>
+
+    <ownerSignature>
+        <signatureName>/s/ Cecil D. Conlee</signatureName>
+        <signatureDate>2022-07-18</signatureDate>
+    </ownerSignature>
+</ownershipDocument>
+</XML>
+</TEXT>
+</DOCUMENT>
+</SEC-DOCUMENT>
