@@ -11,4 +11,4 @@ Angular convention: `type(scope): subject`, imperative, lowercase, no trailing p
 Types: `build`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `test`, `chore`.
 Example: `fix(client): inflate deflate-encoded responses`.
 
-This file is a placeholder; the full version is written in Phase 5.
+This file is a placeholder; the full version is written in Phase 6.

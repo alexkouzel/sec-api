@@ -11,8 +11,9 @@ Update this file in the same commit that completes (or changes) a phase.
 | 1 | Verify against live EDGAR, refresh specs | Done |
 | 2 | Automated tests (offline fixtures, mock client, opt-in live) | Not started |
 | 3 | Fix known bugs in Java | Not started |
-| 4 | Kotlin rewrite and redesign | Not started |
-| 5 | Final `CLAUDE.md` and README | Not started |
+| 4 | Spec drift monitoring (CI, scheduled live check) | Not started |
+| 5 | Kotlin rewrite and redesign | Not started |
+| 6 | Final `CLAUDE.md` and README | Not started |
 
 ## Phases
 
@@ -41,15 +42,42 @@ Update this file in the same commit that completes (or changes) a phase.
 - Client tests against a mock HTTP server: retries, 429 handling, gzip/deflate, rate limit.
 - Live smoke tests, tagged and excluded from the default `./gradlew test` run.
 - Each known bug gets a failing test before it is fixed.
+- Contract tests (first layer of drift detection, see Phase 4):
+  - strict-parse every ownership fixture with `FAIL_ON_UNKNOWN_PROPERTIES` on;
+  - compare the element names in `specs/ownership-xml-*/schemas` with the model's fields,
+    so dropping in a new spec version shows exactly what to add.
 - These tests specify behaviour for the Kotlin rewrite.
 
 ### Phase 3 — Fix bugs (Java)
 
-Make the Phase 2 suite pass. Behaviour fixes only; renaming and restructuring wait for Phase 4.
+Make the Phase 2 suite pass. Behaviour fixes only; renaming and restructuring wait for Phase 5.
 
-### Phase 4 — Kotlin rewrite and redesign
+### Phase 4 — Spec drift monitoring
 
-Redesign rather than port line by line, porting the Phase 2 tests first and keeping them green.
+Phase 1 found EDGAR had changed silently (new XML schemas, new JSON fields). Notice the next
+change within days, not years. Comes after Phase 3 so the check isn't noisy with known bugs,
+and before Phase 5 so it protects the rewrite.
+
+- **CI on every push/PR** (GitHub Actions): `./gradlew test`, offline only.
+- **Live drift check** — a `driftCheck` Gradle task (tests tagged `drift`):
+  - sample recent data from every source: tickers, a few submissions, latest feed,
+    daily page, current quarter's `master.idx`, ~50 recent Form 3/4/5 filings across types;
+  - parse strictly, collecting instead of failing: unknown fields/elements (via a Jackson
+    `DeserializationProblemHandler`), unseen `schemaVersion` values, header-layout or index
+    format changes, parse errors;
+  - write a Markdown report and save each offending raw response (candidate new fixtures).
+- **Spec watcher**: read https://www.sec.gov/submit-filings/technical-specifications and
+  compare the listed Ownership spec version with the one in `specs/` (record known versions
+  and known `schemaVersion` values in a small `specs/versions.json`).
+- **Scheduled workflow** (weekly + manual trigger) runs both and opens or updates a single
+  GitHub issue (label `spec-drift`) with the report; closes nothing automatically.
+- **Runbook** in `CLAUDE.md`: drift reported → add the raw response as a fixture, refresh
+  `specs/`, extend the model, contract tests go green, record it in the findings log.
+- Needs: a repository secret with an EDGAR User-Agent (`Name contact@domain`) for CI requests.
+
+### Phase 5 — Kotlin rewrite and redesign
+
+Redesign rather than port line by line, porting the Phase 2 and 4 tests first and keeping them green.
 
 - Packages by area: `client`, `company`, `filing`, `ownership`.
 - Renames: `FileRef` → `FilingRef`, `FileType` → `FormType`, drop `File`/`FileF345`
@@ -58,12 +86,15 @@ Redesign rather than port line by line, porting the Phase 2 tests first and keep
 - Token-bucket rate limiter, exponential backoff, 429 handling per SEC guidance,
   closeable client.
 - Sealed error type instead of checked exceptions; keep the API usable from Java.
+- Optional unknown-field listener on the client, so library users see drift in production
+  too (tolerant parsing stays the default).
+- Port the Phase 4 drift check along with the tests.
 - Remove Lombok.
 
 Open questions before starting: must Java callers stay first-class? Expand scope
 (XBRL company facts, 13F, 10-K) or keep the current one?
 
-### Phase 5 — Documentation
+### Phase 6 — Documentation
 
 Write the full `CLAUDE.md` and README for the Kotlin code.
 
@@ -72,6 +103,8 @@ Write the full `CLAUDE.md` and README for the Kotlin code.
 - **Bugs are fixed in Java, renaming/restructuring happens in Kotlin.** Tests prove each
   fix before the port; redesigning the Java API right before a rewrite would be done twice.
 - **Tests before fixes and before the rewrite.** Fixture tests are the behavioural spec.
+- **Tolerant at runtime, strict in tests.** The library ignores unknown EDGAR fields so users
+  don't break; contract tests and the scheduled drift check parse strictly so we notice.
 - **Commits follow the Angular convention**: `type(scope): subject` with types
   `build`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `test`, `chore`.
 
