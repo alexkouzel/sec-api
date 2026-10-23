@@ -15,7 +15,7 @@ Frozen on purpose: tests assert exact values, so do not refresh in place — add
 | `current/current-q1-1-q3-4.html` | daily page, 1 day ago, `q3=4` | first 60 rows |
 | `full-index/master-2022-QTR3.idx` | quarterly index | header + 200 rows |
 | `full-index/master-2026-QTR4.idx` | quarterly index | header + 200 rows |
-| `ownership/<accNo>.txt` | filing text | no |
+| `ownership/<accession number>.txt` | filing text | no |
 
 Ownership filings:
 
