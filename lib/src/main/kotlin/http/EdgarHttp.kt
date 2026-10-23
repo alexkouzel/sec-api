@@ -137,7 +137,9 @@ internal class EdgarHttp(
         const val OK = 200
         const val TOO_MANY_REQUESTS = 429
         const val SERVER_ERROR = 500
-        val TIMEOUT: Duration = Duration.ofSeconds(5)
+
+        // EDGAR's cgi-bin pages can take 20 seconds when it is busy.
+        val TIMEOUT: Duration = Duration.ofSeconds(30)
     }
 }
 
