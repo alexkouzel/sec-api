@@ -75,6 +75,12 @@ listOf("testFixturesApiElements", "testFixturesRuntimeElements").forEach {
     java.withVariantsFromConfiguration(configurations[it]) { skip() }
 }
 
+// Without -Pversion the release would be called "unspecified".
+val releaseVersion = version.toString()
+tasks.withType<PublishToMavenRepository>().configureEach {
+    doFirst { check(releaseVersion != "unspecified") { "Set the version: -Pversion=<version>" } }
+}
+
 publishing {
     publications {
         register<MavenPublication>("maven") {

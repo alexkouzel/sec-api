@@ -22,7 +22,8 @@ before changing code, and use the glossary's terms.
 - `./gradlew ktlintFormat` — fixes formatting.
 - `./gradlew liveTest` — against live EDGAR; reads the User-Agent from env `EDGAR_USER_AGENT`
   (`Name contact@domain`).
-- `scripts/publish.sh <version>` — publishes to GitHub Packages (`GPR_USERNAME`, `GPR_TOKEN`).
+- `./gradlew -Pversion=<version> publish` — publishes to GitHub Packages (`GPR_USERNAME`,
+  `GPR_TOKEN`).
 
 ## Fixtures
 
