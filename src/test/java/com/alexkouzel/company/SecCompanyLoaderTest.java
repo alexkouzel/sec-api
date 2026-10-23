@@ -1,29 +1,27 @@
 package com.alexkouzel.company;
 
-import com.alexkouzel.client.TestEdgarClient;
-import com.alexkouzel.client.exceptions.HttpRequestException;
+import com.alexkouzel.testing.FixtureClient;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SecCompanyLoaderTest {
-    private static final SecCompanyLoader loader = new SecCompanyLoader(new TestEdgarClient());
+    private static final String URL = "https://www.sec.gov/files/company_tickers_exchange.json";
+
+    private final FixtureClient client = new FixtureClient()
+            .route(URL, "files/company_tickers_exchange.json");
+
+    private final SecCompanyLoader loader = new SecCompanyLoader(client);
 
     @Test
-    public void test() throws HttpRequestException {
+    public void loadsEveryRowInOrder() throws Exception {
         List<SecCompany> companies = loader.load();
-        assertTrue(companies.size() > 10_000);
-        verifyCompany(companies.getFirst());
-    }
 
-    private void verifyCompany(SecCompany company) {
-        assertNotNull(company);
-        assertNotNull(company.id());
-        assertNotNull(company.exchange());
-        assertNotNull(company.name());
-        assertNotNull(company.ticker());
+        assertEquals(25, companies.size());
+        assertEquals(new SecCompany(1045810, "NVIDIA CORP", "NVDA", "Nasdaq"), companies.getFirst());
+        assertEquals(new SecCompany(320193, "Apple Inc.", "AAPL", "Nasdaq"), companies.get(1));
+        assertEquals(new SecCompany(858877, "CISCO SYSTEMS, INC.", "CSCO", "Nasdaq"), companies.getLast());
     }
 }
