@@ -10,27 +10,46 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+/**
+ * Parses a quarterly master.idx: a free-form header, a line of dashes, then rows of
+ * {@code CIK|Company Name|Form Type|Date Filed|Filename}. Each filing is returned once.
+ */
 @UtilityClass
 public class IndexFeedParser {
 
     public List<FileRef> parse(InputStream stream) throws ParsingException {
         List<FileRef> fileRefs = new ArrayList<>();
+        Set<String> seen = new HashSet<>();
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
-            int idx = 0;
+        // Company names aren't guaranteed to be UTF-8; ISO-8859-1 never fails to decode.
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.ISO_8859_1))) {
+            boolean inRows = false;
             String line;
             while ((line = reader.readLine()) != null) {
-                if (idx >= 11) {
-                    fileRefs.add(parseLine(line));
+                if (!inRows) {
+                    inRows = line.startsWith("---");
+                    continue;
                 }
-                idx++;
+                if (line.isBlank()) {
+                    continue;
+                }
+                FileRef ref = parseLine(line);
+                if (seen.add(ref.accNo())) {
+                    fileRefs.add(ref);
+                }
+            }
+            if (!inRows) {
+                throw new ParsingException("No header separator (line of dashes) found");
             }
         } catch (IOException e) {
-            throw new ParsingException("Failed to read a line");
+            throw new ParsingException("Failed to read index: " + e.getMessage());
         }
         return fileRefs;
     }
@@ -39,21 +58,22 @@ public class IndexFeedParser {
         String[] parts = line.split("\\|");
 
         if (parts.length != 5) {
-            throw new ParsingException("Invalid number of data parts");
+            throw new ParsingException("Invalid number of data parts: " + line);
         }
 
         // Parse accession number
-        int accNoIdx = parts[4].lastIndexOf("/") + 1;
-        String accNo = parts[4].substring(accNoIdx, parts[4].length() - 4);
+        String filename = parts[4].trim();
+        int accNoIdx = filename.lastIndexOf("/") + 1;
+        String accNo = filename.substring(accNoIdx, filename.length() - ".txt".length());
 
         // Parse issuer CIK
-        int issuerCik = Integer.parseInt(parts[0]);
+        int issuerCik = Integer.parseInt(parts[0].trim());
 
         // Parse file type
-        FileType type = FileType.ofValue(parts[2]);
+        FileType type = FileType.ofValue(parts[2].trim());
 
         // Parse file date
-        LocalDate filedAt = DateUtils.parse(parts[3], "yyyy-MM-dd");
+        LocalDate filedAt = DateUtils.parse(parts[3].trim(), "yyyy-MM-dd");
 
         return new FileRef(accNo, issuerCik, type, filedAt);
     }

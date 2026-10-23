@@ -14,6 +14,8 @@ import com.alexkouzel.file.reference.latest.LatestFilesLimit;
 import com.alexkouzel.file.reference.latest.LatestFeedParser;
 
 import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class FileRefLoader {
@@ -53,9 +55,13 @@ public class FileRefLoader {
         return loadDaysAgo(url);
     }
 
+    /**
+     * Filings of exactly this form type. EDGAR's own filter is a prefix match
+     * (type "4" also matches "424B2"), so results are filtered again here.
+     */
     public List<FileRef> loadDaysAgo(int daysAgo, FileType type) throws HttpRequestException, ParsingException {
-        String url = String.format(URL_DAYS_AGO, daysAgo) + "&q3=" + type.getValue();
-        return loadDaysAgo(url);
+        String url = String.format(URL_DAYS_AGO, daysAgo) + "&q3=" + encode(type.getValue());
+        return FileRefUtils.filterType(loadDaysAgo(url), type);
     }
 
     private List<FileRef> loadDaysAgo(String url) throws HttpRequestException, ParsingException {
@@ -73,9 +79,18 @@ public class FileRefLoader {
         return loadLatest(0, count, type);
     }
     
+    /**
+     * Filings of exactly this form type among the latest {@code count} feed entries.
+     * EDGAR's own filter is a prefix match (type "4" also matches "424B2"), so results
+     * are filtered again here and may be fewer than {@code count}, or none.
+     */
     public List<FileRef> loadLatest(int start, LatestFilesLimit count, FileType type) throws ParsingException, HttpRequestException {
-        String url = String.format(URL_LATEST, start, count.getValue()) + "&type=" + type.getValue();
-        return loadLatest(url);
+        String url = String.format(URL_LATEST, start, count.getValue()) + "&type=" + encode(type.getValue());
+        return FileRefUtils.filterType(loadLatest(url), type);
+    }
+
+    private static String encode(String value) {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 
     public List<FileRef> loadLatest(String url) throws ParsingException, HttpRequestException {

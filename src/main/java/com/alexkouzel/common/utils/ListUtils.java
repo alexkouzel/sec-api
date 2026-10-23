@@ -3,6 +3,7 @@ package com.alexkouzel.common.utils;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -13,7 +14,7 @@ public class ListUtils {
 
     public <T, U> List<T> removeDups(List<T> list, Function<T, U> keyMapper) {
         return new ArrayList<>(list.stream()
-                .collect(Collectors.toMap(keyMapper, Function.identity(), (e1, e2) -> e1))
+                .collect(Collectors.toMap(keyMapper, Function.identity(), (e1, e2) -> e1, LinkedHashMap::new))
                 .values());
     }
 
