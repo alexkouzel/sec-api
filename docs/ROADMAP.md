@@ -205,7 +205,18 @@ Build fixes found on the way: `check`'s detekt only analysed `main` and `test` (
 all of `src/`, and test names and magic numbers are allowed in every test source set), and
 the test suites name `kotlin-test-junit5`, which the Kotlin plugin infers for `test` only.
 
-Next in step 3: `SecClient` with `liveClient()`.
+Progress (2026-10-23): step 3 done. `SecClient(userAgent, baseRetryDelay, maxRetryDelay)`
+(`@JvmOverloads`) wires `companies`, `filings` and `ownership` over one `EdgarHttp` and closes
+it; a User-Agent without `@` is rejected. `liveClient()` in `testFixtures` reads
+`EDGAR_USER_AGENT`. `liveTest` holds `SecClientLiveTest` (port of `EdgarLiveTest`) and
+`JavaLiveTest`, which calls the main paths from Java as CONVENTIONS asks. Both compile; they
+have not passed yet, as the session that wrote them could not reach sec.gov (every request
+was refused by its network policy, after building the right URLs). Run `./gradlew liveTest`
+before step 5.
+
+Offline totals: `lib` 101 unit tests and 30 contract tests, `legacy` 123, all green.
+
+Next: step 4.
 
 Wire classes map only the fields the library uses (the Java ones mapped every field), so
 strict parsing of them can't spot EDGAR additions. Step 4 decides how the drift check sees
