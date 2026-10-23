@@ -16,6 +16,8 @@ ktlint {
 }
 
 detekt {
+    // Every source set, not only main and test.
+    source.setFrom("src")
     buildUponDefaultConfig = true
     config.from(rootProject.file("config/detekt.yml"))
     file("detekt.yml").takeIf { it.exists() }?.let { config.from(it) }

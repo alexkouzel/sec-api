@@ -1,10 +1,15 @@
 # Only differences from detekt's default config.
 naming:
+  FunctionNaming:
+    # Test names are sentences in backticks, in every test source set.
+    excludes: ['**/test/**', '**/testFixtures/**', '**/contractTest/**', '**/liveTest/**']
   InvalidPackageDeclaration:
     # Directories omit the root package (see docs/ARCHITECTURE.md).
     rootPackage: com.alexkouzel.sec
 
 style:
+  MagicNumber:
+    excludes: ['**/test/**', '**/testFixtures/**', '**/contractTest/**', '**/liveTest/**', '**/*.kts']
   DestructuringDeclarationWithTooManyEntries:
     # Regex groups and index columns read best destructured.
     maxDestructuringEntries: 5
