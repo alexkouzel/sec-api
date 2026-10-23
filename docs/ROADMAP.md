@@ -84,6 +84,16 @@ and before Phase 5 so it protects the rewrite.
 
 Redesign rather than port line by line, porting the Phase 2 and 4 tests first and keeping them green.
 
+First step — conventions, before any Kotlin code:
+
+- Confirm the glossary's Kotlin names in `docs/CONVENTIONS.md` (the glossary itself
+  applies from Phase 3 on).
+- Write its Structure and Kotlin style sections together with the API design.
+- Tooling, wired into the Phase 4 CI: `.editorconfig`, ktlint (formatting), detekt (lint),
+  Kotlin explicit API mode (every public declaration is a deliberate choice).
+
+Then:
+
 - Packages by area: `client`, `company`, `filing`, `ownership`.
 - Renames: `FileRef` → `FilingRef`, `FileType` → `FormType`, drop `File`/`FileF345`
   for a plain `OwnershipFiling`, replace `LatestFilesLimit` with a validated count.
@@ -110,6 +120,9 @@ Write the full `CLAUDE.md` and README for the Kotlin code.
 - **Tests before fixes and before the rewrite.** Fixture tests are the behavioural spec.
 - **Tolerant at runtime, strict in tests.** The library ignores unknown EDGAR fields so users
   don't break; contract tests and the scheduled drift check parse strictly so we notice.
+- **Conventions are set for Kotlin, not retrofitted to Java.** `docs/CONVENTIONS.md` holds
+  the EDGAR glossary now; structure and style rules are written at the start of Phase 5 and
+  enforced by tools where possible, prose only for what tools can't check.
 - **Commits follow the Angular convention**: `type(scope): subject` with types
   `build`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `test`, `chore`.
 

@@ -5,6 +5,9 @@ Java library for SEC EDGAR data, being restored and rewritten in Kotlin.
 **Read [docs/ROADMAP.md](docs/ROADMAP.md) first.** It holds the current phase, decisions,
 known bugs, and findings. Update it in the commit that completes or changes a phase.
 
+**Use the terms in [docs/CONVENTIONS.md](docs/CONVENTIONS.md)** (EDGAR glossary: CIK roles,
+accession number, filing vs form vs document) in code, tests and docs.
+
 ## Tests
 
 - `./gradlew test` — offline: fixtures, contract tests, local HTTP server. Must stay green.
