@@ -166,7 +166,36 @@ jackson-module-kotlin applies a property's non-null element type to nested colle
 `List<List<Any?>>` rejects a `null` inside an inner list. `Tickers` reads each row as a
 `JsonNode` instead; keep this in mind for `ownership/xml`.
 
-Next in step 3: `ownership`, then `SecClient` with `liveClient()`.
+Progress (2026-10-23): step 3, `ownership` done (contract tests next). `Ownership.get(ref)`
+returns an `OwnershipFiling`; it rejects a ref whose form type isn't 3, 4 or 5 (or an
+amendment) with `IllegalArgumentException`.
+
+- Model: `OwnershipFiling` (header values, issuer, owners, transactions, holdings,
+  footnotes, signatures, flags), `Owner.kt` (`Issuer`, `ReportingOwner`, `Address`,
+  `Relationship`, `Signature`), `Transaction.kt` (`Transaction`, `Holding`, `Derivative`,
+  `Coding`, `TransactionCode`), `Footnote.kt` (`Footnote`, `Footnoted<T>`). The XML's nesting
+  is flattened: `transaction.shares: Footnoted<Double>?`.
+- Both tables share `Transaction` and `Holding`; `derivative: Derivative?` holds a derivative
+  security's exercise price, dates and underlying security. Lists are in filing order,
+  non-derivative first.
+- `Coding.value` keeps the raw transaction code; `Coding.code` is the `TransactionCode`, null
+  when unknown. `TransactionCode` keeps the Java codes (the XSD's 18 plus `V` and `K`), some
+  renamed after the SEC's descriptions: `F` `TAX_OR_EXERCISE_PAYMENT`, `U` `TENDER_OF_SHARES`,
+  `G` `GIFT`, `W` `INHERITANCE`, `C` `CONVERSION`, `E`/`H` `EXPIRATION_SHORT`/`_LONG`,
+  `O`/`X` `EXERCISE_OUT_OF_THE_MONEY`/`_IN_THE_MONEY`.
+- `ownership/xml` mirrors the XSD with every leaf as text; `Values.kt` converts numbers,
+  dates and flags and fails with `SecException.Parse` on a malformed one. An element with
+  neither value nor footnote is null. Repeated elements keep `@JsonMerge` (with `@field:`);
+  removing it from `nonDerivativeHolding` fails the interleaving test.
+- Fixes over the Java parser: line breaks inside the XML are kept (Java deleted every
+  newline, gluing words of multi-line footnotes: "effect ofcorrecting" in
+  0001437749-22-017271); `document` is the `<FILENAME>` of the document holding the XML,
+  not the first one in the filing; accession number, form type and filed date always come
+  from the header.
+- Tests: 35 in `test/ownership/`, from `OwnershipDocumentLoaderTest` plus the URL, the form
+  type check, a missing `<XML>` block, unknown transaction codes and footnote line breaks.
+
+Next in step 3: the contract tests, then `SecClient` with `liveClient()`.
 
 Wire classes map only the fields the library uses (the Java ones mapped every field), so
 strict parsing of them can't spot EDGAR additions. Step 4 decides how the drift check sees
