@@ -32,6 +32,8 @@ public class CikSubmissionFilings {
         private List<Boolean> isXBRL;
         @JsonDeserialize(contentUsing = BooleanDeserializer.class)
         private List<Boolean> isInlineXBRL;
+        @JsonDeserialize(contentUsing = BooleanDeserializer.class)
+        private List<Boolean> isXBRLNumeric;
         private List<String> primaryDocument;
         private List<String> primaryDocDescription;
     }

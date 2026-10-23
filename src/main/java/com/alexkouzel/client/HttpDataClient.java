@@ -3,6 +3,7 @@ package com.alexkouzel.client;
 import com.alexkouzel.client.exceptions.HttpRequestException;
 import com.alexkouzel.client.exceptions.StatusCodeException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -42,6 +43,10 @@ public abstract class HttpDataClient {
         JavaTimeModule timeModule = new JavaTimeModule();
         jsonMapper.registerModule(timeModule);
         xmlMapper.registerModule(timeModule);
+
+        // EDGAR adds fields over time; unknown ones must not break parsing.
+        jsonMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
 
     protected abstract HttpRequest buildRequest(String url, String contentType);
