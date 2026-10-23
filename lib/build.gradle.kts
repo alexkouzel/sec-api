@@ -34,10 +34,12 @@ testing {
     }
 }
 
-// Test code may use internal declarations of main.
+// Test code may use internal declarations of main, and tests those of testFixtures.
 kotlin.target.compilations.run {
     val main = getByName("main")
+    val testFixtures = getByName("testFixtures")
     listOf("testFixtures", "contractTest", "liveTest").forEach { getByName(it).associateWith(main) }
+    listOf("test", "contractTest", "liveTest").forEach { getByName(it).associateWith(testFixtures) }
 }
 
 tasks.check {
