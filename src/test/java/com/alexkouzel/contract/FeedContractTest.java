@@ -1,6 +1,7 @@
 package com.alexkouzel.contract;
 
 import com.alexkouzel.file.reference.company.CikSubmission;
+import com.alexkouzel.file.reference.company.CikSubmissionFilings;
 import com.alexkouzel.file.reference.latest.LatestFeed;
 import com.alexkouzel.testing.Fixtures;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -25,6 +26,16 @@ public class FeedContractTest {
                 .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
         assertNotNull(mapper.readValue(Fixtures.text(path), CikSubmission.class).getFilings().getRecent());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"submissions/CIK0000946581-submissions-001.json"})
+    public void olderSubmissionsParseStrictly(String path) throws Exception {
+        ObjectMapper mapper = new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+        assertNotNull(mapper.readValue(Fixtures.text(path), CikSubmissionFilings.Recent.class).getAccessionNumber());
     }
 
     @ParameterizedTest

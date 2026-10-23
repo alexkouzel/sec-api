@@ -6,6 +6,7 @@ import com.alexkouzel.common.exceptions.ParsingException;
 import com.alexkouzel.common.utils.StringUtils;
 import com.alexkouzel.file.FileType;
 import com.alexkouzel.file.reference.company.CikSubmission;
+import com.alexkouzel.file.reference.company.CikSubmissionFilings;
 import com.alexkouzel.file.reference.company.CikSubmissionParser;
 import com.alexkouzel.file.reference.daysago.DailyFeedParser;
 import com.alexkouzel.file.reference.fiscalquarter.IndexFeedParser;
@@ -16,10 +17,12 @@ import com.alexkouzel.file.reference.latest.LatestFeedParser;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileRefLoader {
     private static final String URL_COMPANY = "https://data.sec.gov/submissions/CIK%s.json";
+    private static final String URL_COMPANY_OLDER = "https://data.sec.gov/submissions/%s";
     private static final String URL_DAYS_AGO = "https://www.sec.gov/cgi-bin/current?q1=%s";
     private static final String URL_FISCAL_QUARTER = "https://www.sec.gov/Archives/edgar/full-index/%d/QTR%d/master.idx";
     private static final String URL_LATEST = "https://www.sec.gov/cgi-bin/browse-edgar" +
@@ -34,11 +37,26 @@ public class FileRefLoader {
         this.client = client;
     }
 
+    /**
+     * Every filing of this CIK, newest first: {@code filings.recent} of the submissions JSON
+     * (at most 1,000 filings or one year), then each older file it lists in {@code filings.files}.
+     * Each older file costs one extra request.
+     */
     public List<FileRef> loadCompany(int cik) throws HttpRequestException, ParsingException {
         String cikValue = StringUtils.padLeft(String.valueOf(cik), 10, '0');
         String url = String.format(URL_COMPANY, cikValue);
         CikSubmission submission = client.loadJson(url, CikSubmission.class);
-        return CikSubmissionParser.parse(submission);
+
+        CikSubmissionFilings filings = submission.getFilings();
+        List<FileRef> fileRefs = new ArrayList<>(CikSubmissionParser.parse(filings.getRecent(), submission.getCik()));
+        if (filings.getFiles() != null) {
+            for (CikSubmission.FilingFile file : filings.getFiles()) {
+                String fileUrl = String.format(URL_COMPANY_OLDER, file.getName());
+                CikSubmissionFilings.Recent older = client.loadJson(fileUrl, CikSubmissionFilings.Recent.class);
+                fileRefs.addAll(CikSubmissionParser.parse(older, submission.getCik()));
+            }
+        }
+        return fileRefs;
     }
 
     public List<FileRef> loadLatest(int start, LatestFilesLimit count) throws ParsingException, HttpRequestException {

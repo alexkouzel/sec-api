@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FileRefLoaderTest {
     private static final String COMPANY_URL = "https://data.sec.gov/submissions/CIK0000946581.json";
+    private static final String COMPANY_OLDER_URL = "https://data.sec.gov/submissions/CIK0000946581-submissions-001.json";
     private static final String LATEST_URL = "https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent";
     private static final String LATEST_10_URL = LATEST_URL + "&start=0&count=10&output=atom";
     private static final String LATEST_40_F4_URL = LATEST_URL + "&start=0&count=40&output=atom&type=4";
@@ -30,6 +31,7 @@ public class FileRefLoaderTest {
 
     private final FixtureClient client = new FixtureClient()
             .route(COMPANY_URL, "submissions/CIK0000946581.json")
+            .route(COMPANY_OLDER_URL, "submissions/CIK0000946581-submissions-001.json")
             .route(LATEST_10_URL, "latest/getcurrent-count-10.atom")
             .route(LATEST_40_F4_URL, "latest/getcurrent-count-40-type-4.atom")
             .route(LATEST_20_URL, "latest/getcurrent-count-20-type-SCHEDULE13.atom")
@@ -53,13 +55,22 @@ public class FileRefLoaderTest {
 
         @Test
         public void loadsRecentFilings() throws Exception {
-            List<FileRef> refs = loader.loadCompany(946581);
+            List<FileRef> refs = loader.loadCompany(946581).subList(0, 40);
 
-            assertEquals(40, refs.size());
             assertEquals(ref("0000946581-26-000104", 946581, FileType.F4, "2026-10-16"), refs.getFirst());
             assertEquals(ref("0001950047-26-006756", 946581, FileType.OTHER, "2026-07-01"), refs.getLast());
             assertEquals(21, refs.stream().filter(r -> r.type() == FileType.F4).count());
+        }
+
+        @Test
+        public void appendsOlderFilings() throws Exception {
+            List<FileRef> refs = loader.loadCompany(946581);
+
+            assertEquals(70, refs.size());
+            assertEquals(ref("0001104659-15-011425", 946581, FileType.OTHER, "2015-02-17"), refs.get(40));
+            assertEquals(ref("0001104659-14-078955", 946581, FileType.F4, "2014-11-10"), refs.getLast());
             assertTrue(refs.stream().allMatch(r -> r.issuerCik() == 946581));
+            assertEquals(List.of(COMPANY_URL, COMPANY_OLDER_URL), client.requestedUrls());
         }
     }
 

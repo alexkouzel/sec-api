@@ -11,21 +11,23 @@ import java.util.List;
 @UtilityClass
 public class CikSubmissionParser {
 
-    public List<FileRef> parse(CikSubmission submission) {
-        CikSubmissionFilings.Recent recent = submission.getFilings().getRecent();
-        int filingCount = recent.getAccessionNumber().size();
+    /**
+     * Parses one block of filings: {@code filings.recent} of a submission, or one of
+     * the older files listed in {@code filings.files} (same shape).
+     */
+    public List<FileRef> parse(CikSubmissionFilings.Recent filings, int cik) {
+        int filingCount = filings.getAccessionNumber().size();
 
         List<FileRef> fileRefs = new ArrayList<>();
         for (int i = 0; i < filingCount; i++) {
 
-            String accNo = recent.getAccessionNumber().get(i);
-            String typeValue = recent.getForm().get(i);
-            LocalDate filedAt = recent.getFilingDate().get(i);
+            String accNo = filings.getAccessionNumber().get(i);
+            String typeValue = filings.getForm().get(i);
+            LocalDate filedAt = filings.getFilingDate().get(i);
 
-            int issuerCik = submission.getCik();
             FileType type = FileType.ofValue(typeValue);
 
-            FileRef fileRef = new FileRef(accNo, issuerCik, type, filedAt);
+            FileRef fileRef = new FileRef(accNo, cik, type, filedAt);
             fileRefs.add(fileRef);
         }
         return fileRefs;
