@@ -1,5 +1,8 @@
 # SEC API
 
+> **Out of date:** this README describes the Java API, which was replaced by the Kotlin
+> library in `lib/` (Phase 5 in [docs/ROADMAP.md](docs/ROADMAP.md)). It is rewritten in Phase 6.
+
 Java library for SEC EDGAR data.
 
 SEC API gives you typed Java access to data from the [U.S. Securities and Exchange Commission (SEC)](https://www.sec.gov/) through its EDGAR system: registered companies, filing references, and fully parsed insider ownership documents. It handles EDGAR's rate limits and retries for you.

@@ -27,7 +27,6 @@ Target design for the Kotlin rewrite (Phase 5). Code rules are in
 sec-api/
 ├── lib/          the published library
 ├── drift/        drift-check tool; uses only lib's public API
-├── legacy/       the Java library, until lib replaces it (removed in Phase 5, step 5)
 ├── build-logic/  convention plugin sec.kotlin: toolchain, ktlint, detekt, JUnit
 ├── config/       detekt.yml (differences from detekt's defaults only)
 ├── specs/        SEC specifications and specs/versions.json
@@ -135,7 +134,7 @@ Rules:
   support code can stay `internal` (e.g. `FixtureHttp`).
 - The `known-bug` tag stays for tests that document an open bug.
 
-Current Java tests → new place:
+Where the Java tests went in Phase 5:
 
 | Now | Becomes |
 |-----|---------|
@@ -154,4 +153,4 @@ Current Java tests → new place:
 - Gradle Kotlin DSL, versions in `gradle/libs.versions.toml`, settings shared by a
   convention plugin in `build-logic/` (toolchain, ktlint, detekt, test tasks).
 - Jackson 3 (`tools.jackson`, with `jackson-module-kotlin`): it handles the XML well, its
-  exceptions are unchecked, and java.time support is built in. Lombok goes with `legacy`.
+  exceptions are unchecked, and java.time support is built in.

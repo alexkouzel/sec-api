@@ -1,7 +1,10 @@
 plugins {
     id("sec.kotlin")
     `java-test-fixtures`
+    `maven-publish`
 }
+
+group = "com.alexkouzel"
 
 kotlin {
     explicitApi()
@@ -44,4 +47,29 @@ kotlin.target.compilations.run {
 
 tasks.check {
     dependsOn(testing.suites.named("contractTest"))
+}
+
+// Published to GitHub Packages by scripts/publish.sh; test fixtures stay unpublished.
+val java = components["java"] as AdhocComponentWithVariants
+listOf("testFixturesApiElements", "testFixturesRuntimeElements").forEach {
+    java.withVariantsFromConfiguration(configurations[it]) { skip() }
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("maven") {
+            artifactId = "sec-api"
+            from(java)
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/alexkouzel/sec-api")
+            credentials {
+                username = findProperty("gpr.username") as String? ?: System.getenv("GPR_USERNAME")
+                password = findProperty("gpr.token") as String? ?: System.getenv("GPR_TOKEN")
+            }
+        }
+    }
 }

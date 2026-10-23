@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Library for SEC EDGAR data: the Java version in `legacy/`, being rewritten in Kotlin in `lib/`.
+Kotlin library for SEC EDGAR data, in `lib/`; the drift-check tool is in `drift/`.
 
 **Read [docs/ROADMAP.md](docs/ROADMAP.md) first.** It holds the current phase, decisions,
 known bugs, and findings. Update it in the commit that completes or changes a phase.
@@ -11,8 +11,7 @@ its naming, comment and style rules and the layout in [docs/ARCHITECTURE.md](doc
 
 ## Modules
 
-- `lib/` — the Kotlin library (Phase 5, in progress). `drift/` — the drift-check tool.
-- `legacy/` — the Java library, kept building and tested until `lib` replaces it.
+- `lib/` — the library. `drift/` — the drift-check tool, on `lib`'s public API.
 - `build-logic/` — the `sec.kotlin` convention plugin (toolchain, ktlint, detekt, JUnit);
   versions in `gradle/libs.versions.toml`.
 
@@ -20,12 +19,11 @@ its naming, comment and style rules and the layout in [docs/ARCHITECTURE.md](doc
 
 - `./gradlew check` — offline, all modules: unit and contract tests, ktlint, detekt. Must
   stay green.
-- `./gradlew liveTest` — hits real EDGAR (`lib/src/liveTest`, legacy tag `live`).
+- `./gradlew liveTest` — hits real EDGAR (`lib/src/liveTest`).
 - `./gradlew knownBugTest` — tag `known-bug`, fails until each bug in the roadmap is fixed;
   remove a test's tag when its fix lands.
 - `./gradlew :drift:driftCheck` — samples live EDGAR and the SEC spec page through the library;
   writes `drift/build/drift/report.md` and saves offending responses under `drift/build/drift/raw/`.
-  (`:legacy:driftCheck` is the Java original, removed with `legacy`.)
 - `./gradlew ktlintFormat` fixes formatting.
 - Live tasks read the User-Agent from env `EDGAR_USER_AGENT` (`Name contact@domain`).
 - Fixtures in `lib/src/testFixtures/resources/edgar/` are frozen (see its README); add new files,

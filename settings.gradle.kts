@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "sec-api"
 
-include("lib", "drift", "legacy")
+include("lib", "drift")

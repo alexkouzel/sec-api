@@ -12,7 +12,7 @@ Update this file in the same commit that completes (or changes) a phase.
 | 2 | Automated tests (offline fixtures, mock client, opt-in live) | Done |
 | 3 | Fix known bugs in Java | Done |
 | 4 | Spec drift monitoring (CI, scheduled live check) | Done |
-| 5 | Kotlin rewrite and redesign | In progress |
+| 5 | Kotlin rewrite and redesign | Done |
 | 6 | Final `CLAUDE.md` and README | Not started |
 
 ## Phases
@@ -246,7 +246,18 @@ or Q4) clean, no unknown fields. The latest feed passed once the timeout was rai
 daily list failed both runs with HTTP 503 and 30 s timeouts, as did curl (503 after 78 s), so
 EDGAR's `cgi-bin/current` was down, not drifted. Rerun before trusting a `request failed`.
 
-Next: step 5.
+Progress (2026-10-23): step 5 done; Phase 5 done. `legacy/` (Java sources, its tests, Lombok
+and Jackson 2) is deleted; `settings.gradle.kts` includes `lib` and `drift` only. Publishing
+moved to `lib` (`com.alexkouzel:sec-api`, GitHub Packages, test fixtures not published);
+`scripts/publish.sh` runs `:lib:publish`. CI and `CLAUDE.md` name no Java tasks. The README
+still describes the Java API, marked out of date until Phase 6.
+
+Final state: `./gradlew check` runs `lib` 103 unit and 37 contract tests and `drift` 11 tests,
+with ktlint and detekt over every source set; `./gradlew liveTest` 7 tests (Kotlin and Java);
+`./gradlew :drift:driftCheck` the drift check. The open questions above keep their defaults:
+blocking API usable from Java, current sources only, no coroutines.
+
+Next: Phase 6.
 
 Wire classes map only the fields the library uses (the Java ones mapped every field), so
 strict parsing of them can't spot EDGAR additions. Step 4 decides how the drift check sees
