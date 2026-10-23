@@ -11,7 +11,7 @@ Update this file in the same commit that completes (or changes) a phase.
 | 1 | Verify against live EDGAR, refresh specs | Done |
 | 2 | Automated tests (offline fixtures, mock client, opt-in live) | Done |
 | 3 | Fix known bugs in Java | Done |
-| 4 | Spec drift monitoring (CI, scheduled live check) | Not started |
+| 4 | Spec drift monitoring (CI, scheduled live check) | Done |
 | 5 | Kotlin rewrite and redesign | Not started |
 | 6 | Final `CLAUDE.md` and README | Not started |
 
@@ -83,6 +83,12 @@ and before Phase 5 so it protects the rewrite.
 - **Runbook** in `CLAUDE.md`: drift reported → add the raw response as a fixture, refresh
   `specs/`, extend the model, contract tests go green, record it in the findings log.
 - Needs: a repository secret with an EDGAR User-Agent (`Name contact@domain`) for CI requests.
+
+Result: `ci.yml` (offline tests on push/PR) and `drift.yml` (weekly, Tuesdays 06:00 UTC, and
+manual). `./gradlew driftCheck` makes about 70 requests in ~15 s. Code in
+`src/test/java/com/alexkouzel/drift/`; the runbook is in `CLAUDE.md`. Details in the
+findings log. Before the workflows run on GitHub: push `main` and add the
+`EDGAR_USER_AGENT` secret.
 
 ### Phase 5 — Kotlin rewrite and redesign
 
@@ -237,3 +243,27 @@ Behaviour changes, for the README and the Kotlin port:
 - `FileUrlBuilder.buildF345` removed.
 - JDK `HttpClient` silently retries a dropped connection once by itself; tests account
   for it.
+
+### Phase 4 — 2026-10-23
+
+Drift check (`drift/EdgarDriftTest`, tag `drift`), one run over every source:
+
+| Source | Sample | Checks |
+|--------|--------|--------|
+| Spec page | `submit-filings/technical-specifications` | Ownership section version and every linked `ownershipxmltechspec-v*.zip` (drafts too) vs `specs/versions.json` |
+| Company tickers | full file | `fields` is `[cik, name, ticker, exchange]`, no extra keys, every row matches |
+| Submissions | Apple, Tesla, CIK 946581, Tim Cook (insider); newest older file of each | unknown fields, filing columns of equal length |
+| Latest feed | 40 entries, with and without `type=4` | unknown elements, parser |
+| Daily list | 1 day ago, with and without `q3=4` | parser (an empty weekend page is fine) |
+| Quarterly index | current quarter; previous too when a form type is short | column line, parser |
+| Ownership filings | newest 20 × 4, 10 × 3, 6 × 5, 6 × 4/A, 4 × 3/A, 4 × 5/A from the index | unknown elements, parser, `schemaVersion` known, header form type = index form type |
+
+Unknown fields are collected with a Jackson `DeserializationProblemHandler`
+(`UnknownFieldCollector`) on mappers set up like the library's, so one run lists every
+addition. Every failure is a finding, so a broken source doesn't hide the others.
+
+First run: no drift. Spec 5.5 is current; recent filings carry `X0607` (14) and `X0609`
+(32); no 5/A was filed in 2026 Q3 or Q4 so far. Removing `X0609` from `versions.json` gave
+32 findings with their raw filings saved, as expected. The issue step was dry-run with a
+stub `gh` (create when none is open, else edit and comment). The workflows themselves
+haven't run on GitHub yet.

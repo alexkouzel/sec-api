@@ -94,8 +94,8 @@ empty EDGAR values), the sealed error type, KDoc on public API.
 Applies now (see also `CLAUDE.md`):
 
 - Mirror the main package of the code under test; shared helpers live in `testing/`.
-- Offline by default. Tags: `live` (real EDGAR), `known-bug` (fails until fixed), later
-  `drift` (Phase 4).
+- Offline by default. Tags: `live` (real EDGAR), `known-bug` (fails until fixed), `drift`
+  (samples live EDGAR, reports differences from the model).
 - Fixtures under `src/test/resources/edgar/<source>/` are frozen; ownership filings are
   named `<accession number>.txt`. Add new fixtures and list them in that folder's README.
 - Expected values come from the raw data (independently extracted), not from the code's
