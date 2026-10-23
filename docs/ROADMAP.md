@@ -216,7 +216,37 @@ before step 5.
 
 Offline totals: `lib` 101 unit tests and 30 contract tests, `legacy` 123, all green.
 
-Next: step 4.
+Live run (2026-10-23, network access added): `./gradlew liveTest` passes, 7 Kotlin tests and
+the Java ones. Live company tickers: 164 of 10,429 rows have a null `exchange`, so the
+nullable field is needed.
+
+Progress (2026-10-23): step 4 done.
+
+- `SecClient(..., unknownFields)` takes an `UnknownFieldListener`, told the URL and the field
+  (`Issuer.issuerNewThing`) of everything EDGAR sends that the library doesn't know; parsing
+  carries on. A Jackson problem handler on the shared mappers reports to the listener of the
+  `Http.get` call running on that thread. New ticker columns are reported too.
+- Decision (simplest, one mechanism): wire classes declare every field EDGAR sends, unused
+  ones as `Any?`, instead of comparing key sets. The submissions JSON and latest feed classes
+  were widened again. Contract tests collect unknown fields the same way and assert none;
+  `FeedContractTest` is ported (submissions, older submissions, latest feed, tickers). The
+  strict mapper in `OwnershipContractTest` was replaced: the problem handler would have
+  made `FAIL_ON_UNKNOWN_PROPERTIES` pass silently.
+- `SecException.url` names the request that failed or whose response didn't parse.
+- `drift` module: `Main`, `DriftCheck` (same samples as the Java check, through `SecClient`;
+  raw responses are fetched again only for findings), `Report`, `SpecPage`, `KnownVersions`;
+  11 unit tests. `./gradlew :drift:driftCheck` (exit code 1 on findings); `drift.yml` runs it
+  and reads `drift/build/drift/`.
+- Request timeout raised from 5 s to 30 s: the first live drift run timed out on the latest
+  feed, which EDGAR answered in 11–19 s (curl) while busy.
+
+First live drift run: spec 5.5 current; tickers, four submissions (with every older file),
+both quarterly indexes and 46 ownership filings (`X0607` 14, `X0609` 32; no 5/A in 2026 Q3
+or Q4) clean, no unknown fields. The latest feed passed once the timeout was raised; the
+daily list failed both runs with HTTP 503 and 30 s timeouts, as did curl (503 after 78 s), so
+EDGAR's `cgi-bin/current` was down, not drifted. Rerun before trusting a `request failed`.
+
+Next: step 5.
 
 Wire classes map only the fields the library uses (the Java ones mapped every field), so
 strict parsing of them can't spot EDGAR additions. Step 4 decides how the drift check sees

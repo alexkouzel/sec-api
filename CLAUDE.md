@@ -23,8 +23,9 @@ its naming, comment and style rules and the layout in [docs/ARCHITECTURE.md](doc
 - `./gradlew liveTest` — hits real EDGAR (`lib/src/liveTest`, legacy tag `live`).
 - `./gradlew knownBugTest` — tag `known-bug`, fails until each bug in the roadmap is fixed;
   remove a test's tag when its fix lands.
-- `./gradlew :legacy:driftCheck` — samples live EDGAR and the SEC spec page; writes
-  `legacy/build/drift/report.md` and saves offending responses under `legacy/build/drift/raw/`.
+- `./gradlew :drift:driftCheck` — samples live EDGAR and the SEC spec page through the library;
+  writes `drift/build/drift/report.md` and saves offending responses under `drift/build/drift/raw/`.
+  (`:legacy:driftCheck` is the Java original, removed with `legacy`.)
 - `./gradlew ktlintFormat` fixes formatting.
 - Live tasks read the User-Agent from env `EDGAR_USER_AGENT` (`Name contact@domain`).
 - Fixtures in `lib/src/testFixtures/resources/edgar/` are frozen (see its README); add new files,
@@ -33,9 +34,9 @@ its naming, comment and style rules and the layout in [docs/ARCHITECTURE.md](doc
 ## CI
 
 - `.github/workflows/ci.yml` runs `./gradlew check` on every push and pull request.
-- `.github/workflows/drift.yml` runs `./gradlew :legacy:driftCheck` weekly (Tuesdays) and on
+- `.github/workflows/drift.yml` runs `./gradlew :drift:driftCheck` weekly (Tuesdays) and on
   demand; on findings it opens or updates one issue labelled `spec-drift`, with the report,
-  and uploads `legacy/build/drift/` as the `drift-report` artifact. It never closes the issue.
+  and uploads `drift/build/drift/` as the `drift-report` artifact. It never closes the issue.
   Needs the repository secret `EDGAR_USER_AGENT`.
 
 ## Drift runbook
@@ -48,11 +49,13 @@ When the drift check reports something:
 3. New spec version: download it from the spec page into `specs/ownership-xml-v<version>/`,
    update `specs/README.md` and `ownershipSpec` in `specs/versions.json`. Unseen
    `schemaVersion`: add it to `schemaVersions` once its filings parse fully.
-4. Extend the model for new fields or elements; the contract tests
-   (`OwnershipContractTest`, `FeedContractTest`) must fail first, then pass.
+4. Extend the model for new fields or elements (wire classes declare every field EDGAR sends,
+   read or not); the contract tests (`OwnershipContractTest`, `FeedContractTest` in
+   `lib/src/contractTest`) must fail first, then pass.
 5. Format change (parse error, layout changed): fix the parser with a test on the new fixture.
-6. Record it in the findings log in `docs/ROADMAP.md`, run `./gradlew driftCheck` until
-   clean, then close the issue by hand.
+6. Record it in the findings log in `docs/ROADMAP.md`, run `./gradlew :drift:driftCheck` until
+   clean, then close the issue by hand. A `request failed` finding alone is usually EDGAR being
+   down; rerun before acting on it.
 
 ## Commits
 

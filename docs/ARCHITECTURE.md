@@ -34,7 +34,8 @@ sec-api/
 └── docs/
 ```
 
-`drift` is an application, not a test: it samples live EDGAR and writes a report. Being a
+`drift` is an application, not a test: it samples live EDGAR and writes a report
+(`Main`, `DriftCheck`, `Report`, `SpecPage`, `KnownVersions` in `drift/src/main/kotlin`). Being a
 separate module keeps the library free of tooling and makes it a real consumer of the API
 (it sees drift through the same unknown-field listener library users get).
 
@@ -46,6 +47,7 @@ root: `lib/src/main/kotlin/filing/FilingRef.kt` is `com.alexkouzel.sec.filing`.
 ```
 lib/src/main/kotlin/
 ├── SecClient.kt          entry point: SecClient(userAgent, ...) with .companies, .filings, .ownership
+├── UnknownFieldListener.kt  told about fields EDGAR added (used by drift)
 ├── SecException.kt       sealed: Http, Parse
 ├── http/                 transport only, knows nothing about EDGAR formats
 │   ├── Http.kt           internal interface: get(url) -> bytes; the seam tests replace
