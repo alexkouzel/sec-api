@@ -117,8 +117,8 @@ stable detekt 1.23 doesn't support Kotlin 2.4. Verified with throwaway files: ea
 set compiles and runs under its task and sees `main`'s `internal` code; explicit API mode,
 ktlint, detekt's package-vs-directory rule and the `known-bug` split all fail as they should.
 
-Progress (2026-10-23): step 2 done except `LocalServer` and `liveClient()`, which come with
-their first users (`http`, `SecClient`). Fixtures moved to `lib/src/testFixtures/resources/edgar/`
+Progress (2026-10-23): step 2 done except `liveClient()`, which comes with its first user,
+`SecClient`; `LocalServer` came with `http`. Fixtures moved to `lib/src/testFixtures/resources/edgar/`
 unchanged; `legacy` reads them from there. `Fixtures` and `FixtureHttp` are in `testFixtures`;
 `test`, `contractTest` and `liveTest` are also associated with `testFixtures`, since
 `FixtureHttp` implements the internal `Http` and so must be internal itself.
@@ -126,8 +126,7 @@ unchanged; `legacy` reads them from there. `Fixtures` and `FixtureHttp` are in `
 Progress (2026-10-23): step 3, `filing` done, ahead of the rest of `http` and of `company`.
 It needed only a seam from `http`, which now exists: `Http` (`get(url)` → bytes, plus
 `get(url, parse)`, which adds the URL to parse errors), `Mapping.kt` (shared Jackson mappers that
-ignore unknown fields) and `SecException` (`Http`, `Parse`). Still to write for `http`:
-`EdgarHttp`, `RateLimiter`, `LocalServer`, and the ports of `EdgarClientTest`/`RateLimiterTest`.
+ignore unknown fields) and `SecException` (`Http`, `Parse`).
 
 - API: `Filings.latest(count = 40, form, start)`, `daily(daysAgo = 0, form)`,
   `quarter(year, quarter)`, `ofCompany(cik)`, each `List<FilingRef>`; `latest` accepts the
@@ -143,6 +142,20 @@ ignore unknown fields) and `SecException` (`Http`, `Parse`). Still to write for 
   an accession number, page without the list, wrong column count, submission columns of unequal
   length, parse error names the URL). Removing the role preference or the form filter fails them.
 - detekt allows up to 5 destructured entries (regex groups, index columns).
+
+Progress (2026-10-23): step 3, `http` done: `EdgarHttp`, `RateLimiter`, and `LocalServer`
+in `testFixtures`. 23 tests in `test/http/`, from `EdgarClientTest` and `RateLimiterTest`
+(the JSON and XML mapping cases now test `Mapping.kt`), plus `Retry-After` as an HTTP date
+and the URL in parse errors. Behaviour is the Java client's after Phase 3, except:
+
+- the body is read inside the attempt, so a connection dropped mid-body is retried too
+  (the Java client read it after the retry loop);
+- a closed client fails at once instead of retrying;
+- the status code handler is gone (in this repository only tests used it); `SecClient`
+  can add a listener if users need one;
+- no `Content-Type` header on GET requests.
+
+Next in step 3: `company`, then `ownership`, then `SecClient` with `liveClient()`.
 
 Wire classes map only the fields the library uses (the Java ones mapped every field), so
 strict parsing of them can't spot EDGAR additions. Step 4 decides how the drift check sees
