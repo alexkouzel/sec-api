@@ -17,12 +17,10 @@ public class Filings internal constructor(
     public fun latest(
         count: Int = 40,
         form: FormType? = null,
-        start: Int = 0,
     ): List<FilingRef> {
         require(count in LatestFeed.counts) { "count must be one of ${LatestFeed.counts}: $count" }
-        require(start >= 0) { "start must not be negative: $start" }
 
-        val refs = http.get(LatestFeed.url(start, count, form), LatestFeed::parse)
+        val refs = http.get(LatestFeed.url(count, form), LatestFeed::parse)
         return refs.ofForm(form)
     }
 

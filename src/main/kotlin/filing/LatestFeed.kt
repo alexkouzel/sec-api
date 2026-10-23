@@ -21,13 +21,12 @@ internal object LatestFeed {
     private val preferredRoles = listOf("Issuer", "Subject")
 
     fun url(
-        start: Int,
         count: Int,
         form: FormType?,
     ): String {
         val url =
             "https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent" +
-                "&start=$start&count=$count&output=atom"
+                "&start=0&count=$count&output=atom"
         if (form == null) return url
         return url + "&type=" + URLEncoder.encode(form.value, Charsets.UTF_8)
     }

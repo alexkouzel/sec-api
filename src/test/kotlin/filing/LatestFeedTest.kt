@@ -82,7 +82,7 @@ class LatestFeedTest {
         assertEquals(
             "https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent" +
                 "&start=0&count=40&output=atom&type=SCHEDULE+13D%2FA",
-            LatestFeed.url(0, 40, FormType("SCHEDULE 13D/A")),
+            LatestFeed.url(40, FormType("SCHEDULE 13D/A")),
         )
     }
 
