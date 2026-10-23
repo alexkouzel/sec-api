@@ -1,92 +1,66 @@
 package com.alexkouzel.client;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.Semaphore;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 
+/**
+ * Allows at most {@code rate} requests in any window of one {@code timeUnit}.
+ * <p>
+ * Keeps the start times of the last {@code rate} requests; a new request starts no
+ * earlier than one window after the oldest of them. Uses no background threads.
+ * {@link #pause} delays every request until the given time has passed (e.g. after
+ * the server says "too many requests").
+ */
 public class RateLimiter {
-    private final TimeUnit timeUnit;
-    private final int rate;
-    private final Semaphore semaphore;
-    private final ScheduledExecutorService permitRefiller;
-    private final AtomicInteger backoffCounter;
-    private final Object delayLock;
-    private boolean isDelaying;
+    private final long windowNanos;
+    private final long[] starts;
+    private int oldest;
+    private long pausedUntil;
 
     public RateLimiter(TimeUnit timeUnit, int rate) {
-        this.timeUnit = timeUnit;
-        this.rate = rate;
-        this.semaphore = new Semaphore(rate);
-        this.permitRefiller = startPermitRefiller();
-        this.backoffCounter = new AtomicInteger(-1);
-        this.delayLock = new Object();
-        this.isDelaying = false;
+        if (rate < 1) {
+            throw new IllegalArgumentException("rate must be positive: " + rate);
+        }
+        this.windowNanos = timeUnit.toNanos(1);
+        this.starts = new long[rate];
+        long now = System.nanoTime();
+        for (int i = 0; i < rate; i++) {
+            starts[i] = now - windowNanos;
+        }
+        this.pausedUntil = now;
     }
 
-    public void resetBackoff() {
-        backoffCounter.set(-1);
-    }
-
-    public void shutdown() {
-        permitRefiller.shutdownNow();
-    }
-
+    /**
+     * Blocks until a request may start.
+     */
     public void acquirePermit() throws InterruptedException {
-        synchronized (delayLock) {
-            while (isDelaying) delayLock.wait();
-            semaphore.acquire();
+        long start;
+        synchronized (this) {
+            start = latest(System.nanoTime(), starts[oldest] + windowNanos, pausedUntil);
+            starts[oldest] = start;
+            oldest = (oldest + 1) % starts.length;
+        }
+        long wait = start - System.nanoTime();
+        if (wait > 0) {
+            TimeUnit.NANOSECONDS.sleep(wait);
         }
     }
 
-    public void applyDelaySeq(TimeUnit timeUnit, int... delays) {
-        applyDelay(timeUnit, backoff -> delays[backoff < delays.length ? backoff : delays.length - 1]);
+    /**
+     * Delays all requests that haven't started yet by at least {@code duration} from now.
+     */
+    public synchronized void pause(Duration duration) {
+        pausedUntil = latest(pausedUntil, System.nanoTime() + duration.toNanos());
     }
 
-    public void applyFixedDelay(TimeUnit timeUnit, int delay) {
-        applyDelay(timeUnit, backoff -> delay);
-    }
-
-    private void applyDelay(TimeUnit timeUnit, Function<Integer, Integer> delayer) {
-        synchronized (delayLock) {
-            if (isDelaying) return; // don't overflow delays
-            isDelaying = true;
-        }
-        try {
-            int backoff = backoffCounter.incrementAndGet();
-            int delay = delayer.apply(backoff);
-
-            try {
-                timeUnit.sleep(delay);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        } finally {
-            synchronized (delayLock) {
-                isDelaying = false;
-                delayLock.notifyAll();
+    // nanoTime values may overflow, so compare by difference.
+    private static long latest(long first, long... others) {
+        long result = first;
+        for (long other : others) {
+            if (other - result > 0) {
+                result = other;
             }
         }
-    }
-
-    private ScheduledExecutorService startPermitRefiller() {
-        ScheduledExecutorService permitRefiller = startDaemonScheduler();
-        permitRefiller.scheduleAtFixedRate(this::refillPermits, 1, 1, timeUnit);
-        return permitRefiller;
-    }
-
-    private ScheduledExecutorService startDaemonScheduler() {
-        return Executors.newScheduledThreadPool(1, runnable -> {
-            Thread thread = Executors.defaultThreadFactory().newThread(runnable);
-            thread.setDaemon(true);
-            return thread;
-        });
-    }
-
-    private void refillPermits() {
-        int freshPermits = rate - semaphore.availablePermits();
-        semaphore.release(freshPermits);
+        return result;
     }
 }

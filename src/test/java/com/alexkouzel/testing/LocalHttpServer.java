@@ -13,9 +13,11 @@ import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -60,6 +62,23 @@ public class LocalHttpServer implements AutoCloseable {
                 throw new UncheckedIOException(e);
             }
             return new Response(200, Map.of("Content-Encoding", "deflate"), out.toByteArray(), false);
+        }
+
+        /** Raw deflate data without the zlib wrapper, as some servers send it. */
+        public static Response rawDeflate(String body) {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            try (DeflaterOutputStream deflate = new DeflaterOutputStream(out, new Deflater(Deflater.DEFAULT_COMPRESSION, true))) {
+                deflate.write(body.getBytes(StandardCharsets.UTF_8));
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+            return new Response(200, Map.of("Content-Encoding", "deflate"), out.toByteArray(), false);
+        }
+
+        public Response withHeader(String name, String value) {
+            Map<String, String> merged = new HashMap<>(headers);
+            merged.put(name, value);
+            return new Response(status, Map.copyOf(merged), body, dropConnection);
         }
 
         /** Closes the connection without sending a response, so the client sees an I/O error. */

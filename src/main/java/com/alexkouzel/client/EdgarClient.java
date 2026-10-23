@@ -14,13 +14,20 @@ public class EdgarClient extends HttpDataClient {
 
     private final String userAgent;
 
-    private EdgarClient(String userAgent, Consumer<Integer> statusCodeHandler, RateLimiter rateLimiter) {
-        super(REQUEST_ATTEMPT_LIMIT, handleStatusCode(statusCodeHandler, rateLimiter), rateLimiter);
+    /**
+     * @param userAgent         identifies you to EDGAR, e.g. "Sample Company admin@example.com"
+     * @param statusCodeHandler called with the status code of every response
+     * @param baseRetryDelay    wait before the first retry; doubles on each further retry
+     * @param maxRetryDelay     longest wait between attempts, including for HTTP 429
+     */
+    public EdgarClient(String userAgent, Consumer<Integer> statusCodeHandler,
+                       Duration baseRetryDelay, Duration maxRetryDelay) {
+        super(REQUEST_ATTEMPT_LIMIT, baseRetryDelay, maxRetryDelay, statusCodeHandler, buildRateLimiter());
         this.userAgent = userAgent;
     }
 
     public EdgarClient(String userAgent, Consumer<Integer> statusCodeHandler) {
-        this(userAgent, statusCodeHandler, buildRateLimiter());
+        this(userAgent, statusCodeHandler, DEFAULT_BASE_RETRY_DELAY, DEFAULT_MAX_RETRY_DELAY);
     }
 
     public EdgarClient(String userAgent) {
@@ -36,17 +43,6 @@ public class EdgarClient extends HttpDataClient {
                 .header("Content-Type", contentType + ";charset=UTF-8")
                 .header("Accept-Encoding", "gzip, deflate")
                 .build();
-    }
-
-    private static Consumer<Integer> handleStatusCode(Consumer<Integer> statusCodeHandler, RateLimiter rateLimiter) {
-        return (statusCode) -> {
-            if (statusCode == 429) { // TOO_MANY_REQUESTS
-                rateLimiter.applyDelaySeq(TimeUnit.MINUTES, 30, 60, 120);
-            } else if (statusCode != 200) {
-                rateLimiter.applyFixedDelay(TimeUnit.SECONDS, 1);
-            }
-            statusCodeHandler.accept(statusCode);
-        };
     }
 
     private static RateLimiter buildRateLimiter() {

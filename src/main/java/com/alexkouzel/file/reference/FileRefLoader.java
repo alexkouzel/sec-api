@@ -32,7 +32,7 @@ public class FileRefLoader {
         this.client = client;
     }
 
-    public List<FileRef> loadCompany(int cik) throws HttpRequestException {
+    public List<FileRef> loadCompany(int cik) throws HttpRequestException, ParsingException {
         String cikValue = StringUtils.padLeft(String.valueOf(cik), 10, '0');
         String url = String.format(URL_COMPANY, cikValue);
         CikSubmission submission = client.loadJson(url, CikSubmission.class);

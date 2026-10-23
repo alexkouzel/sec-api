@@ -2,6 +2,7 @@ package com.alexkouzel.company;
 
 import com.alexkouzel.client.HttpDataClient;
 import com.alexkouzel.client.exceptions.HttpRequestException;
+import com.alexkouzel.common.exceptions.ParsingException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ public class SecCompanyLoader {
         this.client = client;
     }
 
-    public List<SecCompany> load() throws HttpRequestException {
+    public List<SecCompany> load() throws HttpRequestException, ParsingException {
         CompanyTickersExchange data = client.loadJson(URL, CompanyTickersExchange.class);
         return data.data()
                 .stream()
