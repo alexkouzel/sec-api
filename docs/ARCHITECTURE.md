@@ -1,7 +1,7 @@
 # Architecture
 
-Target design for the Kotlin rewrite (Phase 5). Code rules are in
-[CONVENTIONS.md](CONVENTIONS.md); this file says what goes where and why.
+How the library and its tools are laid out, and why. Code rules are in
+[CONVENTIONS.md](CONVENTIONS.md).
 
 ## Principles
 
@@ -86,7 +86,37 @@ Notes:
   e.g. `transaction.shares: Footnoted<Double>?`. Contract tests compare the XSD with
   `ownership/xml`, so new elements are still caught.
 - `FormType` keeps the raw value (`"424B2"`) with constants for the common forms, instead
-  of an enum that collapses everything else into `OTHER`.
+  of an enum that collapses everything else into `OTHER`. `TransactionCode` is an enum, but
+  `Coding.value` keeps the raw code, so an unknown one isn't lost.
+- Transactions and holdings of both tables share `Transaction` and `Holding`; a derivative
+  security's terms (exercise price, dates, underlying security) are in `derivative`, null
+  for the security itself.
+- `FilingRef.cik` is a related CIK, not an issuer's: its role depends on the source (see the
+  glossary). EDGAR serves a filing under each related CIK.
+
+## Unknown fields and drift
+
+Wire classes (`ownership/xml`, the submissions and latest feed classes, `Tickers`) declare
+every field EDGAR sends, read or not (unread ones as `Any?`). A Jackson problem handler on the
+shared mappers in `http/Mapping.kt` reports anything else to the `UnknownFieldListener` of
+the request being parsed, and parsing carries on. One mechanism serves three users:
+
+- library users, through `SecClient(..., unknownFields)`;
+- the contract tests, which collect unknown fields while parsing every fixture and expect none;
+- the `drift` tool, which samples live EDGAR weekly and reports them.
+
+So the runtime is tolerant of additions and the tests are strict about them. A changed
+layout (a missing field, an unrecognized row) fails with `SecException.Parse` instead.
+
+Known Jackson behaviour to keep in mind:
+
+- jackson-module-kotlin applies a property's non-null element type to nested collections
+  too, so `List<List<Any?>>` rejects a `null` inside an inner list; `Tickers` reads each row
+  as a `JsonNode`.
+- With the problem handler installed, `FAIL_ON_UNKNOWN_PROPERTIES` never fires, so tests
+  check unknown fields through the listener mechanism, not a strict mapper.
+- Repeated XML elements may be interleaved with others (valid per XSD); `@field:JsonMerge`
+  on each list keeps every group.
 
 ## Public API sketch
 
@@ -109,11 +139,11 @@ lib/src/
 ├── main/
 ├── test/            unit tests only; mirrors main: filing/LatestFeed.kt -> filing/LatestFeedTest.kt
 ├── testFixtures/    shared support: Fixtures, FixtureHttp, LocalServer; resources/edgar/ (frozen fixtures)
-├── contractTest/    strict parsing of every fixture, XSD vs ownership/xml, transaction codes
+├── contractTest/    no unknown fields in any fixture, XSD vs ownership/xml, transaction codes
 └── liveTest/        smoke tests against real EDGAR
 drift/src/
 ├── main/            the drift-check tool
-└── test/            its unit tests (report, spec watcher)
+└── test/            its unit tests (report, spec page, known versions)
 ```
 
 | Gradle task | Runs | Network |
@@ -122,7 +152,8 @@ drift/src/
 | `contractTest` | `contractTest` | no |
 | `check` | `test`, `contractTest`, ktlint, detekt | no |
 | `liveTest` | `liveTest` | EDGAR |
-| `driftCheck` | `drift` app | EDGAR, SEC spec page |
+| `:drift:driftCheck` | `drift` app | EDGAR, SEC spec page |
+| `knownBugTest` | tests tagged `known-bug` | no |
 
 Rules:
 
@@ -133,20 +164,6 @@ Rules:
   `test`, `contractTest` and `liveTest` are associated with `testFixtures` too, so its
   support code can stay `internal` (e.g. `FixtureHttp`).
 - The `known-bug` tag stays for tests that document an open bug.
-
-Where the Java tests went in Phase 5:
-
-| Now | Becomes |
-|-----|---------|
-| `testing/FixtureClient`, `Fixtures`, `LocalHttpServer` | `testFixtures/`: `FixtureHttp`, `Fixtures`, `LocalServer` |
-| `client/TestEdgarClient` | `testFixtures/`: `liveClient()` reading `EDGAR_USER_AGENT` |
-| `contract/*` | `contractTest/` |
-| `live/EdgarLiveTest` | `liveTest/` |
-| `drift/*` | `drift/` module |
-| `utils/ListUtilsTest`, `StringUtilsTest` | removed with the utils (Kotlin stdlib) |
-| `file/reference/FileRefLoaderTest` | `test/filing/`: one test per source file, plus `FilingsTest` |
-| `file/type/f345/OwnershipDocumentLoaderTest` | `test/ownership/`: `FilingTextTest`, `OwnershipTest` |
-| `client/EdgarClientTest`, `RateLimiterTest` | `test/http/` |
 
 ## Build
 

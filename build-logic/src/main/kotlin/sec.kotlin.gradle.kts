@@ -41,7 +41,7 @@ tasks.withType<Test>().configureEach {
 }
 
 tasks.register<Test>("knownBugTest") {
-    description = "Runs tests that document known, unfixed bugs (docs/ROADMAP.md)."
+    description = "Runs tests that document known, unfixed bugs (tag known-bug)."
     group = "verification"
     val test = tasks.test.get()
     testClassesDirs = test.testClassesDirs

@@ -3,33 +3,29 @@
 How code in this repository is named, structured and written. Tools enforce what they can
 (formatting, lint, public API); this file covers what they can't.
 
-Status: the glossary applies now; the other sections apply to the Kotlin code (Phase 5).
-The Java code stays consistent with itself and is not restyled.
-
 ## Glossary
 
 EDGAR terms as used in code, docs and tests. Names in code follow this table; don't
-abbreviate beyond what it lists. "Current name" is the Java code today; "Kotlin name" is
-the target, confirmed at the start of Phase 5.
+abbreviate beyond what it lists.
 
 ### Identifiers
 
-| Term | Meaning | Current name | Kotlin name |
-|------|---------|--------------|-------------|
-| CIK | Central Index Key: the SEC's numeric ID for any entity that files or is filed about — companies, funds, and individual insiders alike. Up to 10 digits; zero-padded to 10 in `data.sec.gov` URLs. | `cik`, `issuerCik`, `rptOwnerCik` | `cik` (always qualified by role when the role is known: `issuerCik`, `ownerCik`) |
-| Accession number | Unique ID of one filing, e.g. `0001127602-23-028345`: submitter's CIK, two-digit year, sequence. 20 characters with dashes; dashes removed in archive paths. | `accNo` | `accessionNumber` |
-| Ticker | Trading symbol, e.g. `AAPL`. Not unique over time; CIK is the stable key. | `ticker`, `issuerTradingSymbol` | `ticker` |
+| Term | Meaning | Name in code |
+|------|---------|--------------|
+| CIK | Central Index Key: the SEC's numeric ID for any entity that files or is filed about — companies, funds, and individual insiders alike. Up to 10 digits; zero-padded to 10 in `data.sec.gov` URLs. | `cik`; on a type named after its role (`Issuer.cik`, `ReportingOwner.cik`), or a related CIK (`FilingRef.cik`) |
+| Accession number | Unique ID of one filing, e.g. `0001127602-23-028345`: submitter's CIK, two-digit year, sequence. 20 characters with dashes; dashes removed in archive paths. | `accessionNumber` |
+| Ticker | Trading symbol, e.g. `AAPL`. Not unique over time; CIK is the stable key. | `ticker` |
 
 ### Filings
 
-| Term | Meaning | Current name | Kotlin name |
-|------|---------|--------------|-------------|
-| Filing | One submission to EDGAR, identified by its accession number. Contains one or more documents. | `File`, `FileF345` | `Filing` |
-| Filing reference | A pointer to a filing from a list (index, feed, submissions): accession number, form type, date, a CIK (a related CIK; its role depends on the source). No content. | `FileRef` | `FilingRef` |
-| Form type | The kind of filing: `4`, `4/A`, `10-K`, `8-K`, `424B2`, ... `/A` marks an amendment of an earlier filing. Matched exactly; EDGAR's own `type=` filters are prefix matches. | `FileType` (enum, unknown forms become `OTHER`) | `FormType` (keeps the raw value) |
-| Document | One file inside a filing (the ownership XML, an exhibit, ...). | `xmlFilename` | `document` |
-| Filed date | Date the filing was accepted for filing (`FILED AS OF DATE`, `filingDate`). | `filedAt` | `filedOn` (a `LocalDate`) |
-| Period of report | Date the filing reports on; for Form 4, the transaction date that triggered it. | `periodOfReport` | `periodOfReport` |
+| Term | Meaning | Name in code |
+|------|---------|--------------|
+| Filing | One submission to EDGAR, identified by its accession number. Contains one or more documents. | `OwnershipFiling` (Forms 3, 4, 5) |
+| Filing reference | A pointer to a filing from a list (index, feed, submissions): accession number, form type, date, a CIK (a related CIK; its role depends on the source). No content. | `FilingRef` |
+| Form type | The kind of filing: `4`, `4/A`, `10-K`, `8-K`, `424B2`, ... `/A` marks an amendment of an earlier filing. Matched exactly; EDGAR's own `type=` filters are prefix matches. | `FormType` (keeps the raw value) |
+| Document | One file inside a filing (the ownership XML, an exhibit, ...). | `document` |
+| Filed date | Date the filing was accepted for filing (`FILED AS OF DATE`, `filingDate`). | `filedOn` (a `LocalDate`) |
+| Period of report | Date the filing reports on; for Form 4, the transaction date that triggered it. | `periodOfReport` |
 
 ### Roles
 
@@ -75,8 +71,7 @@ Subject's CIK is kept (else the first entry's); from the daily page, the first r
 | Quarterly index | Every filing in a calendar quarter. | `Archives/edgar/full-index/<year>/QTR<n>/master.idx` |
 | Filing text | Full submission: SGML header plus documents. | `Archives/edgar/data/<cik>/<accession>/<accession>.txt` |
 
-Note: EDGAR's "fiscal quarter" naming in the current code (`loadFiscalQuarter`) is wrong —
-indexes are by calendar quarter. Kotlin name: `quarterlyIndex(year, quarter)`.
+Quarterly indexes are by calendar quarter, not fiscal quarter: `Filings.quarter(year, quarter)`.
 
 ## Structure
 
@@ -84,7 +79,7 @@ Packages, modules and test layout are in [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Naming
 
-- Names say what a thing is in the glossary's words: `FilingRef`, `formType`, `issuerCik`.
+- Names say what a thing is in the glossary's words: `FilingRef`, `formType`, `accessionNumber`.
 - Short and specific. A type is one to three words; a local is usually one (`refs`,
   `filing`, `owner`). The package already gives context: `filing.LatestFeed`, not
   `filing.LatestFilingFeedParser`.
@@ -128,8 +123,8 @@ Code should explain itself through names and structure; a comment is a last reso
 ## Tests
 
 - Layout and tasks: see ARCHITECTURE.md (one source set per kind of test).
-- Offline by default. Live EDGAR only in `liveTest` and `drift`; tag `known-bug` for tests
-  that fail until a roadmap bug is fixed.
+- Offline by default. Live EDGAR only in `liveTest` and `drift`. A test that documents an open
+  bug is tagged `known-bug` and names its GitHub issue; the tag goes when the fix lands.
 - Fixtures under `testFixtures/resources/edgar/<source>/` are frozen; ownership filings are
   named `<accession number>.txt`. Add new fixtures and list them in that folder's README.
 - Expected values come from the raw data (independently extracted), not from the code's
