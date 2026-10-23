@@ -7,7 +7,7 @@ Update this file in the same commit that completes (or changes) a phase.
 
 | Phase | Goal | Status |
 |-------|------|--------|
-| 0 | Build compiles on a current JDK | Not started |
+| 0 | Build compiles on a current JDK | Done |
 | 1 | Verify against live EDGAR, refresh specs | Not started |
 | 2 | Automated tests (offline fixtures, mock client, opt-in live) | Not started |
 | 3 | Fix known bugs in Java | Not started |
@@ -20,6 +20,9 @@ Update this file in the same commit that completes (or changes) a phase.
 
 - Pin a JDK toolchain (21) in Gradle; upgrade the Gradle wrapper and the Lombok plugin.
 - No logic changes. Done when `./gradlew compileJava compileTestJava` succeeds.
+- Result: Gradle 8.5 → 9.8.2, Lombok plugin 8.4 → 9.8.2, Java 21 toolchain auto-provisioned
+  via the foojay resolver, JUnit platform launcher added (required by Gradle 9).
+  Before: JDK 25 crashed in Lombok during `compileJava`; JDK 17 failed on `getFirst()` in tests.
 
 ### Phase 1 — Verify against live EDGAR
 
@@ -76,7 +79,7 @@ Write the full `CLAUDE.md` and README for the Kotlin code.
 
 Found by reading the code (2026-10-23); confirm with tests in Phase 2.
 
-- [ ] Gradle 8.5 cannot run on JDK 25; tests use `List.getFirst()` (Java 21) while the
+- [x] Gradle 8.5 cannot run on JDK 25; tests use `List.getFirst()` (Java 21) while the
       README claims Java 17; no toolchain pinned.
 - [ ] `HttpDataClient` decodes `deflate` with `DeflaterInputStream` (compresses);
       should be `InflaterInputStream`.

@@ -13,7 +13,7 @@ SEC API gives you typed Java access to data from the [U.S. Securities and Exchan
 
 ## Requirements
 
-- Java 17 or newer
+- Java 21 or newer
 - Jackson (`jackson-databind`, `jackson-dataformat-xml`, `jackson-datatype-jsr310`)
 
 ## Installation
