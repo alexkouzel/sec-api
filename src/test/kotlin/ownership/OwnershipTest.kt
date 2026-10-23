@@ -27,6 +27,19 @@ class OwnershipTest {
     }
 
     @Test
+    fun `get reads a filing by CIK and accession number`() {
+        val filing = ownership.get(1000753, "0001127602-23-028345")
+
+        assertEquals("0001127602-23-028345", filing.accessionNumber)
+        assertEquals(listOf(url), http.requestedUrls)
+    }
+
+    @Test
+    fun `get rejects a malformed accession number`() {
+        assertFailsWith<IllegalArgumentException> { ownership.get(1000753, "000112760223028345") }
+    }
+
+    @Test
     fun `get rejects a filing that isn't an ownership form`() {
         val ref =
             FilingRef(

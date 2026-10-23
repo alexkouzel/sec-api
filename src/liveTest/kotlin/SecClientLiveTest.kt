@@ -53,7 +53,11 @@ class SecClientLiveTest {
             val refs = previousQuarter.filter { it.formType == form }.takeLast(SAMPLE_SIZE)
             for (ref in refs) {
                 val filing = sec.ownership.get(ref)
-                problems += problems(filing, ref).map { "$it in ${FilingText.url(ref)}" }
+                problems +=
+                    problems(
+                        filing,
+                        ref,
+                    ).map { "$it in ${FilingText.url(ref.cik, ref.accessionNumber)}" }
             }
         }
 

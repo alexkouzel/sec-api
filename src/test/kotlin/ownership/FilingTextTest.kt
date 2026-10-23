@@ -81,14 +81,23 @@ class FilingTextTest {
     }
 
     @Test
+    fun `rejects a filing that isn't an ownership form`() {
+        val text =
+            text(
+                "0001127602-23-028345",
+            ).replace("CONFORMED SUBMISSION TYPE:\t4", "CONFORMED SUBMISSION TYPE:\t10-K")
+
+        assertFailsWith<IllegalArgumentException> { FilingText.parse(text.toByteArray()) }
+    }
+
+    @Test
     fun `builds the URL under the CIK and the accession number`() {
-        val ref =
-            FilingRef("0001127602-23-028345", 1000753, FormType.F4, LocalDate.parse("2023-11-28"))
+        val url = FilingText.url(1000753, "0001127602-23-028345")
 
         assertEquals(
             "https://www.sec.gov/Archives/edgar/data/1000753/000112760223028345/" +
                 "0001127602-23-028345.txt",
-            FilingText.url(ref),
+            url,
         )
     }
 }

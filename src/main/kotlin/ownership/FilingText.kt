@@ -1,7 +1,6 @@
 package com.alexkouzel.sec.ownership
 
 import com.alexkouzel.sec.SecException
-import com.alexkouzel.sec.filing.FilingRef
 import com.alexkouzel.sec.filing.FormType
 import com.alexkouzel.sec.http.map
 import com.alexkouzel.sec.http.xml
@@ -14,10 +13,12 @@ import java.time.format.DateTimeParseException
 // The full submission text: an SGML header (<SEC-HEADER>) with values by label, then each
 // document with its <FILENAME>; the ownership form's document holds an <XML> block.
 internal object FilingText {
-    fun url(ref: FilingRef): String {
-        val folder = ref.accessionNumber.replace("-", "")
-        val file = "${ref.accessionNumber}.txt"
-        return "https://www.sec.gov/Archives/edgar/data/${ref.cik}/$folder/$file"
+    fun url(
+        cik: Long,
+        accessionNumber: String,
+    ): String {
+        val folder = accessionNumber.replace("-", "")
+        return "https://www.sec.gov/Archives/edgar/data/$cik/$folder/$accessionNumber.txt"
     }
 
     fun parse(content: ByteArray): OwnershipFiling {
@@ -27,10 +28,16 @@ internal object FilingText {
                 ?: throw SecException.Parse("No <SEC-HEADER>")
         val block = text.between("<XML>", "</XML>") ?: throw SecException.Parse("No <XML> block")
 
+        val accessionNumber = header.value("ACCESSION NUMBER")
+        val formType = FormType(header.value("CONFORMED SUBMISSION TYPE"))
+        require(
+            formType in ownershipForms,
+        ) { "Not an ownership filing: $formType ($accessionNumber)" }
+
         val ownershipDocument = xml.map<OwnershipDocument>(block.trim().toByteArray())
         return ownershipDocument.toFiling(
-            accessionNumber = header.value("ACCESSION NUMBER"),
-            formType = FormType(header.value("CONFORMED SUBMISSION TYPE")),
+            accessionNumber = accessionNumber,
+            formType = formType,
             filedOn = filedOn(header.value("FILED AS OF DATE")),
             document = documentName(text),
         )
