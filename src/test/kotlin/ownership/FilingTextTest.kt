@@ -54,10 +54,12 @@ class FilingTextTest {
 
     @Test
     fun `finds header values by label`() {
+        val original = text("0001127602-23-028345")
         val text =
-            text(
-                "0001127602-23-028345",
-            ).replace("ACCESSION NUMBER:", "SOME NEW FIELD:\t\tvalue\nACCESSION NUMBER:")
+            original.replace(
+                "ACCESSION NUMBER:",
+                "SOME NEW FIELD:\t\tvalue\nACCESSION NUMBER:",
+            )
 
         val filing = FilingText.parse(text.toByteArray())
 
@@ -82,10 +84,12 @@ class FilingTextTest {
 
     @Test
     fun `rejects a filing that isn't an ownership form`() {
+        val original = text("0001127602-23-028345")
         val text =
-            text(
-                "0001127602-23-028345",
-            ).replace("CONFORMED SUBMISSION TYPE:\t4", "CONFORMED SUBMISSION TYPE:\t10-K")
+            original.replace(
+                "CONFORMED SUBMISSION TYPE:\t4",
+                "CONFORMED SUBMISSION TYPE:\t10-K",
+            )
 
         assertFailsWith<IllegalArgumentException> { FilingText.parse(text.toByteArray()) }
     }

@@ -37,9 +37,14 @@ internal fun parseXml(content: ByteArray): Element {
 // The child elements with this name, in document order; none for a missing parent.
 internal fun Element?.children(name: String): List<Element> {
     if (this == null) return emptyList()
+    return childElements().filter { it.tagName == name }
+}
+
+internal fun Element.hasChildElements(): Boolean = childElements().isNotEmpty()
+
+private fun Element.childElements(): List<Element> {
     val nodes = childNodes
-    val elements = (0 until nodes.length).map { nodes.item(it) }.filterIsInstance<Element>()
-    return elements.filter { it.tagName == name }
+    return (0 until nodes.length).map { nodes.item(it) }.filterIsInstance<Element>()
 }
 
 internal fun Element.child(name: String): Element? = children(name).firstOrNull()

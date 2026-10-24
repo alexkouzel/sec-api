@@ -28,16 +28,17 @@ internal object OwnershipXml {
         }
         val nonDerivative = root.child("nonDerivativeTable")
         val derivative = root.child("derivativeTable")
+        val nonDerivativeTransactions = nonDerivative.children("nonDerivativeTransaction")
+        val nonDerivativeHoldings = nonDerivative.children("nonDerivativeHolding")
+        val derivativeTransactions = derivative.children("derivativeTransaction")
+        val derivativeHoldings = derivative.children("derivativeHolding")
 
         val transactions =
-            nonDerivative
-                .children(
-                    "nonDerivativeTransaction",
-                ).map { transaction(it, derivative = null) } +
-                derivative.children("derivativeTransaction").map { transaction(it, derivative(it)) }
+            nonDerivativeTransactions.map { transaction(it, derivative = null) } +
+                derivativeTransactions.map { transaction(it, derivative(it)) }
         val holdings =
-            nonDerivative.children("nonDerivativeHolding").map { holding(it, derivative = null) } +
-                derivative.children("derivativeHolding").map { holding(it, derivative(it)) }
+            nonDerivativeHoldings.map { holding(it, derivative = null) } +
+                derivativeHoldings.map { holding(it, derivative(it)) }
 
         return OwnershipFiling(
             accessionNumber = accessionNumber,

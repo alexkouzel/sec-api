@@ -4,6 +4,7 @@ import com.alexkouzel.sec.SecException
 import com.alexkouzel.sec.http.attribute
 import com.alexkouzel.sec.http.child
 import com.alexkouzel.sec.http.children
+import com.alexkouzel.sec.http.hasChildElements
 import com.alexkouzel.sec.http.isoDate
 import com.alexkouzel.sec.http.text
 import com.alexkouzel.sec.http.trimmedText
@@ -23,13 +24,7 @@ internal fun <T> Element?.footnoted(
     convert: (String) -> T,
 ): Footnoted<T>? {
     val element = this?.child(name) ?: return null
-    val hasChildren =
-        (0 until element.childNodes.length).any {
-            element.childNodes.item(
-                it,
-            ) is Element
-        }
-    val text = if (hasChildren) element.text("value") else element.trimmedText()
+    val text = if (element.hasChildElements()) element.text("value") else element.trimmedText()
     return footnoted(text?.let(convert), element)
 }
 
@@ -42,10 +37,10 @@ internal fun <T> footnoted(
     return Footnoted(value, ids)
 }
 
-internal fun footnoteIds(element: Element): List<String> =
-    element.children("footnoteId").mapNotNull {
-        it.attribute("id")
-    }
+internal fun footnoteIds(element: Element): List<String> {
+    val footnoteIds = element.children("footnoteId")
+    return footnoteIds.mapNotNull { it.attribute("id") }
+}
 
 internal fun Element.date(name: String): LocalDate? = text(name)?.let(::ownershipDate)
 

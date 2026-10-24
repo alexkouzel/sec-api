@@ -63,7 +63,6 @@ detekt {
 publishing {
     publications {
         register<MavenPublication>("maven") {
-            artifactId = "sec-api"
             from(components["java"])
         }
     }
