@@ -1,107 +1,103 @@
 # SEC API
 
-Java library for SEC EDGAR data.
+Kotlin library for [SEC EDGAR](https://www.sec.gov/edgar) data, usable from Java too.
 
-SEC API gives you typed Java access to data from the [U.S. Securities and Exchange Commission (SEC)](https://www.sec.gov/) through its EDGAR system: registered companies, filing references, and fully parsed insider ownership documents. It handles EDGAR's rate limits and retries for you.
-
-## Features
-
-- **Companies:** load all SEC-registered companies that have a stock ticker, with their CIK, name, ticker, and exchange.
-- **Filing references:** find filings from the latest feed, from daily indexes, for a whole fiscal quarter, or for a single company. Filter by form type: 3, 4, 5 (and their amendments), 10-Q, 10-K, and 8-K.
-- **Ownership documents:** parse insider Forms 3, 4, and 5 into Java objects, including the issuer, reporting owners, transactions, holdings, and footnotes.
-- **Built-in rate limiting:** stays within EDGAR's limit of 10 requests per second, makes up to 3 attempts per request, and backs off automatically when EDGAR throttles you.
+- **Companies:** every company with a ticker: CIK, name, ticker, exchange.
+- **Filing references:** from the latest filings feed, the daily list, a quarter's full
+  index, or a company's (or insider's) whole filing history. Filtered by exact form type.
+- **Ownership filings:** insider Forms 3, 4 and 5 (and amendments), parsed into issuer,
+  reporting owners, transactions, holdings and footnotes.
+- **Fair access built in:** at most 10 requests per second, retries with backoff after I/O
+  errors, HTTP 429 (honouring `Retry-After`) and 5xx.
+- **Watched against EDGAR:** fields EDGAR adds are ignored, and a daily check in this
+  repository runs the library against live EDGAR and opens an issue when a change breaks it.
 
 ## Requirements
 
-- Java 21 or newer
-- Jackson (`jackson-databind`, `jackson-dataformat-xml`, `jackson-datatype-jsr310`)
+Java 21 or newer. Dependencies: Jackson 3 (`tools.jackson`) and the Kotlin standard library,
+pulled in by Gradle or Maven.
 
 ## Installation
 
-Build the JAR from source:
+Releases are built by [JitPack](https://jitpack.io) from this repository's tags; no account or
+token is needed. Gradle (Kotlin DSL):
 
-```bash
-git clone https://github.com/alexkouzel/sec-api.git
-cd sec-api
-./gradlew jar
+```kotlin
+repositories {
+    mavenCentral()
+    maven("https://jitpack.io")
+}
+
+dependencies {
+    implementation("com.github.alexkouzel:sec-api:v<version>")
+}
 ```
 
-The JAR is written to `build/libs/`. Add it to your project together with the Jackson dependencies listed above.
+The versions are the tags on the [releases page](https://github.com/alexkouzel/sec-api/releases).
+Maven works too, with the repository `https://jitpack.io` and the same coordinates.
 
 ## Usage
 
-### 1. Create a client
+EDGAR asks every client to identify itself as `Name contact@domain`. Create one `SecClient`,
+share it, and close it when done; calls block.
 
-EDGAR requires every request to identify who is making it, so create a client with a user agent in the format `Company Name contact@company.com`:
+```kotlin
+SecClient("Sample Company admin@example.com").use { sec ->
+    val companies = sec.companies.all()
 
-```java
-EdgarClient client = new EdgarClient("Sample Company admin@example.com");
+    val latest = sec.filings.latest(count = 100, form = FormType.F4)
+    val threeDaysAgo = sec.filings.daily(daysAgo = 3, form = FormType.F4)
+    val quarter = sec.filings.quarter(2023, 3)
+    val tesla = sec.filings.ofCompany(1318605)
+
+    val filing = sec.ownership.get(latest.first())
+    println("${filing.issuer.name} (${filing.issuer.ticker}), filed ${filing.filedOn}")
+    for (transaction in filing.transactions) {
+        val shares = transaction.shares?.value
+        val price = transaction.pricePerShare?.value
+        println("${transaction.date?.value} ${transaction.coding?.code}: $shares @ $price")
+    }
+}
 ```
 
-### 2. Load companies
+From Java:
 
 ```java
-SecCompanyLoader companyLoader = new SecCompanyLoader(client);
-
-List<SecCompany> companies = companyLoader.load();
+try (SecClient sec = new SecClient("Sample Company admin@example.com")) {
+    List<FilingRef> refs = sec.getFilings().latest(40, FormType.F4);
+    OwnershipFiling filing = sec.getOwnership().get(refs.get(0));
+}
 ```
 
-### 3. Load filing references
+### What you get
 
-```java
-FileRefLoader fileRefLoader = new FileRefLoader(client);
+- `FilingRef(accessionNumber, cik, formType, filedOn)`. `cik` is a CIK related to the filing;
+  its role depends on the source (the issuer's on the latest feed where one is named, the
+  requested one for `ofCompany`).
+- `FormType` keeps EDGAR's value (`FormType("424B2")`), with constants for common forms
+  (`F3`, `F4`, `F5`, their amendments `F4_A`, ..., `F8_K`, `F10_K`, `F10_Q`). A form filter
+  matches exactly, so `latest` may return fewer filings than `count`, or none.
+- `OwnershipFiling`: header values, `issuer`, `owners`, `transactions`, `holdings`,
+  `footnotes`, `signatures`. Values that can carry footnotes are `Footnoted<T>(value,
+  footnoteIds)`; a derivative security's terms are in `derivative`. Share counts and prices
+  are `BigDecimal`s with the digits EDGAR wrote, so compare them with `compareTo`.
+- With only an accession number (from a link or a search), use
+  `sec.ownership.get(cik, accessionNumber)`, where `cik` is the issuer's or a reporting owner's.
 
-// All filings from Q3 2023
-List<FileRef> quarter = fileRefLoader.loadFiscalQuarter(2023, 3);
+### Errors
 
-// Today's filings
-List<FileRef> today = fileRefLoader.loadToday();
+Methods throw `SecException.Http` when a request still fails after 3 attempts and
+`SecException.Parse` when a response isn't in the expected format (EDGAR changed it); both are
+unchecked and name the URL in their message. Invalid arguments (a `count` the feed doesn't
+offer, quarter 5) throw `IllegalArgumentException`.
 
-// Form 4 filings from 3 days ago
-List<FileRef> daysAgo = fileRefLoader.loadDaysAgo(3, FileType.F4);
+## Development
 
-// The 100 latest Form 4 filings
-List<FileRef> latest = fileRefLoader.loadLatest(LatestFilesLimit.HUNDRED, FileType.F4);
-
-// All filings for Tesla (CIK 1318605)
-List<FileRef> tesla = fileRefLoader.loadCompany(1318605);
-```
-
-Each `FileRef` contains the accession number, issuer CIK, form type, and filing date.
-
-### 4. Load ownership documents (Forms 3, 4, 5)
-
-```java
-FileLoader fileLoader = new FileLoader(client);
-
-// From a filing reference
-FileF345 form = fileLoader.loadF345ByRef(latest.get(0));
-
-// From a URL
-String url = FileUrlBuilder.buildTxt(1318605, "0001972928-24-000002");
-FileF345 formByUrl = fileLoader.loadF345ByUrl(url);
-```
-
-### Error handling
-
-Loaders throw `HttpRequestException` when a request still fails after 3 attempts, and `ParsingException` when a response can't be parsed.
-
-## Running tests
-
-Offline tests, run against EDGAR responses saved in `src/test/resources/edgar/`:
+See [CLAUDE.md](CLAUDE.md) for commands and [docs/](docs/) for the architecture and
+conventions. In Claude Code, `/edgar-change` adapts the library when the daily live check fails
+and `/release` releases the next version, worked out from the commits. In short:
 
 ```bash
-./gradlew test
-```
-
-Smoke tests against live EDGAR:
-
-```bash
-./gradlew liveTest
-```
-
-Tests for known, not yet fixed bugs (these fail on purpose; see `docs/ROADMAP.md`):
-
-```bash
-./gradlew knownBugTest
+./gradlew check       # offline: unit tests, ktlint, detekt
+./gradlew liveTest    # against live EDGAR; set EDGAR_USER_AGENT
 ```

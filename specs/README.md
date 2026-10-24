@@ -25,7 +25,7 @@ Reference material for the EDGAR sources this library reads. Checked 2026-10-23.
 | Latest filings | `https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&output=atom` | Atom. `type` is a **prefix** filter. One entry per related CIK (Filer/Issuer/Reporting). |
 | Daily filings | `https://www.sec.gov/cgi-bin/current?q1=<daysAgo>&q3=<type>` | HTML `<pre>` between two `<hr>`. Same prefix filter and per-CIK duplicates. |
 | Quarterly index | `https://www.sec.gov/Archives/edgar/full-index/<year>/QTR<n>/master.idx` | 11 header lines, then `CIK\|Company Name\|Form Type\|Date Filed\|Filename`. |
-| Filing text | `https://www.sec.gov/Archives/edgar/data/<cik>/<accNoNoDashes>/<accNo>.txt` | SGML header, then documents; ownership XML inside `<XML>`. |
+| Filing text | `https://www.sec.gov/Archives/edgar/data/<cik>/<accession number without dashes>/<accession number>.txt` | SGML header, then documents; ownership XML inside `<XML>`. |
 
 Official pages:
 
@@ -33,11 +33,10 @@ Official pages:
 - Fair access (User-Agent format, 10 requests/second): https://www.sec.gov/about/developer-resources
 - Accessing EDGAR data (indexes, archives): https://www.sec.gov/search-filings/edgar-search-assistance/accessing-edgar-data
 
-## Known versions
+## A new spec version
 
-`versions.json` lists the Ownership spec version in this folder (`ownershipSpec`) and every
-`schemaVersion` seen in filings that parse fully (`schemaVersions`). The drift check
-(`./gradlew driftCheck`) reports a newer spec on the SEC page or an unlisted
-`schemaVersion` in recent filings; update this file as part of handling that.
+Download it from the technical specifications page into `specs/ownership-xml-v<version>/`
+(the PDF and `schemas/`) and run `./gradlew test`: `OwnershipDocumentTest` reads the newest spec
+here and names every XSD element or transaction code the library doesn't have yet.
 
 Fixtures captured from these sources live in `src/test/resources/edgar/`.

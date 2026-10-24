@@ -1,63 +1,52 @@
 # CLAUDE.md
 
-Library for SEC EDGAR data: the Java version in `legacy/`, being rewritten in Kotlin in `lib/`.
+Kotlin library for SEC EDGAR data (`com.github.alexkouzel:sec-api` on JitPack): companies, filing references and
+insider ownership filings (Forms 3, 4, 5), behind one blocking, Java-friendly `SecClient`.
 
-**Read [docs/ROADMAP.md](docs/ROADMAP.md) first.** It holds the current phase, decisions,
-known bugs, and findings. Update it in the commit that completes or changes a phase.
+Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (layout and design) and
+[docs/CONVENTIONS.md](docs/CONVENTIONS.md) (EDGAR glossary, naming, comments, style, tests)
+before changing code, and use the glossary's terms.
 
-**Use the terms in [docs/CONVENTIONS.md](docs/CONVENTIONS.md)** (EDGAR glossary: CIK roles,
-accession number, filing vs form vs document) in code, tests and docs. Kotlin code follows
-its naming, comment and style rules and the layout in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+## Layout
 
-## Modules
+- `src/main` — the library. `src/test` — offline unit tests, their helpers (`Fixtures`,
+  `FixtureHttp`, `LocalServer`) and frozen EDGAR responses. `src/liveTest` — the library against
+  live EDGAR.
+- `specs/` — the SEC's Ownership XML specification and XSDs.
+- `config/detekt.yml` — detekt's differences from its defaults; versions in
+  `gradle/libs.versions.toml`, kept current by Dependabot (`.github/dependabot.yml`).
+- `jitpack.yml` — JitPack builds each release from its git tag; there is no publish step.
 
-- `lib/` — the Kotlin library (Phase 5, in progress). `drift/` — the drift-check tool.
-- `legacy/` — the Java library, kept building and tested until `lib` replaces it.
-- `build-logic/` — the `sec.kotlin` convention plugin (toolchain, ktlint, detekt, JUnit);
-  versions in `gradle/libs.versions.toml`.
+## Commands
 
-## Tests
+- `./gradlew check` — offline: unit tests, ktlint, detekt. Must stay green; CI runs it on every
+  push and pull request.
+- `./gradlew ktlintFormat` — fixes formatting.
+- `./gradlew liveTest` — against live EDGAR; reads the User-Agent from env `EDGAR_USER_AGENT`
+  (`Name contact@domain`).
 
-- `./gradlew check` — offline, all modules: unit and contract tests, ktlint, detekt. Must
-  stay green.
-- `./gradlew liveTest` — hits real EDGAR (`lib/src/liveTest`, legacy tag `live`).
-- `./gradlew knownBugTest` — tag `known-bug`, fails until each bug in the roadmap is fixed;
-  remove a test's tag when its fix lands.
-- `./gradlew :legacy:driftCheck` — samples live EDGAR and the SEC spec page; writes
-  `legacy/build/drift/report.md` and saves offending responses under `legacy/build/drift/raw/`.
-- `./gradlew ktlintFormat` fixes formatting.
-- Live tasks read the User-Agent from env `EDGAR_USER_AGENT` (`Name contact@domain`).
-- Fixtures in `legacy/src/test/resources/edgar/` are frozen (see its README); add new files,
-  don't refresh existing ones. Specs and XSDs live in `specs/`.
+## Fixtures
 
-## CI
+`src/test/resources/edgar/` holds raw EDGAR responses. They are frozen: tests assert
+exact values, so add new files (listed in that folder's README), never edit one. Expected
+values in tests come from the raw data, not from the code's output.
 
-- `.github/workflows/ci.yml` runs `./gradlew check` on every push and pull request.
-- `.github/workflows/drift.yml` runs `./gradlew :legacy:driftCheck` weekly (Tuesdays) and on
-  demand; on findings it opens or updates one issue labelled `spec-drift`, with the report,
-  and uploads `legacy/build/drift/` as the `drift-report` artifact. It never closes the issue.
-  Needs the repository secret `EDGAR_USER_AGENT`.
+## Managing the project
 
-## Drift runbook
+Two project skills (`.claude/skills/`) cover the recurring jobs:
 
-When the drift check reports something:
-
-1. Download the run's `drift-report` artifact. Each finding names its raw response.
-2. Add the raw response as a new fixture under `legacy/src/test/resources/edgar/<source>/` and list
-   it in that folder's README (fixtures are never refreshed in place).
-3. New spec version: download it from the spec page into `specs/ownership-xml-v<version>/`,
-   update `specs/README.md` and `ownershipSpec` in `specs/versions.json`. Unseen
-   `schemaVersion`: add it to `schemaVersions` once its filings parse fully.
-4. Extend the model for new fields or elements; the contract tests
-   (`OwnershipContractTest`, `FeedContractTest`) must fail first, then pass.
-5. Format change (parse error, layout changed): fix the parser with a test on the new fixture.
-6. Record it in the findings log in `docs/ROADMAP.md`, run `./gradlew driftCheck` until
-   clean, then close the issue by hand.
+- `/edgar-change` — the daily `.github/workflows/live.yml` run failed (an issue labelled
+  `edgar-change` opened): find what broke, save the response as a fixture, fix it test-first.
+  The workflow needs the repository secret `EDGAR_USER_AGENT`.
+- `/release` — work out the next version from the commits since the last release, verify
+  against live EDGAR, tag it, create a GitHub release, and check that JitPack builds it.
 
 ## Commits
 
 Angular convention: `type(scope): subject`, imperative, lowercase, no trailing period.
 Types: `build`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `test`, `chore`.
-Example: `fix(client): inflate deflate-encoded responses`.
+Example: `fix(http): inflate deflate-encoded responses`.
 
-This file is a placeholder; the full version is written in Phase 6.
+`/release` derives the version from these: `feat` is a minor release, everything else a patch.
+Mark a change that breaks the public API with `!` (`feat(filing)!: rename latest to recent`)
+or a `BREAKING CHANGE:` line in the body; it makes the next release major.
