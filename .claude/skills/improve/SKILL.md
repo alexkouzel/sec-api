@@ -10,7 +10,7 @@ worth changing, say so and open none: no change is better than a change for its 
 
 ## What counts as an improvement
 
-Read CLAUDE.md, docs/ARCHITECTURE.md and docs/CONVENTIONS.md first; their rules apply. On top:
+Read CLAUDE.md and the files in docs/ first; their rules apply. On top:
 
 - **Simpler.** Fewer files, types, lines and dependencies for the same behaviour. Deleting
   beats adding; a new abstraction, setting or layer has to remove more than it adds.
@@ -19,7 +19,7 @@ Read CLAUDE.md, docs/ARCHITECTURE.md and docs/CONVENTIONS.md first; their rules 
 - **Consistent.** The same job done the same way in every area, with the glossary's names.
 - **Docs that are true, said once, in the right file:** the README for users, CLAUDE.md for
   commands and managing the project, ARCHITECTURE.md for layout and design, CONVENTIONS.md for
-  rules.
+  rules, GLOSSARY.md for EDGAR's terms, specs/README.md for its sources' URLs and formats.
 
 Not improvements: renames for taste, reformatting that ktlint accepts, comments that restate the
 code, features nobody asked for, and handling for input EDGAR doesn't produce.
@@ -57,8 +57,9 @@ another one.
 
 > You review one change to sec-api, a small Kotlin library for SEC EDGAR. You didn't write it
 > and don't know why it was made: judge it only from the change and the repository. Read
-> CLAUDE.md, docs/CONVENTIONS.md and the section "What counts as an improvement" in
-> .claude/skills/improve/SKILL.md, then the change (`git diff` and `git status` for new files).
+> CLAUDE.md, docs/CONVENTIONS.md, docs/GLOSSARY.md and the section "What counts as an
+> improvement" in .claude/skills/improve/SKILL.md, then the change (`git diff` and `git status`
+> for new files).
 >
 > Check that it is correct (behaviour unchanged unless it means to change it, and then tested),
 > that the result is simpler or clearer than before and not just different, that it follows the

@@ -11,8 +11,8 @@ Frozen on purpose: tests assert exact values, so do not refresh in place — add
 | `latest/getcurrent-count-10.atom` | latest feed, no type | no |
 | `latest/getcurrent-count-40-type-4.atom` | latest feed, `type=4` (prefix filter: mostly 424B2/497) | no |
 | `latest/getcurrent-count-20-type-SCHEDULE13.atom` | latest feed, `type=SCHEDULE 13`: `(Subject)` and `(Filed by)` entry pairs, in either order | no |
-| `current/current-q1-1.html` | daily page, 1 day ago | first 60 rows |
-| `current/current-q1-1-q3-4.html` | daily page, 1 day ago, `q3=4` | first 60 rows |
+| `current/current-q1-1.html` | daily list, 1 day ago | first 60 rows |
+| `current/current-q1-1-q3-4.html` | daily list, 1 day ago, `q3=4` | first 60 rows |
 | `full-index/master-2022-QTR3.idx` | quarterly index | header + 200 rows |
 | `full-index/master-2026-QTR4.idx` | quarterly index | header + 200 rows |
 | `ownership/<accession number>.txt` | filing text | no |

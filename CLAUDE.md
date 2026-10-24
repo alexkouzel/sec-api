@@ -4,9 +4,10 @@ Kotlin library for SEC EDGAR data (`com.github.alexkouzel:sec-api` on JitPack): 
 filing references and insider ownership filings (Forms 3, 4, 5), behind one blocking,
 Java-friendly `SecClient`.
 
-Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (layout and design) and
-[docs/CONVENTIONS.md](docs/CONVENTIONS.md) (EDGAR glossary, naming, comments, style, tests)
-before changing code, and use the glossary's terms.
+Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (layout and design),
+[docs/CONVENTIONS.md](docs/CONVENTIONS.md) (naming, comments, style, tests) and
+[docs/GLOSSARY.md](docs/GLOSSARY.md) (EDGAR's terms and their names in code) before changing
+code, and use the glossary's terms.
 
 ## Layout
 
