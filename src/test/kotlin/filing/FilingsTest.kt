@@ -39,7 +39,7 @@ class FilingsTest {
 
     @Test
     fun `latest with a form type keeps exact matches only`() {
-        val refs = filings.latest(form = FormType.F4)
+        val refs = filings.latest(formType = FormType.F4)
 
         assertEquals(listOf(ref("0001493152-26-048187", 1515139, "4", "2026-10-23")), refs)
     }
@@ -50,8 +50,8 @@ class FilingsTest {
     }
 
     @Test
-    fun `daily with a form type keeps exact matches only`() {
-        val refs = filings.daily(daysAgo = 1, form = FormType.F4)
+    fun `day with a form type keeps exact matches only`() {
+        val refs = filings.day(daysAgo = 1, formType = FormType.F4)
 
         assertEquals(33, refs.size)
         assertEquals(ref("0001099910-26-000286", 1553209, "4", "2026-10-21"), refs.first())
@@ -71,8 +71,8 @@ class FilingsTest {
     }
 
     @Test
-    fun `ofCompany appends older filings`() {
-        val refs = filings.ofCompany(946581)
+    fun `company appends older filings`() {
+        val refs = filings.company(946581)
 
         assertEquals(70, refs.size)
         assertEquals(ref("0001104659-15-011425", 946581, "CORRESP", "2015-02-17"), refs[40])
@@ -83,7 +83,7 @@ class FilingsTest {
     fun `a parse error names the URL`() {
         http.route("https://www.sec.gov/cgi-bin/current?q1=2", "full-index/master-2026-QTR4.idx")
 
-        val error = assertFailsWith<SecException.Parse> { filings.daily(daysAgo = 2) }
+        val error = assertFailsWith<SecException.Parse> { filings.day(daysAgo = 2) }
 
         assertContains(error.message.orEmpty(), "https://www.sec.gov/cgi-bin/current?q1=2")
     }

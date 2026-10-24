@@ -7,7 +7,7 @@ import java.time.LocalDate
  *
  * [cik] is one of the CIKs related to the filing; EDGAR serves the filing under each of them.
  * Its role depends on the source: from the latest feed, the Issuer's or Subject's CIK where an
- * entry names one; from [Filings.ofCompany], the requested CIK; otherwise the first CIK the
+ * entry names one; from [Filings.company], the requested CIK; otherwise the first CIK the
  * source lists, whose role it doesn't say.
  */
 public data class FilingRef(

@@ -10,7 +10,7 @@ trades (Forms 3, 4 and 5) as typed objects. Works from Java too.
 
 ```kotlin
 SecClient("Your Name you@example.com").use { sec ->
-    val ref = sec.filings.ofCompany(320193).first { it.formType == FormType.F4 } // Apple
+    val ref = sec.filings.company(320193).first { it.formType == FormType.F4 } // Apple
     val filing = sec.ownership.get(ref)
     val owner = filing.owners.first().name
 
@@ -46,7 +46,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.alexkouzel:sec-api:v2.0.3")
+    implementation("com.github.alexkouzel:sec-api:v2.1.0")
 }
 ```
 
@@ -73,24 +73,24 @@ none.
 Each call returns a list of `FilingRef(accessionNumber, cik, formType, filedOn)`, each filing
 once.
 
-| Call                             | Lists                                | Notes                                         |
-|----------------------------------|--------------------------------------|-----------------------------------------------|
-| `filings.latest(count, form)`    | the newest filings                   | `count` is 10, 20, 40 (default), 80 or 100    |
-| `filings.daily(daysAgo, form)`   | one day's filings                    | `0` is today; empty on weekends and holidays  |
-| `filings.quarter(year, quarter)` | a calendar quarter's full index      | since 1993; tens of megabytes                 |
-| `filings.ofCompany(cik)`         | every filing of a company or insider | one request per ~1,000 filings                |
+| Call                              | Lists                                | Notes                                        |
+|-----------------------------------|--------------------------------------|----------------------------------------------|
+| `filings.latest(count, formType)` | the newest filings                   | `count` is 10, 20, 40 (default), 80 or 100   |
+| `filings.day(daysAgo, formType)`  | one day's filings                    | `0` is today; empty on weekends and holidays |
+| `filings.quarter(year, quarter)`  | a calendar quarter's full index      | since 1993; tens of megabytes                |
+| `filings.company(cik)`            | every filing of a company or insider | one request per ~1,000 filings               |
 
 ```kotlin
-val form4s = sec.filings.daily(daysAgo = 1, form = FormType.F4)
+val form4s = sec.filings.day(daysAgo = 1, formType = FormType.F4)
 val q3 = sec.filings.quarter(2026, 3)
 ```
 
 `FormType` keeps EDGAR's raw value (`FormType("424B2")`), with constants for common forms:
-`F3`, `F4`, `F5`, their amendments `F4_A`, ..., and `F8_K`, `F10_K`, `F10_Q`. The `form` filter
+`F3`, `F4`, `F5`, their amendments `F4_A`, ..., and `F8_K`, `F10_K`, `F10_Q`. The `formType` filter
 matches exactly, so `latest` may return fewer filings than `count`, or none.
 
 `FilingRef.cik` is a CIK related to the filing; its role depends on the list (the issuer's on
-the latest feed where one is named, the requested one for `ofCompany`).
+the latest feed where one is named, the requested one for `company`).
 
 ### Insider trades (Forms 3, 4, 5)
 

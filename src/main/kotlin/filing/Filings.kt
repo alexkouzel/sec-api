@@ -16,24 +16,24 @@ public class Filings internal constructor(
     @JvmOverloads
     public fun latest(
         count: Int = 40,
-        form: FormType? = null,
+        formType: FormType? = null,
     ): List<FilingRef> {
         require(count in LatestFeed.counts) { "count must be one of ${LatestFeed.counts}: $count" }
 
-        val refs = http.get(LatestFeed.url(count, form), LatestFeed::parse)
-        return refs.ofForm(form)
+        val refs = http.get(LatestFeed.url(count, formType), LatestFeed::parse)
+        return refs.matching(formType)
     }
 
     /** Filings from [daysAgo] days ago (0 is today), from the daily list. */
     @JvmOverloads
-    public fun daily(
+    public fun day(
         daysAgo: Int = 0,
-        form: FormType? = null,
+        formType: FormType? = null,
     ): List<FilingRef> {
         require(daysAgo >= 0) { "daysAgo must not be negative: $daysAgo" }
 
-        val refs = http.get(DailyList.url(daysAgo, form), DailyList::parse)
-        return refs.ofForm(form)
+        val refs = http.get(DailyList.url(daysAgo, formType), DailyList::parse)
+        return refs.matching(formType)
     }
 
     /**
@@ -54,7 +54,7 @@ public class Filings internal constructor(
      * Every filing related to [cik], newest first, from its submissions. Costs one request,
      * plus one per file of older filings (one per about 1,000 filings).
      */
-    public fun ofCompany(cik: Long): List<FilingRef> {
+    public fun company(cik: Long): List<FilingRef> {
         val page = http.get(Submissions.url(cik)) { Submissions.parse(it, cik) }
         val older =
             page.olderFiles.flatMap { file ->
@@ -63,9 +63,9 @@ public class Filings internal constructor(
         return page.refs + older
     }
 
-    private fun List<FilingRef>.ofForm(form: FormType?): List<FilingRef> {
-        if (form == null) return this
-        return filter { it.formType == form }
+    private fun List<FilingRef>.matching(formType: FormType?): List<FilingRef> {
+        if (formType == null) return this
+        return filter { it.formType == formType }
     }
 
     private companion object {

@@ -21,20 +21,25 @@ internal object QuarterlyIndex {
         }
 
         val rows = lines.drop(separator + 1).filter { it.isNotBlank() }
-        return rows.map(::parseRow).distinctBy { it.accessionNumber }
+        return rows.map(::ref).distinctBy { it.accessionNumber }
     }
 
-    private fun parseRow(text: String): FilingRef {
-        val columns = text.split('|').map { it.trim() }
+    private fun ref(line: String): FilingRef {
+        val columns = line.split('|').map { it.trim() }
         if (columns.size != COLUMNS) {
-            throw SecException.Parse("Expected $COLUMNS columns in quarterly index row: $text")
+            throw SecException.Parse("Expected $COLUMNS columns in quarterly index row: $line")
         }
 
         val (cik, _, form, filedOn, path) = columns
         val accessionNumber = path.substringAfterLast('/').removeSuffix(".txt")
         val cikValue =
             cik.toLongOrNull()
-                ?: throw SecException.Parse("Invalid CIK in quarterly index row: $text")
-        return FilingRef(accessionNumber, cikValue, FormType(form), isoDate(filedOn))
+                ?: throw SecException.Parse("Invalid CIK in quarterly index row: $line")
+        return FilingRef(
+            accessionNumber = accessionNumber,
+            cik = cikValue,
+            formType = FormType(form),
+            filedOn = isoDate(filedOn),
+        )
     }
 }

@@ -46,7 +46,12 @@ internal object Submissions {
             )
         }
         return accessionNumbers.indices.map { i ->
-            FilingRef(accessionNumbers[i], cik, FormType(forms[i]), isoDate(filingDates[i]))
+            FilingRef(
+                accessionNumber = accessionNumbers[i],
+                cik = cik,
+                formType = FormType(forms[i]),
+                filedOn = isoDate(filingDates[i]),
+            )
         }
     }
 
