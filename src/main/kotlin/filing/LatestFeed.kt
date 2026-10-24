@@ -53,27 +53,27 @@ internal object LatestFeed {
 
     private fun listing(entry: Element): Listing {
         val id = entry.text("id")
-        val summary = entry.text("summary").orEmpty()
+        val summary = entry.text("summary")
+        val link = entry.child("link")?.attribute("href")
+        val category = entry.child("category")?.attribute("term")
+        val title = entry.text("title")
+
         val accessionNumber =
             accessionInId.group(id)
                 ?: accessionInSummary.group(summary)
                 ?: throw missing("accession number", id)
-        val link = entry.child("link")?.attribute("href")
         val cik = cikInLink.group(link) ?: throw missing("CIK", accessionNumber)
         val filedOn = filedInSummary.group(summary) ?: throw missing("filed date", accessionNumber)
-        val form =
-            entry.child("category")?.attribute("term")
-                ?: throw missing("form type", accessionNumber)
+        val form = category ?: throw missing("form type", accessionNumber)
 
         val ref =
             FilingRef(
-                accessionNumber,
-                cik.toLong(),
-                FormType(form),
-                isoDate(filedOn),
+                accessionNumber = accessionNumber,
+                cik = cik.toLong(),
+                formType = FormType(form),
+                filedOn = isoDate(filedOn),
             )
-        val role = roleInTitle.group(entry.text("title"))
-        return Listing(ref, role)
+        return Listing(ref, role = roleInTitle.group(title))
     }
 
     private fun Regex.group(text: String?): String? {

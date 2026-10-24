@@ -26,6 +26,7 @@ internal object FilingText {
 
         val accessionNumber = header.value("ACCESSION NUMBER")
         val formType = FormType(header.value("CONFORMED SUBMISSION TYPE"))
+        val filedOn = filedOn(header.value("FILED AS OF DATE"))
         require(formType in ownershipForms) {
             "Not an ownership filing: $formType ($accessionNumber)"
         }
@@ -34,7 +35,7 @@ internal object FilingText {
             content = block.trim().toByteArray(),
             accessionNumber = accessionNumber,
             formType = formType,
-            filedOn = filedOn(header.value("FILED AS OF DATE")),
+            filedOn = filedOn,
             document = documentName(text),
         )
     }

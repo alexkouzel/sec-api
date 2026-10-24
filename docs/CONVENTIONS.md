@@ -116,6 +116,8 @@ Code should explain itself through names and structure; a comment is a last reso
   calls or nesting expressions; a plain `if` or loop over a clever one-liner. Lines are at most
   100 characters (ktlint enforces it).
 - Guard with `?: throw` and early `return` where it keeps the main path flat.
+- A function that reads a model from a source goes in steps, separated by blank lines: read
+  the raw parts, find and check the values, then build the model with named arguments.
 - One public top-level type per file, named after the file; small related types may share
   a file named after their concept (see ARCHITECTURE.md).
 - Public API stays usable from Java: no value classes in signatures, `@JvmOverloads` on

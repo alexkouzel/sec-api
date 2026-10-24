@@ -152,7 +152,7 @@ internal object OwnershipXml {
         val nature = holding.child("ownershipNature")
         return Holding(
             securityTitle = holding.footnoted("securityTitle") { it },
-            formType = if (coding == null) null else footnoted(formType, coding),
+            formType = coding?.let { footnoted(formType, it) },
             sharesOwned = after.footnoted("sharesOwnedFollowingTransaction", ::number),
             valueOwned = after.footnoted("valueOwnedFollowingTransaction", ::number),
             directOrIndirect = nature.footnoted("directOrIndirectOwnership") { it },
