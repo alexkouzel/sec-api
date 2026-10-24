@@ -1,9 +1,9 @@
 package com.alexkouzel.sec
 
 import com.alexkouzel.sec.filing.FilingRef
-import com.alexkouzel.sec.filing.FormType
 import com.alexkouzel.sec.ownership.FilingText
 import com.alexkouzel.sec.ownership.OwnershipFiling
+import com.alexkouzel.sec.ownership.ownershipForms
 import org.junit.jupiter.api.AfterAll
 import java.time.LocalDate
 import kotlin.test.Test
@@ -49,15 +49,12 @@ class SecClientLiveTest {
     fun `recent ownership filings of every form type`() {
         val problems = mutableListOf<String>()
 
-        for (form in OWNERSHIP_FORMS) {
-            val refs = previousQuarter.filter { it.formType == form }.takeLast(SAMPLE_SIZE)
+        for (formType in ownershipForms) {
+            val refs = previousQuarter.filter { it.formType == formType }.takeLast(SAMPLE_SIZE)
             for (ref in refs) {
                 val filing = sec.ownership.get(ref)
-                problems +=
-                    problems(
-                        filing,
-                        ref,
-                    ).map { "$it in ${FilingText.url(ref.cik, ref.accessionNumber)}" }
+                val url = FilingText.url(ref.cik, ref.accessionNumber)
+                problems += problems(filing, ref).map { "$it in $url" }
             }
         }
 
@@ -70,9 +67,7 @@ class SecClientLiveTest {
         ref: FilingRef,
     ): List<String> {
         val problems = mutableListOf<String>()
-        if (filing.formType !=
-            ref.formType
-        ) {
+        if (filing.formType != ref.formType) {
             problems += "form type ${filing.formType}, expected ${ref.formType}"
         }
         if (filing.issuer.cik <= 0 || filing.issuer.name == null) problems += "no issuer"
@@ -97,7 +92,6 @@ class SecClientLiveTest {
     companion object {
         private const val APPLE = 320193L
         private const val SAMPLE_SIZE = 5
-        private val OWNERSHIP_FORMS = with(FormType) { listOf(F3, F3_A, F4, F4_A, F5, F5_A) }
 
         // EDGAR_USER_AGENT ("Name contact@domain") in CI, a placeholder for local runs.
         private val userAgent =
@@ -107,7 +101,8 @@ class SecClientLiveTest {
         // The last complete quarter has every form type, unlike the current one early on.
         private val previousQuarter: List<FilingRef> by lazy {
             val day = LocalDate.now().minusMonths(3)
-            sec.filings.quarter(day.year, (day.monthValue - 1) / 3 + 1)
+            val quarter = (day.monthValue - 1) / 3 + 1
+            sec.filings.quarter(day.year, quarter)
         }
 
         @JvmStatic
