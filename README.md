@@ -104,3 +104,7 @@ In short:
 ./gradlew check       # offline: unit tests and ktlint
 ./gradlew liveTest    # against live EDGAR; set EDGAR_USER_AGENT
 ```
+
+## License
+
+[MIT](LICENSE).
