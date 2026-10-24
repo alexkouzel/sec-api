@@ -100,7 +100,7 @@ Code should explain itself through names and structure; a comment is a last reso
   constraint. `// EDGAR's type filter is a prefix match: "4" also returns "424B2".`
 - Never restate the code, label sections, or keep commented-out code.
 - KDoc only on public API, and only where name and signature leave a question:
-  units, request cost, EDGAR behaviour. A function named `latest(count, form)` needs none.
+  units, request cost, EDGAR behaviour. A function named `latest(count, formType)` needs none.
 - No file headers, no `@author`, no `@param` that repeats the parameter's name.
 
 ## Kotlin style

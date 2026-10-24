@@ -34,7 +34,7 @@ class SecClientLiveTest {
     @Test
     fun `daily list`() {
         // Empty on weekends and holidays; parsing it is what matters.
-        val refs = sec.filings.daily(daysAgo = 1)
+        val refs = sec.filings.day(daysAgo = 1)
 
         refs.forEach(::assertValid)
     }

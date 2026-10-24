@@ -20,11 +20,11 @@ internal object DailyList {
 
     fun url(
         daysAgo: Int,
-        form: FormType?,
+        formType: FormType?,
     ): String {
         val url = "https://www.sec.gov/cgi-bin/current?q1=$daysAgo"
-        if (form == null) return url
-        return url + "&q3=" + URLEncoder.encode(form.value, Charsets.UTF_8)
+        if (formType == null) return url
+        return url + "&q3=" + URLEncoder.encode(formType.value, Charsets.UTF_8)
     }
 
     fun parse(content: ByteArray): List<FilingRef> {
@@ -36,18 +36,18 @@ internal object DailyList {
         }
 
         val rows = page.substring(start + RULE.length, end).lines().filter { it.isNotBlank() }
-        return rows.map(::parseRow).distinctBy { it.accessionNumber }
+        return rows.map(::ref).distinctBy { it.accessionNumber }
     }
 
-    private fun parseRow(text: String): FilingRef {
+    private fun ref(line: String): FilingRef {
         val match =
-            row.find(text.trim()) ?: throw SecException.Parse("Unrecognized daily list row: $text")
+            row.find(line.trim()) ?: throw SecException.Parse("Unrecognized daily list row: $line")
         val (filedOn, cik, accessionNumber, form) = match.destructured
         return FilingRef(
-            accessionNumber,
-            cik.toLong(),
-            FormType(form.trim()),
-            LocalDate.parse(filedOn, date),
+            accessionNumber = accessionNumber,
+            cik = cik.toLong(),
+            formType = FormType(form.trim()),
+            filedOn = LocalDate.parse(filedOn, date),
         )
     }
 }

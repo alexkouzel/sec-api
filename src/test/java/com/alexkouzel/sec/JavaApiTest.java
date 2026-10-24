@@ -29,7 +29,7 @@ class JavaApiTest {
 
             assertThrows(IllegalArgumentException.class, () -> filings.latest(50));
             assertThrows(IllegalArgumentException.class, () -> filings.latest(50, FormType.F4));
-            assertThrows(IllegalArgumentException.class, () -> filings.daily(-1));
+            assertThrows(IllegalArgumentException.class, () -> filings.day(-1));
             assertThrows(IllegalArgumentException.class, () -> filings.quarter(2026, 5));
             assertThrows(IllegalArgumentException.class, () -> ownership.get(1000753, "0001127602"));
         }

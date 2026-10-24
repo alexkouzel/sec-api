@@ -26,13 +26,13 @@ internal object LatestFeed {
 
     fun url(
         count: Int,
-        form: FormType?,
+        formType: FormType?,
     ): String {
         val url =
             "https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent" +
                 "&start=0&count=$count&output=atom"
-        if (form == null) return url
-        return url + "&type=" + URLEncoder.encode(form.value, Charsets.UTF_8)
+        if (formType == null) return url
+        return url + "&type=" + URLEncoder.encode(formType.value, Charsets.UTF_8)
     }
 
     fun parse(content: ByteArray): List<FilingRef> {
