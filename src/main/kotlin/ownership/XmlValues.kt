@@ -34,7 +34,7 @@ internal fun <T> footnoted(
 ): Footnoted<T>? {
     val ids = footnoteIds(element)
     if (value == null && ids.isEmpty()) return null
-    return Footnoted(value, ids)
+    return Footnoted(value = value, footnoteIds = ids)
 }
 
 internal fun footnoteIds(element: Element): List<String> {

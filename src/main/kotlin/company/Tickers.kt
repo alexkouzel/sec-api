@@ -37,6 +37,6 @@ internal object Tickers {
         if (cik == null || name == null || ticker == null) {
             throw SecException.Parse("Unrecognized company tickers row: $row")
         }
-        return Company(cik, name, ticker, text("exchange"))
+        return Company(cik = cik, name = name, ticker = ticker, exchange = text("exchange"))
     }
 }
