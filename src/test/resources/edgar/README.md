@@ -25,7 +25,7 @@ Ownership filings:
 | 0001000045-22-000004 | 4 | X0306 | 2022 baseline |
 | 0001437749-22-020350 | 5 | X0306 | 2022 baseline |
 | 0001437749-22-017271 | 5/A | X0306 | only 5/A sample (none in 2026 Q4 so far) |
-| 0001127602-23-028345 | 4 | X0508 | existing test fixture |
+| 0001127602-23-028345 | 4 | X0508 | a sale between indirect holdings; the root README's example |
 | 0000921895-26-002730 | 3 | X0607 | 10 reporting owners, 12 holdings, footnotes, `rptOwnerCountry` |
 | 0000929638-26-003820 | 3 | X0607 | no holdings |
 | 0001193125-26-427843 | 3/A | X0607 | amendment, 3 holdings |
