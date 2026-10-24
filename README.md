@@ -98,6 +98,6 @@ conventions. In Claude Code, `/edgar-change` adapts the library when the daily l
 and `/release` releases the next version, worked out from the commits. In short:
 
 ```bash
-./gradlew check       # offline: unit tests, ktlint, detekt
+./gradlew check       # offline: unit tests and ktlint
 ./gradlew liveTest    # against live EDGAR; set EDGAR_USER_AGENT
 ```

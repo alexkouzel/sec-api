@@ -43,7 +43,7 @@ class EdgarHttpTest {
 
         val headers = server.requests.first().headers
         assertEquals(userAgent, headers.getFirst("User-Agent"))
-        assertEquals("gzip, deflate", headers.getFirst("Accept-Encoding"))
+        assertEquals("gzip", headers.getFirst("Accept-Encoding"))
     }
 
     @Test
@@ -58,20 +58,6 @@ class EdgarHttpTest {
         server.enqueue(Response.gzip("zipped body"))
 
         assertEquals("zipped body", get())
-    }
-
-    @Test
-    fun `decodes a deflate body`() {
-        server.enqueue(Response.deflate("deflated body"))
-
-        assertEquals("deflated body", get())
-    }
-
-    @Test
-    fun `decodes a raw deflate body`() {
-        server.enqueue(Response.rawDeflate("raw deflated body"))
-
-        assertEquals("raw deflated body", get())
     }
 
     @Test

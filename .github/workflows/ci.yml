@@ -17,7 +17,7 @@ jobs:
           distribution: temurin
           java-version: '21'
       - uses: gradle/actions/setup-gradle@v4
-      # Offline only: unit tests, ktlint, detekt.
+      # Offline only: unit tests and ktlint.
       - run: ./gradlew check
       - if: failure()
         uses: actions/upload-artifact@v4

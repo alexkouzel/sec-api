@@ -1,7 +1,6 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.ktlint)
-    alias(libs.plugins.detekt)
+    kotlin("jvm") version "2.4.21"
+    id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
     `maven-publish`
 }
 
@@ -14,7 +13,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(libs.jackson.databind)
+    implementation("tools.jackson.core:jackson-databind:3.2.4")
 }
 
 testing {
@@ -28,7 +27,7 @@ testing {
             }
         }
         withType<JvmTestSuite>().configureEach {
-            useJUnitJupiter(libs.versions.junit)
+            useJUnitJupiter("6.1.3")
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-test-junit5")
             }
@@ -49,15 +48,8 @@ tasks.withType<Test>().configureEach {
 }
 
 ktlint {
-    version = libs.versions.ktlint.asProvider()
+    version = "1.8.0"
     outputToConsole = true
-}
-
-detekt {
-    // Every source set, not only main and test.
-    source.setFrom("src")
-    buildUponDefaultConfig = true
-    config.from("config/detekt.yml")
 }
 
 publishing {

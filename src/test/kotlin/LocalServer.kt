@@ -4,13 +4,10 @@ import com.sun.net.httpserver.Headers
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpServer
 import java.io.ByteArrayOutputStream
-import java.io.OutputStream
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.CopyOnWriteArrayList
-import java.util.zip.Deflater
-import java.util.zip.DeflaterOutputStream
 import java.util.zip.GZIPOutputStream
 
 // HTTP server on localhost for client tests. Serves queued responses in order (the last one
@@ -85,29 +82,13 @@ internal class LocalServer : AutoCloseable {
                 body: String,
             ): Response = Response(status, body.toByteArray())
 
-            fun gzip(body: String): Response = encoded("gzip", body) { GZIPOutputStream(it) }
-
-            fun deflate(body: String): Response =
-                encoded("deflate", body) { DeflaterOutputStream(it) }
-
-            // Without the zlib wrapper, as some servers send it.
-            fun rawDeflate(body: String): Response =
-                encoded(
-                    "deflate",
-                    body,
-                ) { DeflaterOutputStream(it, Deflater(Deflater.DEFAULT_COMPRESSION, true)) }
+            fun gzip(body: String): Response {
+                val bytes = ByteArrayOutputStream()
+                GZIPOutputStream(bytes).use { it.write(body.toByteArray()) }
+                return Response(200, bytes.toByteArray(), mapOf("Content-Encoding" to "gzip"))
+            }
 
             fun dropped(): Response = Response(0, isDropped = true)
-
-            private fun encoded(
-                encoding: String,
-                body: String,
-                encoder: (OutputStream) -> OutputStream,
-            ): Response {
-                val bytes = ByteArrayOutputStream()
-                encoder(bytes).use { it.write(body.toByteArray()) }
-                return Response(200, bytes.toByteArray(), mapOf("Content-Encoding" to encoding))
-            }
         }
     }
 }
