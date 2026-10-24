@@ -1,17 +1,17 @@
 ---
-name: edgar-change
-description: Adapt the library after the daily live EDGAR check fails (an open issue labelled edgar-change, a failing liveTest, or a SecException.Parse from EDGAR). Finds what broke, saves the response as a fixture, and fixes the parser or model test-first.
+name: fix-live-check
+description: Adapt the library after the daily live EDGAR check fails (an open issue labelled live-check-failed, a failing liveTest, or a SecException.Parse from EDGAR). Finds what broke, saves the response as a fixture, and fixes the parser or model test-first.
 ---
 
-# Adapt to an EDGAR change
+# Fix the live check
 
 The daily workflow `.github/workflows/live.yml` runs `./gradlew liveTest` and opens an issue
-labelled `edgar-change` when it fails. Work through these steps in order.
+labelled `live-check-failed` when it fails. Work through these steps in order.
 
 ## 1. Find what broke
 
 - Find the open issue and its latest run:
-  `gh issue list --label edgar-change --state open` and `gh issue view <number> --comments`.
+  `gh issue list --label live-check-failed --state open` and `gh issue view <number> --comments`.
 - Read the failures: `gh run view <run-id> --log-failed`. If `gh` isn't available, run
   `./gradlew liveTest` locally (needs env `EDGAR_USER_AGENT`, `Name contact@domain`).
 - Each failure names a URL and what went wrong: a `SecException.Parse` message, or a value the

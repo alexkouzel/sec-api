@@ -112,7 +112,7 @@ src/
 `.github/workflows/live.yml` runs `liveTest` every day. The live tests call every source and
 check the values users rely on (issuer, owners, transaction dates and codes) in a sample of
 recent Form 3, 4 and 5 filings. When EDGAR changes something the library reads, a test fails
-with the URL of the response, and the workflow opens an issue labelled `edgar-change`.
+with the URL of the response, and the workflow opens an issue labelled `live-check-failed`.
 Fields EDGAR only adds don't break anything and aren't reported.
 
 ## Build

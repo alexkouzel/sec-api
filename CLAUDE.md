@@ -34,8 +34,8 @@ values in tests come from the raw data, not from the code's output.
 ## Managing the project
 
 - When the daily `.github/workflows/live.yml` run fails, it opens an issue labelled
-  `edgar-change`; the `/edgar-change` skill (`.claude/skills/`) finds what broke, saves the
-  response as a fixture and fixes it test-first. The workflow needs the repository secret
+  `live-check-failed`; the `/fix-live-check` skill (`.claude/skills/`) finds what broke, saves
+  the response as a fixture and fixes it test-first. The workflow needs the repository secret
   `EDGAR_USER_AGENT`.
 - Releases are made by hand on GitHub: Releases → "Draft a new release", tag `v<version>` on
   `main`, "Generate release notes", publish. JitPack builds a release when it is first requested.
