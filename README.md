@@ -94,8 +94,8 @@ offer, quarter 5) throw `IllegalArgumentException`.
 ## Development
 
 See [CLAUDE.md](CLAUDE.md) for commands and [docs/](docs/) for the architecture and
-conventions. In Claude Code, `/edgar-change` adapts the library when the daily live check fails
-and `/release` releases the next version, worked out from the commits. In short:
+conventions. In Claude Code, `/edgar-change` adapts the library when the daily live check fails.
+In short:
 
 ```bash
 ./gradlew check       # offline: unit tests and ktlint

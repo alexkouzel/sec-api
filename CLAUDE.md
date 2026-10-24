@@ -33,13 +33,13 @@ values in tests come from the raw data, not from the code's output.
 
 ## Managing the project
 
-Two project skills (`.claude/skills/`) cover the recurring jobs:
-
-- `/edgar-change` — the daily `.github/workflows/live.yml` run failed (an issue labelled
-  `edgar-change` opened): find what broke, save the response as a fixture, fix it test-first.
-  The workflow needs the repository secret `EDGAR_USER_AGENT`.
-- `/release` — work out the next version from the commits since the last release, verify
-  against live EDGAR, tag it, create a GitHub release, and check that JitPack builds it.
+- When the daily `.github/workflows/live.yml` run fails, it opens an issue labelled
+  `edgar-change`; the `/edgar-change` skill (`.claude/skills/`) finds what broke, saves the
+  response as a fixture and fixes it test-first. The workflow needs the repository secret
+  `EDGAR_USER_AGENT`.
+- Releases are made by hand on GitHub: Releases → "Draft a new release", tag `v<version>` on
+  `main`, "Generate release notes", publish. JitPack builds a release when it is first requested.
+  The version follows the commits since the last tag (see Commits).
 
 ## Commits
 
@@ -47,6 +47,6 @@ Angular convention: `type(scope): subject`, imperative, lowercase, no trailing p
 Types: `build`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `test`, `chore`.
 Example: `fix(filing): read the daily list's new row layout`.
 
-`/release` derives the version from these: `feat` is a minor release, everything else a patch.
-Mark a change that breaks the public API with `!` (`feat(filing)!: rename latest to recent`)
-or a `BREAKING CHANGE:` line in the body; it makes the next release major.
+They decide the next version: a `feat` makes a minor release, anything else a patch. Mark a
+change that breaks the public API with `!` (`feat(filing)!: rename latest to recent`) or a
+`BREAKING CHANGE:` line in the body; it makes the next release major.

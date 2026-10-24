@@ -48,5 +48,5 @@ Name ownership filings `<accession number>.txt`. Add a row for the file to
 
 - `./gradlew check` and `./gradlew liveTest` must both pass.
 - Commit as `fix(<area>): <what EDGAR changed>`, describing the change in the body.
-- Ask the user before releasing (use the `release` skill) and before closing the issue with a
-  comment linking the fix.
+- Tell the user the fix needs a release (a patch, unless the public API changed), and ask
+  before closing the issue with a comment linking the fix.
