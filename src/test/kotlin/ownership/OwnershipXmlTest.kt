@@ -24,10 +24,8 @@ import kotlin.test.assertTrue
 class OwnershipXmlTest {
     @Test
     fun `reads every element the XSD defines`() {
-        val named =
-            Regex(
-                """"([A-Za-z0-9]+)"""",
-            ).findAll(parserSource()).map { it.groupValues[1] }.toSet()
+        val quotedName = Regex(""""([A-Za-z0-9]+)"""")
+        val named = quotedName.findAll(parserSource()).map { it.groupValues[1] }.toSet()
 
         val missing = xsdElements() - named - unread
 
