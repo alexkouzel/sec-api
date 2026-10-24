@@ -99,7 +99,10 @@ class SecClientLiveTest {
         private const val SAMPLE_SIZE = 5
         private val OWNERSHIP_FORMS = with(FormType) { listOf(F3, F3_A, F4, F4_A, F5, F5_A) }
 
-        private val sec = liveClient()
+        // EDGAR_USER_AGENT ("Name contact@domain") in CI, a placeholder for local runs.
+        private val userAgent =
+            System.getenv("EDGAR_USER_AGENT") ?: "TestCompany test.company@gmail.com"
+        private val sec = SecClient(userAgent)
 
         // The last complete quarter has every form type, unlike the current one early on.
         private val previousQuarter: List<FilingRef> by lazy {

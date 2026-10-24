@@ -6,8 +6,8 @@ Reference material for the EDGAR sources this library reads. Checked 2026-10-23.
 
 `ownership-xml-v5.5/` — EDGAR Ownership XML Technical Specification, version 5.5 (March 2026).
 
-- `ownership-xml-technical-specification.pdf` — the specification.
-- `schemas/` — the "reduced content" XSDs from the same package. Their header comments
+- `schemas/` — the "reduced content" XSDs from the specification package (the PDF is in the
+  download below; only the XSDs are kept, as `OwnershipXmlTest` reads them). Their header comments
   still say `X0306`, but the content defines the 2026 elements
   (`issuerForeignTradingSymbol`, `rptOwnerNonUSAddressFlag`, `rptOwnerNonUSStateTerritory`,
   `rptOwnerCountry`).
@@ -36,7 +36,7 @@ Official pages:
 ## A new spec version
 
 Download it from the technical specifications page into `specs/ownership-xml-v<version>/`
-(the PDF and `schemas/`) and run `./gradlew test`: `OwnershipXmlTest` reads the newest spec
+(its `schemas/`) and run `./gradlew test`: `OwnershipXmlTest` reads the newest spec
 here and names every XSD element or transaction code the library doesn't have yet.
 
 Fixtures captured from these sources live in `src/test/resources/edgar/`.
