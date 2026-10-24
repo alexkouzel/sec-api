@@ -30,7 +30,7 @@ src/main/kotlin/
 ├── SecException.kt       sealed: Http, Parse
 ├── http/                 transport, knows nothing about EDGAR formats
 │   ├── Http.kt           internal interface: get(url) -> bytes; the seam tests replace
-│   ├── EdgarHttp.kt      JDK HttpClient, User-Agent, gzip/deflate, retries
+│   ├── EdgarHttp.kt      JDK HttpClient, User-Agent, gzip, retries
 │   ├── RateLimiter.kt    at most 10 requests per second
 │   └── Parsing.kt        JSON and XML trees and helpers the areas share
 ├── company/
@@ -99,7 +99,7 @@ src/
 
 | Gradle task | Runs | Network |
 |-------------|------|---------|
-| `check` | unit tests, ktlint, detekt | no |
+| `check` | unit tests, ktlint | no |
 | `liveTest` | `src/liveTest` | EDGAR |
 
 - `test` and `liveTest` may use `internal` code of `main`.
@@ -117,8 +117,8 @@ Fields EDGAR only adds don't break anything and aren't reported.
 
 ## Build
 
-- One Gradle project; plugin and library versions in `gradle/libs.versions.toml` (Dependabot
-  proposes updates); detekt's differences from its defaults in `config/detekt.yml`.
+- One Gradle project, all in `build.gradle.kts` with its versions (Dependabot proposes
+  updates); ktlint reads its settings from `.editorconfig`.
 - Releases are git tags; JitPack builds them (`jitpack.yml`) as `com.github.alexkouzel:sec-api`.
 - One runtime dependency besides the Kotlin standard library: Jackson 3's `jackson-databind`
   (`tools.jackson`), for JSON trees. XML uses the JDK's DOM parser, with DTDs refused.

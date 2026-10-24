@@ -1,7 +1,6 @@
 package com.alexkouzel.sec.http
 
 import com.alexkouzel.sec.SecException
-import java.io.BufferedInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.net.URI
@@ -15,8 +14,6 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.zip.GZIPInputStream
-import java.util.zip.Inflater
-import java.util.zip.InflaterInputStream
 
 // Retries I/O errors, 429 and 5xx, waiting baseRetryDelay, then twice that, and so on, up to
 // maxRetryDelay. A 429 waits at least its Retry-After (also capped) and pauses the rate limiter,
@@ -42,7 +39,7 @@ internal class EdgarHttp(
                 .newBuilder(URI.create(url))
                 .timeout(TIMEOUT)
                 .header("User-Agent", userAgent)
-                .header("Accept-Encoding", "gzip, deflate")
+                .header("Accept-Encoding", "gzip")
                 .build()
         try {
             return send(request)
@@ -142,27 +139,7 @@ private fun read(
         when (encoding) {
             "identity" -> body
             "gzip" -> GZIPInputStream(body)
-            "deflate" -> inflate(body)
             else -> throw IOException("Unsupported Content-Encoding: $encoding")
         }
     return decoded.use { it.readBytes() }
 }
-
-// HTTP "deflate" means zlib-wrapped data, but some servers send raw deflate. A zlib stream
-// starts with two bytes: the compression method (8) in the low bits, and a check (multiple of 31).
-private fun inflate(body: InputStream): InputStream {
-    val buffered = BufferedInputStream(body)
-    buffered.mark(2)
-    val first = buffered.read()
-    val second = buffered.read()
-    buffered.reset()
-
-    val isDeflateMethod = (first and ZLIB_METHOD_MASK) == ZLIB_DEFLATE
-    val hasValidCheck = ((first shl Byte.SIZE_BITS) or second) % ZLIB_CHECK == 0
-    val isZlib = second != -1 && isDeflateMethod && hasValidCheck
-    return InflaterInputStream(buffered, Inflater(!isZlib))
-}
-
-private const val ZLIB_METHOD_MASK = 0x0F
-private const val ZLIB_DEFLATE = 8
-private const val ZLIB_CHECK = 31
