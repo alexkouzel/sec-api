@@ -5,7 +5,7 @@ import com.alexkouzel.sec.http.attribute
 import com.alexkouzel.sec.http.child
 import com.alexkouzel.sec.http.children
 import com.alexkouzel.sec.http.hasChildElements
-import com.alexkouzel.sec.http.isoDate
+import com.alexkouzel.sec.http.parseDate
 import com.alexkouzel.sec.http.text
 import com.alexkouzel.sec.http.trimmedText
 import org.w3c.dom.Element
@@ -45,7 +45,7 @@ internal fun footnoteIds(element: Element): List<String> {
 internal fun Element.date(name: String): LocalDate? = text(name)?.let(::ownershipDate)
 
 // Some filings add a UTC offset, e.g. 2023-08-16-05:00.
-internal fun ownershipDate(text: String): LocalDate = isoDate(text.take(ISO_DATE_LENGTH))
+internal fun ownershipDate(text: String): LocalDate = parseDate(text.take(ISO_DATE_LENGTH))
 
 internal fun number(text: String): BigDecimal =
     text.toBigDecimalOrNull()

@@ -7,6 +7,7 @@ import tools.jackson.core.JacksonException
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.json.JsonMapper
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -58,10 +59,13 @@ internal fun Element.trimmedText(): String? = textContent.trim().takeIf { it.isN
 internal fun Element.attribute(name: String): String? =
     getAttribute(name).trim().takeIf { it.isNotEmpty() }
 
-// A yyyy-MM-dd date; anything else means the format changed.
-internal fun isoDate(text: String): LocalDate {
+// yyyy-MM-dd unless a format is given; anything else means the format changed.
+internal fun parseDate(
+    text: String,
+    format: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE,
+): LocalDate {
     try {
-        return LocalDate.parse(text)
+        return LocalDate.parse(text, format)
     } catch (e: DateTimeParseException) {
         throw SecException.Parse("Invalid date: $text", e)
     }

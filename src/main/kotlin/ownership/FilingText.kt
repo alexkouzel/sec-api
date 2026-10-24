@@ -2,9 +2,8 @@ package com.alexkouzel.sec.ownership
 
 import com.alexkouzel.sec.SecException
 import com.alexkouzel.sec.filing.FormType
-import java.time.LocalDate
+import com.alexkouzel.sec.http.parseDate
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
 // The full submission text: an SGML header (<SEC-HEADER>) with values by label, then each
 // document with its <FILENAME>; the ownership form's document holds an <XML> block.
@@ -26,7 +25,7 @@ internal object FilingText {
 
         val accessionNumber = header.value("ACCESSION NUMBER")
         val formType = FormType(header.value("CONFORMED SUBMISSION TYPE"))
-        val filedOn = filedOn(header.value("FILED AS OF DATE"))
+        val filedOn = parseDate(header.value("FILED AS OF DATE"), DateTimeFormatter.BASIC_ISO_DATE)
         require(formType in ownershipForms) {
             "Not an ownership filing: $formType ($accessionNumber)"
         }
@@ -51,14 +50,6 @@ internal object FilingText {
         val line = Regex("""^${Regex.escape(label)}:[ \t]*(.+?)[ \t]*\r?$""", RegexOption.MULTILINE)
         val match = line.find(this) ?: throw SecException.Parse("No $label in the filing header")
         return match.groupValues[1]
-    }
-
-    private fun filedOn(value: String): LocalDate {
-        try {
-            return LocalDate.parse(value, DateTimeFormatter.BASIC_ISO_DATE)
-        } catch (e: DateTimeParseException) {
-            throw SecException.Parse("Invalid FILED AS OF DATE: $value", e)
-        }
     }
 
     private fun String.between(
