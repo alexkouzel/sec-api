@@ -17,7 +17,8 @@ labelled `live-check-failed` when it fails. Work through these steps in order.
 - Each failure names a URL and what went wrong: a `SecException.Parse` message, or a value the
   live test expected (issuer, owners, transaction date or code) that came back empty.
 - If every failure is `SecException.Http`, EDGAR was down. Rerun the check
-  (`gh workflow run live.yml`) and stop here unless it fails again.
+  (`gh workflow run live.yml`, or ask the user to rerun it from the Actions tab where that's
+  not allowed) and stop here unless it fails again.
 
 ## 2. Save the response as a fixture
 
@@ -33,8 +34,9 @@ Name ownership filings `<accession number>.txt`. Add a row for the file to
 
 ## 3. Fix it test-first
 
-- Find the parser for the source: `filing/LatestFeed.kt`, `DailyList.kt`, `QuarterlyIndex.kt`,
-  `Submissions.kt`, `company/Tickers.kt`, or `ownership/FilingText.kt` with `OwnershipXml.kt`.
+- Find the parser for the source in `src/main/kotlin/`: `filing/LatestFeed.kt`, `DailyList.kt`,
+  `QuarterlyIndex.kt`, `Submissions.kt`, `company/Tickers.kt`, or `ownership/FilingText.kt` with
+  `OwnershipXml.kt`.
 - Write a unit test on the new fixture in the parser's test file (`<Name>Test.kt`). Take the
   expected values from the raw response, not from the code. Run it and see it fail.
 - Fix the parser or the model until it passes. Follow docs/CONVENTIONS.md and keep the

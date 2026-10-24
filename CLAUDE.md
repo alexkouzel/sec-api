@@ -1,7 +1,8 @@
 # CLAUDE.md
 
-Kotlin library for SEC EDGAR data (`com.github.alexkouzel:sec-api` on JitPack): companies, filing references and
-insider ownership filings (Forms 3, 4, 5), behind one blocking, Java-friendly `SecClient`.
+Kotlin library for SEC EDGAR data (`com.github.alexkouzel:sec-api` on JitPack): companies,
+filing references and insider ownership filings (Forms 3, 4, 5), behind one blocking,
+Java-friendly `SecClient`.
 
 Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (layout and design) and
 [docs/CONVENTIONS.md](docs/CONVENTIONS.md) (EDGAR glossary, naming, comments, style, tests)
@@ -10,9 +11,10 @@ before changing code, and use the glossary's terms.
 ## Layout
 
 - `src/main` — the library. `src/test` — offline unit tests, their helpers (`Fixtures`,
-  `FixtureHttp`, `LocalServer`) and frozen EDGAR responses. `src/liveTest` — the library against
-  live EDGAR.
-- `specs/` — the SEC's Ownership XML specification and XSDs.
+  `FixtureHttp`, `LocalServer`) and raw EDGAR responses in `resources/edgar/`, which are frozen
+  (see Tests in CONVENTIONS.md). `src/liveTest` — the library against live EDGAR.
+- `specs/` — the XSDs of the SEC's Ownership XML specification, which a unit test checks the
+  parser against.
 - `build.gradle.kts` — the whole build, with every version; Dependabot (`.github/dependabot.yml`)
   proposes updates. `.editorconfig` configures ktlint.
 - `jitpack.yml` — JitPack builds each release from its git tag; there is no publish step.
@@ -24,12 +26,6 @@ before changing code, and use the glossary's terms.
 - `./gradlew ktlintFormat` — fixes formatting.
 - `./gradlew liveTest` — against live EDGAR; reads the User-Agent from env `EDGAR_USER_AGENT`
   (`Name contact@domain`).
-
-## Fixtures
-
-`src/test/resources/edgar/` holds raw EDGAR responses. They are frozen: tests assert
-exact values, so add new files (listed in that folder's README), never edit one. Expected
-values in tests come from the raw data, not from the code's output.
 
 ## Managing the project
 
