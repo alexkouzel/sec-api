@@ -89,8 +89,9 @@ Calls block, so Java uses the same API: `sec.getFilings().latest(40, FormType.F4
 src/
 ├── main/
 ├── test/            unit tests, offline; mirrors main: filing/LatestFeed.kt -> filing/LatestFeedTest.kt
-│                    helpers at its root: Fixtures, FixtureHttp, LocalServer; resources/edgar/ (frozen)
-└── liveTest/        the library against live EDGAR, in Kotlin and Java
+│                    helpers at its root: Fixtures, FixtureHttp, LocalServer; resources/edgar/ (frozen);
+│                    java/: JavaApiTest, the API as Java sees it
+└── liveTest/        the library against live EDGAR
 ```
 
 | Gradle task | Runs | Network |
