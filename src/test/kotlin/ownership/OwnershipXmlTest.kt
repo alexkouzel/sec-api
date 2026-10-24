@@ -1,12 +1,19 @@
-package com.alexkouzel.sec.ownership.xml
+package com.alexkouzel.sec.ownership
 
 import com.alexkouzel.sec.Fixtures
 import com.alexkouzel.sec.filing.FormType
-import com.alexkouzel.sec.ownership.FilingText
-import com.alexkouzel.sec.ownership.Footnoted
-import com.alexkouzel.sec.ownership.TransactionCode
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
+import org.w3c.dom.Document
+import org.w3c.dom.Element
 import java.math.BigDecimal
+import java.nio.file.Path
 import java.time.LocalDate
+import javax.xml.parsers.DocumentBuilderFactory
+import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.name
+import kotlin.io.path.readBytes
+import kotlin.io.path.readText
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -14,7 +21,75 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class ConversionTest {
+class OwnershipXmlTest {
+    @Test
+    fun `reads every element the XSD defines`() {
+        val named =
+            Regex(
+                """"([A-Za-z0-9]+)"""",
+            ).findAll(parserSource()).map { it.groupValues[1] }.toSet()
+
+        val missing = xsdElements() - named - unread
+
+        assertEquals(emptySet(), missing, "XSD elements the parser doesn't read")
+    }
+
+    @Test
+    fun `knows every transaction code the XSD defines`() {
+        val common = spec().resolve("schemas/ownershipDocumentCommon.xsd.xml").readText()
+        val picklist =
+            Regex(
+                """name="TRANS_CODE_PICKLIST".*?<xs:pattern value="([^"]+)"""",
+                RegexOption.DOT_MATCHES_ALL,
+            )
+        val codes =
+            picklist
+                .find(common)
+                ?.groupValues
+                ?.get(1)
+                ?.split('|')
+                .orEmpty()
+
+        val unknown = codes.filter { TransactionCode.of(it) == null }
+
+        assertEquals(18, codes.size)
+        assertEquals(emptyList(), unknown, "XSD transaction codes missing from TransactionCode")
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("fixtures")
+    fun `keeps every repeated element`(accessionNumber: String) {
+        val text = Fixtures.bytes("ownership/$accessionNumber.txt")
+        val xml =
+            text
+                .decodeToString()
+                .substringAfter("<XML>")
+                .substringBefore("</XML>")
+                .trim()
+        val dom = dom(xml.toByteArray())
+
+        val filing = FilingText.parse(text)
+
+        val expected =
+            mapOf(
+                "reportingOwner" to dom.count("reportingOwner"),
+                "ownerSignature" to dom.count("ownerSignature"),
+                "footnote" to dom.count("footnote"),
+                "transaction" to
+                    dom.count("nonDerivativeTransaction") + dom.count("derivativeTransaction"),
+                "holding" to dom.count("nonDerivativeHolding") + dom.count("derivativeHolding"),
+            )
+        val actual =
+            mapOf(
+                "reportingOwner" to filing.owners.size,
+                "ownerSignature" to filing.signatures.size,
+                "footnote" to filing.footnotes.size,
+                "transaction" to filing.transactions.size,
+                "holding" to filing.holdings.size,
+            )
+        assertEquals(expected, actual)
+    }
+
     private fun filing(accessionNumber: String) =
         FilingText.parse(Fixtures.bytes("ownership/$accessionNumber.txt"))
 
@@ -259,5 +334,58 @@ class ConversionTest {
         assertEquals(TransactionCode.GIFT, gift.coding?.code)
         assertEquals(date("2021-09-29"), gift.date?.value)
         assertEquals(BigDecimal("2000"), gift.shares?.value)
+    }
+
+    // The parser's source, whose string literals name the elements it reads.
+    private fun parserSource(): String {
+        val dir = Path.of("src/main/kotlin/ownership")
+        return dir.resolve("OwnershipXml.kt").readText() + dir.resolve("XmlValues.kt").readText()
+    }
+
+    // The element names of every ownership XSD in the newest spec in specs/.
+    private fun xsdElements(): Set<String> {
+        val xsds = spec().resolve("schemas").listDirectoryEntries("ownership*")
+        val names = mutableSetOf<String>()
+        for (xsd in xsds) {
+            val elements = dom(xsd.readBytes()).getElementsByTagNameNS(XML_SCHEMA, "element")
+            for (i in 0 until elements.length) {
+                names += (elements.item(i) as Element).getAttribute("name")
+            }
+        }
+        return names - ""
+    }
+
+    private fun spec(): Path {
+        val specs = Path.of("specs").listDirectoryEntries("ownership-xml-v*")
+        return specs.maxBy { version(it.name.removePrefix("ownership-xml-v")) }
+    }
+
+    private fun version(text: String): Int {
+        val (major, minor) = text.split('.').map(String::toInt)
+        return major * 1000 + minor
+    }
+
+    private fun dom(bytes: ByteArray): Document {
+        val factory = DocumentBuilderFactory.newInstance()
+        factory.isNamespaceAware = true
+        return factory.newDocumentBuilder().parse(bytes.inputStream())
+    }
+
+    private fun Document.count(element: String) = getElementsByTagName(element).length
+
+    private companion object {
+        const val XML_SCHEMA = "http://www.w3.org/2001/XMLSchema"
+
+        // Elements the model leaves out on purpose: the form type is in the header, the other
+        // two are EDGAR's internal codes.
+        val unread = setOf("documentType", "rptOwnerCcc", "rptOwnerGoodAddress")
+
+        @JvmStatic
+        fun fixtures(): List<String> =
+            Path
+                .of("src/test/resources/edgar/ownership")
+                .listDirectoryEntries("*.txt")
+                .map { it.name.removeSuffix(".txt") }
+                .sorted()
     }
 }

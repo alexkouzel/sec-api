@@ -119,8 +119,9 @@ Code should explain itself through names and structure; a comment is a last reso
 - One public top-level type per file, named after the file; small related types may share
   a file named after their concept (see ARCHITECTURE.md).
 - Public API stays usable from Java: no value classes in signatures, `@JvmOverloads` on
-  functions with default arguments, `@JvmField`/`@JvmStatic` for constants. A Java test in
-  `liveTest` calls the main paths.
+  functions with default arguments, `@JvmField`/`@JvmStatic` for constants.
+  `src/test/java/.../JavaApiTest` uses the API from Java, so a change that breaks that fails
+  `check`.
 
 ## Tests
 

@@ -14,9 +14,7 @@ kotlin {
 }
 
 dependencies {
-    api(libs.jackson.databind)
-    implementation(libs.jackson.xml)
-    implementation(libs.jackson.kotlin)
+    implementation(libs.jackson.databind)
 }
 
 testing {
@@ -65,7 +63,6 @@ detekt {
 publishing {
     publications {
         register<MavenPublication>("maven") {
-            artifactId = "sec-api"
             from(components["java"])
         }
     }

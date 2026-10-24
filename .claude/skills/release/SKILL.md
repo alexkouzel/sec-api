@@ -25,12 +25,6 @@ Versions are semantic (`MAJOR.MINOR.PATCH`) and tagged `v<version>`.
    Bumping resets the lower parts: `2.3.1` → major `3.0.0`, minor `2.4.0`, patch `2.3.2`.
 4. Only `build`, `ci`, `docs`, `test` or `chore` commits change nothing users get: say so and
    ask whether to release anyway (as a patch).
-5. No tag yet: this is the first release of the Kotlin library, which replaces the Java API
-   entirely, so it is a major release. The Java versions were published to GitHub Packages as
-   `com.alexkouzel:sec-api`; find the highest:
-   `gh api /users/alexkouzel/packages/maven/com.alexkouzel.sec-api/versions --jq '.[].name'`,
-   and use the next major above it (`1.4.2` → `2.0.0`). If nothing was published, use `1.0.0`;
-   if the command fails, ask the user for the last published version.
 
 ## 3. Verify
 

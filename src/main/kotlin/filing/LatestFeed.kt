@@ -1,10 +1,14 @@
 package com.alexkouzel.sec.filing
 
 import com.alexkouzel.sec.SecException
-import com.alexkouzel.sec.http.map
-import com.alexkouzel.sec.http.xml
+import com.alexkouzel.sec.http.attribute
+import com.alexkouzel.sec.http.child
+import com.alexkouzel.sec.http.children
+import com.alexkouzel.sec.http.isoDate
+import com.alexkouzel.sec.http.parseXml
+import com.alexkouzel.sec.http.text
+import org.w3c.dom.Element
 import java.net.URLEncoder
-import java.time.LocalDate
 
 // The latest filings feed (Atom). It lists a filing once per related CIK, with the CIK's role
 // at the end of the title: "4 - WASTE ENERGY CORP. (0001515139) (Issuer)".
@@ -32,7 +36,7 @@ internal object LatestFeed {
     }
 
     fun parse(content: ByteArray): List<FilingRef> {
-        val listings = xml.map<Feed>(content).entry.map(::listing)
+        val listings = parseXml(content).children("entry").map(::listing)
         return listings
             .groupBy { it.ref.accessionNumber }
             .values
@@ -47,24 +51,28 @@ internal object LatestFeed {
         return listings.first()
     }
 
-    private fun listing(entry: Entry): Listing {
-        val summary = entry.summary.orEmpty()
+    private fun listing(entry: Element): Listing {
+        val id = entry.text("id")
+        val summary = entry.text("summary").orEmpty()
         val accessionNumber =
-            accessionInId.group(entry.id)
+            accessionInId.group(id)
                 ?: accessionInSummary.group(summary)
-                ?: throw missing("accession number", entry.id)
-        val cik = cikInLink.group(entry.link?.href) ?: throw missing("CIK", accessionNumber)
+                ?: throw missing("accession number", id)
+        val link = entry.child("link")?.attribute("href")
+        val cik = cikInLink.group(link) ?: throw missing("CIK", accessionNumber)
         val filedOn = filedInSummary.group(summary) ?: throw missing("filed date", accessionNumber)
-        val form = entry.category?.term ?: throw missing("form type", accessionNumber)
+        val form =
+            entry.child("category")?.attribute("term")
+                ?: throw missing("form type", accessionNumber)
 
         val ref =
             FilingRef(
                 accessionNumber,
                 cik.toLong(),
-                FormType(form.trim()),
-                LocalDate.parse(filedOn),
+                FormType(form),
+                isoDate(filedOn),
             )
-        val role = roleInTitle.group(entry.title?.trim())
+        val role = roleInTitle.group(entry.text("title"))
         return Listing(ref, role)
     }
 
@@ -81,25 +89,5 @@ internal object LatestFeed {
     private class Listing(
         val ref: FilingRef,
         val role: String?,
-    )
-
-    internal data class Feed(
-        val entry: List<Entry> = emptyList(),
-    )
-
-    internal data class Entry(
-        val title: String? = null,
-        val link: Link? = null,
-        val summary: String? = null,
-        val category: Category? = null,
-        val id: String? = null,
-    )
-
-    internal data class Link(
-        val href: String? = null,
-    )
-
-    internal data class Category(
-        val term: String? = null,
     )
 }

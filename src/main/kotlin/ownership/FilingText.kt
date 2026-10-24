@@ -2,10 +2,6 @@ package com.alexkouzel.sec.ownership
 
 import com.alexkouzel.sec.SecException
 import com.alexkouzel.sec.filing.FormType
-import com.alexkouzel.sec.http.map
-import com.alexkouzel.sec.http.xml
-import com.alexkouzel.sec.ownership.xml.OwnershipDocument
-import com.alexkouzel.sec.ownership.xml.toFiling
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -30,12 +26,12 @@ internal object FilingText {
 
         val accessionNumber = header.value("ACCESSION NUMBER")
         val formType = FormType(header.value("CONFORMED SUBMISSION TYPE"))
-        require(
-            formType in ownershipForms,
-        ) { "Not an ownership filing: $formType ($accessionNumber)" }
+        require(formType in ownershipForms) {
+            "Not an ownership filing: $formType ($accessionNumber)"
+        }
 
-        val ownershipDocument = xml.map<OwnershipDocument>(block.trim().toByteArray())
-        return ownershipDocument.toFiling(
+        return OwnershipXml.parse(
+            content = block.trim().toByteArray(),
             accessionNumber = accessionNumber,
             formType = formType,
             filedOn = filedOn(header.value("FILED AS OF DATE")),

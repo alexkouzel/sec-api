@@ -1,7 +1,7 @@
 package com.alexkouzel.sec.filing
 
 import com.alexkouzel.sec.SecException
-import java.time.LocalDate
+import com.alexkouzel.sec.http.isoDate
 
 // master.idx: a free-form header, a line of dashes, then rows of
 // CIK|Company Name|Form Type|Date Filed|Filename, one per filing and related CIK.
@@ -35,6 +35,6 @@ internal object QuarterlyIndex {
         val cikValue =
             cik.toLongOrNull()
                 ?: throw SecException.Parse("Invalid CIK in quarterly index row: $text")
-        return FilingRef(accessionNumber, cikValue, FormType(form), LocalDate.parse(filedOn))
+        return FilingRef(accessionNumber, cikValue, FormType(form), isoDate(filedOn))
     }
 }
