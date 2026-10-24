@@ -2,7 +2,6 @@ package com.alexkouzel.sec.filing
 
 import com.alexkouzel.sec.Fixtures
 import com.alexkouzel.sec.SecException
-import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -85,11 +84,4 @@ class LatestFeedTest {
             LatestFeed.url(40, FormType("SCHEDULE 13D/A")),
         )
     }
-
-    private fun ref(
-        accessionNumber: String,
-        cik: Long,
-        form: String,
-        filedOn: String,
-    ) = FilingRef(accessionNumber, cik, FormType(form), LocalDate.parse(filedOn))
 }
