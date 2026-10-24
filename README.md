@@ -1,110 +1,149 @@
 # SEC API
 
-Kotlin library for [SEC EDGAR](https://www.sec.gov/edgar) data, usable from Java too.
+[![CI](https://github.com/alexkouzel/sec-api/actions/workflows/ci.yml/badge.svg)](https://github.com/alexkouzel/sec-api/actions/workflows/ci.yml)
+[![Live EDGAR check](https://github.com/alexkouzel/sec-api/actions/workflows/live.yml/badge.svg)](https://github.com/alexkouzel/sec-api/actions/workflows/live.yml)
+[![JitPack](https://jitpack.io/v/alexkouzel/sec-api.svg)](https://jitpack.io/#alexkouzel/sec-api)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-- **Companies:** every company with a ticker: CIK, name, ticker, exchange.
-- **Filing references:** from the latest filings feed, the daily list, a quarter's full
-  index, or a company's (or insider's) whole filing history. Filtered by exact form type.
-- **Ownership filings:** insider Forms 3, 4 and 5 (and amendments), parsed into issuer,
-  reporting owners, transactions, holdings and footnotes.
-- **Fair access built in:** at most 10 requests per second, retries with backoff after I/O
-  errors, HTTP 429 (honouring `Retry-After`) and 5xx.
-- **Watched against EDGAR:** fields EDGAR adds are ignored, and a daily check in this
-  repository runs the library against live EDGAR and opens an issue when a change breaks it.
+A Kotlin library for [SEC EDGAR](https://www.sec.gov/edgar): companies, filing lists and insider
+trades (Forms 3, 4 and 5) as typed objects. Works from Java too.
 
-## Requirements
+```kotlin
+SecClient("Your Name you@example.com").use { sec ->
+    val ref = sec.filings.ofCompany(320193).first { it.formType == FormType.F4 } // Apple
+    val filing = sec.ownership.get(ref)
+    val owner = filing.owners.first().name
 
-Java 21 or newer. Dependencies: Jackson 3 (`jackson-databind`) and the Kotlin standard library,
-pulled in by Gradle or Maven.
+    for (transaction in filing.transactions) {
+        val shares = transaction.shares?.value
+        println("$owner: ${transaction.coding?.code}, $shares shares")
+    }
+}
+```
+
+## Features
+
+- **Companies:** every company with a ticker, with its CIK, name, ticker and exchange.
+- **Filing lists:** the latest filings, a day's filings, a quarter's full index, or the whole
+  history of a company or an insider, filtered by exact form type.
+- **Insider trades:** Forms 3, 4 and 5 (and amendments), with issuer, reporting owners,
+  transactions, holdings and footnotes. Numbers are exact `BigDecimal`s.
+- **Fair access built in:** at most 10 requests per second, with retries and backoff after
+  network errors, HTTP 429 (honouring `Retry-After`) and 5xx.
+- **Checked daily against EDGAR:** a scheduled job runs the library against live EDGAR, so a
+  format change is noticed within a day (the second badge above).
 
 ## Installation
 
-Releases are built by [JitPack](https://jitpack.io) from this repository's tags; no account or
-token is needed. Gradle (Kotlin DSL):
+Releases are built by [JitPack](https://jitpack.io/#alexkouzel/sec-api) from this repository's
+tags; no account or token is needed. Requires Java 21 or newer.
 
 ```kotlin
+// build.gradle.kts
 repositories {
     mavenCentral()
     maven("https://jitpack.io")
 }
 
 dependencies {
-    implementation("com.github.alexkouzel:sec-api:v<version>")
+    implementation("com.github.alexkouzel:sec-api:v2.0.0")
 }
 ```
 
-The versions are the tags on the [releases page](https://github.com/alexkouzel/sec-api/releases).
+The latest version is on the [releases page](https://github.com/alexkouzel/sec-api/releases).
 Maven works too, with the repository `https://jitpack.io` and the same coordinates.
 
 ## Usage
 
-EDGAR asks every client to identify itself as `Name contact@domain`. Create one `SecClient`,
-share it (it is safe to use from several threads, and keeps them all under EDGAR's limit of 10
-requests per second), and close it when done. Calls block.
+EDGAR asks every client to identify itself as `Name contact@domain`. Create one `SecClient` and
+share it: it is safe to use from several threads and keeps all of them under EDGAR's limit of
+10 requests per second. Calls block; close the client when done.
+
+### Companies
 
 ```kotlin
-SecClient("Sample Company admin@example.com").use { sec ->
-    val companies = sec.companies.all()
-
-    val latest = sec.filings.latest(count = 100, form = FormType.F4)
-    val threeDaysAgo = sec.filings.daily(daysAgo = 3, form = FormType.F4)
-    val quarter = sec.filings.quarter(2023, 3)
-    val tesla = sec.filings.ofCompany(1318605)
-
-    val filing = sec.ownership.get(latest.first())
-    println("${filing.issuer.name} (${filing.issuer.ticker}), filed ${filing.filedOn}")
-    for (transaction in filing.transactions) {
-        val shares = transaction.shares?.value
-        val price = transaction.pricePerShare?.value
-        println("${transaction.date?.value} ${transaction.coding?.code}: $shares @ $price")
-    }
-}
+val companies = sec.companies.all() // Company(cik, name, ticker, exchange)
 ```
 
-From Java:
+A company with several tickers appears once per ticker. `exchange` is null where EDGAR lists
+none.
+
+### Filing lists
+
+Each call returns a list of `FilingRef(accessionNumber, cik, formType, filedOn)`, each filing
+once.
+
+| Call                             | Lists                                | Notes                                         |
+|----------------------------------|--------------------------------------|-----------------------------------------------|
+| `filings.latest(count, form)`    | the newest filings                   | `count` is 10, 20, 40 (default), 80 or 100    |
+| `filings.daily(daysAgo, form)`   | one day's filings                    | `0` is today; empty on weekends and holidays  |
+| `filings.quarter(year, quarter)` | a calendar quarter's full index      | since 1993; tens of megabytes                 |
+| `filings.ofCompany(cik)`         | every filing of a company or insider | one request per ~1,000 filings                |
+
+```kotlin
+val form4s = sec.filings.daily(daysAgo = 1, form = FormType.F4)
+val q3 = sec.filings.quarter(2026, 3)
+```
+
+`FormType` keeps EDGAR's raw value (`FormType("424B2")`), with constants for common forms:
+`F3`, `F4`, `F5`, their amendments `F4_A`, ..., and `F8_K`, `F10_K`, `F10_Q`. The `form` filter
+matches exactly, so `latest` may return fewer filings than `count`, or none.
+
+`FilingRef.cik` is a CIK related to the filing; its role depends on the list (the issuer's on
+the latest feed where one is named, the requested one for `ofCompany`).
+
+### Insider trades (Forms 3, 4, 5)
+
+```kotlin
+val filing = sec.ownership.get(ref) // from a FilingRef
+val sameFiling = sec.ownership.get(1000753, "0001127602-23-028345") // CIK + accession number
+
+filing.issuer // Issuer(cik, name, ticker, ...)
+filing.owners // reporting owners, with address and relationship
+filing.transactions // what was bought, sold, granted or exercised
+filing.holdings // what is held without a transaction
+filing.footnotes // the texts footnote ids refer to
+```
+
+- Values that can carry footnotes are `Footnoted<T>(value, footnoteIds)`; read them with
+  `.value`.
+- `derivative` is set on transactions and holdings of options, warrants and other derivative
+  securities, with their exercise price, dates and underlying security.
+- Share counts and prices are `BigDecimal`s with the digits EDGAR wrote (`24.4000`), so compare
+  them with `compareTo`, not `==`.
+- `coding?.code` is a `TransactionCode` (`PURCHASE`, `SALE`, `OPTION_EXERCISE`, ...);
+  `coding.value` keeps EDGAR's letter.
+
+### From Java
 
 ```java
-try (SecClient sec = new SecClient("Sample Company admin@example.com")) {
+try (SecClient sec = new SecClient("Your Name you@example.com")) {
     List<FilingRef> refs = sec.getFilings().latest(40, FormType.F4);
     OwnershipFiling filing = sec.getOwnership().get(refs.get(0));
 }
 ```
 
-### What you get
-
-- `Company(cik, name, ticker, exchange)`, one per ticker; `exchange` is null where EDGAR lists
-  none.
-- `FilingRef(accessionNumber, cik, formType, filedOn)`. `cik` is a CIK related to the filing;
-  its role depends on the source (the issuer's on the latest feed where one is named, the
-  requested one for `ofCompany`).
-- `FormType` keeps EDGAR's value (`FormType("424B2")`), with constants for common forms
-  (`F3`, `F4`, `F5`, their amendments `F4_A`, ..., `F8_K`, `F10_K`, `F10_Q`). A form filter
-  matches exactly, so `latest` may return fewer filings than `count`, or none.
-- `OwnershipFiling`: header values, `issuer`, `owners`, `transactions`, `holdings`,
-  `footnotes`, `signatures`. Values that can carry footnotes are `Footnoted<T>(value,
-  footnoteIds)`; a derivative security's terms are in `derivative`. Share counts and prices
-  are `BigDecimal`s with the digits EDGAR wrote, so compare them with `compareTo`.
-- With only an accession number (from a link or a search), use
-  `sec.ownership.get(cik, accessionNumber)`, where `cik` is the issuer's or a reporting owner's.
-
 ### Errors
 
-Methods throw `SecException.Http` when a request still fails after 3 attempts and
-`SecException.Parse` when a response isn't in the expected format (EDGAR changed it); both are
-unchecked and name the URL in their message. Invalid arguments (a `count` the feed doesn't
-offer, quarter 5) throw `IllegalArgumentException`.
+| Exception                  | Thrown when                                                 |
+|----------------------------|-------------------------------------------------------------|
+| `SecException.Http`        | a request still fails after 3 attempts                      |
+| `SecException.Parse`       | a response isn't in the expected format: EDGAR changed it   |
+| `IllegalArgumentException` | an argument is invalid, such as quarter 5                   |
+
+Both `SecException`s are unchecked and name the URL in their message.
 
 ## Development
-
-See [CLAUDE.md](CLAUDE.md) for commands and [docs/](docs/) for the architecture and
-conventions. In Claude Code, `/fix-live-check` adapts the library when the daily live check fails.
-In short:
 
 ```bash
 ./gradlew check       # offline: unit tests and ktlint
 ./gradlew liveTest    # against live EDGAR; set EDGAR_USER_AGENT
 ```
 
+[CLAUDE.md](CLAUDE.md) has the commands and how the project is managed; [docs/](docs/) has the
+architecture and conventions. In Claude Code, `/fix-live-check` adapts the library when the
+daily check fails.
+
 ## License
 
-[MIT](LICENSE).
+[MIT](LICENSE)
