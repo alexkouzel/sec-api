@@ -22,7 +22,7 @@ before changing code, and use the glossary's terms.
 ## Commands
 
 - `./gradlew check` — offline: unit tests and ktlint. Must stay green; CI runs it on every
-  push and pull request.
+  pull request and push to `main`.
 - `./gradlew ktlintFormat` — fixes formatting.
 - `./gradlew liveTest` — against live EDGAR; reads the User-Agent from env `EDGAR_USER_AGENT`
   (`Name contact@domain`).

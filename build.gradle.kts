@@ -12,6 +12,11 @@ kotlin {
     explicitApi()
 }
 
+// Sources let IDEs show the KDoc and code of the library.
+java {
+    withSourcesJar()
+}
+
 dependencies {
     implementation("tools.jackson.core:jackson-databind:3.2.4")
 }

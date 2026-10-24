@@ -12,7 +12,7 @@ indent_size = 4
 ktlint_code_style = ktlint_official
 max_line_length = 100
 
-[*.{yml,yaml,json,toml}]
+[*.{yml,yaml,json}]
 indent_size = 2
 
 [*.md]
