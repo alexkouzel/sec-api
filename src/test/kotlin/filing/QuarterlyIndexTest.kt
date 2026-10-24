@@ -44,6 +44,21 @@ class QuarterlyIndexTest {
     }
 
     @Test
+    fun `returns each filing once with its first row's CIK`() {
+        val index =
+            """
+            -----
+            1000177|NORDIC AMERICAN TANKERS Ltd|4|2026-10-06|edgar/data/1000177/0000919574-26-006682.txt
+            1234567|SMITH JOHN|4|2026-10-06|edgar/data/1234567/0000919574-26-006682.txt
+            """.trimIndent()
+
+        assertEquals(
+            listOf(ref("0000919574-26-006682", 1000177, "4", "2026-10-06")),
+            QuarterlyIndex.parse(index.toByteArray()),
+        )
+    }
+
+    @Test
     fun `rejects an index without the line of dashes`() {
         val index = "CIK|Company Name|Form Type|Date Filed|Filename\n"
 
