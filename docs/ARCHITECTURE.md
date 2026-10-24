@@ -38,7 +38,7 @@ src/main/kotlin/
 │   ├── Company.kt
 │   └── Tickers.kt        internal: company_tickers_exchange.json
 ├── filing/
-│   ├── Filings.kt        facade: latest(), daily(), quarter(), ofCompany()
+│   ├── Filings.kt        facade: latest(), daily(), quarter(), company()
 │   ├── FilingRef.kt
 │   ├── FormType.kt
 │   ├── LatestFeed.kt     internal: Atom feed

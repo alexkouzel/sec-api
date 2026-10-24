@@ -23,7 +23,7 @@ class SecClientLiveTest {
 
     @Test
     fun `filings of a company`() {
-        assertValid(sec.filings.ofCompany(APPLE))
+        assertValid(sec.filings.company(APPLE))
     }
 
     @Test

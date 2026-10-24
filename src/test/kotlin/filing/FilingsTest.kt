@@ -71,8 +71,8 @@ class FilingsTest {
     }
 
     @Test
-    fun `ofCompany appends older filings`() {
-        val refs = filings.ofCompany(946581)
+    fun `company appends older filings`() {
+        val refs = filings.company(946581)
 
         assertEquals(70, refs.size)
         assertEquals(ref("0001104659-15-011425", 946581, "CORRESP", "2015-02-17"), refs[40])

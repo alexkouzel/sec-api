@@ -54,7 +54,7 @@ public class Filings internal constructor(
      * Every filing related to [cik], newest first, from its submissions. Costs one request,
      * plus one per file of older filings (one per about 1,000 filings).
      */
-    public fun ofCompany(cik: Long): List<FilingRef> {
+    public fun company(cik: Long): List<FilingRef> {
         val page = http.get(Submissions.url(cik)) { Submissions.parse(it, cik) }
         val older =
             page.olderFiles.flatMap { file ->
