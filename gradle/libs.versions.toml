@@ -8,8 +8,6 @@ detekt = "2.0.0-alpha.6"
 
 [libraries]
 jackson-databind = { module = "tools.jackson.core:jackson-databind", version.ref = "jackson" }
-jackson-xml = { module = "tools.jackson.dataformat:jackson-dataformat-xml", version.ref = "jackson" }
-jackson-kotlin = { module = "tools.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

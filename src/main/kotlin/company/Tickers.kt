@@ -1,8 +1,7 @@
 package com.alexkouzel.sec.company
 
 import com.alexkouzel.sec.SecException
-import com.alexkouzel.sec.http.json
-import com.alexkouzel.sec.http.map
+import com.alexkouzel.sec.http.parseJson
 import tools.jackson.databind.JsonNode
 
 // company_tickers_exchange.json: a list of field names, then one array of values per row.
@@ -13,14 +12,15 @@ internal object Tickers {
     private val fields = listOf("cik", "name", "ticker", "exchange")
 
     fun parse(content: ByteArray): List<Company> {
-        val table = json.map<Table>(content)
-        val columns = fields.associateWith { table.fields.indexOf(it) }
+        val root = parseJson(content)
+        val names = root.path("fields").values().map { it.asString() }
+        val columns = fields.associateWith { names.indexOf(it) }
         val missing = columns.filterValues { it == -1 }.keys
         if (missing.isNotEmpty()) {
-            throw SecException.Parse("Company tickers lack the fields $missing: ${table.fields}")
+            throw SecException.Parse("Company tickers lack the fields $missing: $names")
         }
 
-        return table.data.map { company(it, columns) }
+        return root.path("data").values().map { company(it, columns) }
     }
 
     private fun company(
@@ -39,9 +39,4 @@ internal object Tickers {
         }
         return Company(cik, name, ticker, text("exchange"))
     }
-
-    internal data class Table(
-        val fields: List<String>,
-        val data: List<JsonNode>,
-    )
 }

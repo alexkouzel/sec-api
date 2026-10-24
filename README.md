@@ -14,7 +14,7 @@ Kotlin library for [SEC EDGAR](https://www.sec.gov/edgar) data, usable from Java
 
 ## Requirements
 
-Java 21 or newer. Dependencies: Jackson 3 (`tools.jackson`) and the Kotlin standard library,
+Java 21 or newer. Dependencies: Jackson 3 (`jackson-databind`) and the Kotlin standard library,
 pulled in by Gradle or Maven.
 
 ## Installation

@@ -32,7 +32,7 @@ src/main/kotlin/
 │   ├── Http.kt           internal interface: get(url) -> bytes; the seam tests replace
 │   ├── EdgarHttp.kt      JDK HttpClient, User-Agent, gzip/deflate, retries
 │   ├── RateLimiter.kt    at most 10 requests per second
-│   └── Mapping.kt        the JSON and XML mappers the areas share
+│   └── Parsing.kt        JSON and XML trees and helpers the areas share
 ├── company/
 │   ├── Companies.kt      facade: all()
 │   ├── Company.kt
@@ -52,14 +52,17 @@ src/main/kotlin/
     ├── Transaction.kt    Transaction, Holding, Derivative, Coding, TransactionCode
     ├── Footnote.kt       Footnote, Footnoted<T>
     ├── FilingText.kt     internal: SGML header and <XML> block
-    └── xml/              internal: classes mirroring the XSD, converted to the model
+    ├── OwnershipXml.kt   internal: the ownership XML, element by element, into the model
+    └── XmlValues.kt      internal: its values (footnoted values, numbers, dates, flags)
 ```
 
 Notes:
 
-- `ownership/xml` mirrors the XSD element by element, because the XML is deep and awkward
-  (`transactionAmounts.transactionShares.value` plus `footnoteId`s). `Conversion.kt` flattens
-  it into the model, e.g. `transaction.shares: Footnoted<BigDecimal>?`; `Values.kt` turns its text
+- Responses are read as trees (Jackson `JsonNode`, the JDK's DOM), never mapped onto classes,
+  so fields EDGAR adds are simply not looked at.
+- The ownership XML is deep and awkward (`transactionAmounts.transactionShares.value` plus
+  `footnoteId`s). `OwnershipXml.kt` reads it by the XSD's element names and flattens it into the
+  model, e.g. `transaction.shares: Footnoted<BigDecimal>?`; `XmlValues.kt` turns its text
   into numbers, dates and flags and fails on a malformed one.
 - Transactions and holdings of both tables share `Transaction` and `Holding`; a derivative
   security's terms (exercise price, dates, underlying security) are in `derivative`, null for
@@ -100,8 +103,9 @@ src/
 | `liveTest` | `src/liveTest` | EDGAR |
 
 - `test` and `liveTest` may use `internal` code of `main`.
-- `ownership/xml/OwnershipDocumentTest` compares the XML classes with the newest XSDs in
-  `specs/`, and the fixtures' element counts with the model.
+- `ownership/OwnershipXmlTest` checks that the parser reads every element of the newest XSD in
+  `specs/` and knows every transaction code, and that the model keeps every repeated element
+  of each fixture.
 
 ## How EDGAR changes are caught
 
@@ -116,8 +120,5 @@ Fields EDGAR only adds don't break anything and aren't reported.
 - One Gradle project; plugin and library versions in `gradle/libs.versions.toml` (Dependabot
   proposes updates); detekt's differences from its defaults in `config/detekt.yml`.
 - Releases are git tags; JitPack builds them (`jitpack.yml`) as `com.github.alexkouzel:sec-api`.
-- Jackson 3 (`tools.jackson`, with `jackson-module-kotlin`). Two of its behaviours to know:
-  - it applies a property's non-null element type to nested collections too, so
-    `List<List<Any?>>` rejects a `null` inside; `Tickers` reads each row as a `JsonNode`;
-  - repeated XML elements may be interleaved with others (valid per XSD); `@field:JsonMerge`
-    on each list keeps every group.
+- One runtime dependency besides the Kotlin standard library: Jackson 3's `jackson-databind`
+  (`tools.jackson`), for JSON trees. XML uses the JDK's DOM parser, with DTDs refused.

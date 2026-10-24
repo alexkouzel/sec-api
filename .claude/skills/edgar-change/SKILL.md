@@ -34,15 +34,15 @@ Name ownership filings `<accession number>.txt`. Add a row for the file to
 ## 3. Fix it test-first
 
 - Find the parser for the source: `filing/LatestFeed.kt`, `DailyList.kt`, `QuarterlyIndex.kt`,
-  `Submissions.kt`, `company/Tickers.kt`, or `ownership/FilingText.kt` with `ownership/xml/`.
+  `Submissions.kt`, `company/Tickers.kt`, or `ownership/FilingText.kt` with `OwnershipXml.kt`.
 - Write a unit test on the new fixture in the parser's test file (`<Name>Test.kt`). Take the
   expected values from the raw response, not from the code. Run it and see it fail.
 - Fix the parser or the model until it passes. Follow docs/CONVENTIONS.md and keep the
   change minimal; existing fixtures must keep passing.
 - New ownership spec: if the SEC published one (https://www.sec.gov/submit-filings/technical-specifications),
   put it in `specs/ownership-xml-v<version>/` as `specs/README.md` describes, and update that
-  README. `OwnershipDocumentTest` then names every element or transaction code still missing
-  from `ownership/xml` and `TransactionCode`.
+  README. `OwnershipXmlTest` then names every element `OwnershipXml.kt` doesn't read yet and
+  every transaction code missing from `TransactionCode`.
 
 ## 4. Verify and finish
 

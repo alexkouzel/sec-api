@@ -1,17 +1,19 @@
 package com.alexkouzel.sec.filing
 
 import com.alexkouzel.sec.SecException
-import com.alexkouzel.sec.http.json
-import com.alexkouzel.sec.http.map
-import java.time.LocalDate
+import com.alexkouzel.sec.http.isoDate
+import com.alexkouzel.sec.http.parseJson
+import tools.jackson.databind.JsonNode
 
 // A CIK's submissions JSON: `filings.recent` holds the newest filings (at most 1,000 or one
-// year), `filings.files` names older files with the same columns.
+// year) as parallel columns, `filings.files` names older files with the same columns.
 internal object Submissions {
     private const val CIK_DIGITS = 10
 
-    fun url(cik: Long): String =
-        "https://data.sec.gov/submissions/CIK${cik.toString().padStart(CIK_DIGITS, '0')}.json"
+    fun url(cik: Long): String {
+        val paddedCik = cik.toString().padStart(CIK_DIGITS, '0')
+        return "https://data.sec.gov/submissions/CIK$paddedCik.json"
+    }
 
     fun olderUrl(file: String): String = "https://data.sec.gov/submissions/$file"
 
@@ -19,48 +21,48 @@ internal object Submissions {
         content: ByteArray,
         cik: Long,
     ): Page {
-        val filings = json.map<Submission>(content).filings
-        return Page(filings.recent.refs(cik), filings.files.map { it.name })
+        val filings = parseJson(content).path("filings")
+        val refs = refs(filings.path("recent"), cik)
+        val olderFiles = filings.path("files").values().map { it.path("name").asString() }
+        return Page(refs, olderFiles)
     }
 
     fun parseOlder(
         content: ByteArray,
         cik: Long,
-    ): List<FilingRef> = json.map<Columns>(content).refs(cik)
+    ): List<FilingRef> = refs(parseJson(content), cik)
+
+    private fun refs(
+        columns: JsonNode,
+        cik: Long,
+    ): List<FilingRef> {
+        val accessionNumbers = column(columns, "accessionNumber")
+        val forms = column(columns, "form")
+        val filingDates = column(columns, "filingDate")
+        if (forms.size != accessionNumbers.size || filingDates.size != accessionNumbers.size) {
+            throw SecException.Parse(
+                "Filing columns differ in length: ${accessionNumbers.size} accession numbers, " +
+                    "${forms.size} forms, ${filingDates.size} filing dates",
+            )
+        }
+        return accessionNumbers.indices.map { i ->
+            FilingRef(accessionNumbers[i], cik, FormType(forms[i]), isoDate(filingDates[i]))
+        }
+    }
+
+    private fun column(
+        columns: JsonNode,
+        name: String,
+    ): List<String> {
+        val column = columns.path(name)
+        if (!column.isArray) {
+            throw SecException.Parse("No $name column in the submissions")
+        }
+        return column.values().map { it.asString() }
+    }
 
     class Page(
         val refs: List<FilingRef>,
         val olderFiles: List<String>,
     )
-
-    internal data class Submission(
-        val filings: SubmissionFilings,
-    )
-
-    internal data class SubmissionFilings(
-        val recent: Columns,
-        val files: List<OlderFile> = emptyList(),
-    )
-
-    internal data class OlderFile(
-        val name: String,
-    )
-
-    internal data class Columns(
-        val accessionNumber: List<String>,
-        val form: List<String>,
-        val filingDate: List<LocalDate>,
-    ) {
-        fun refs(cik: Long): List<FilingRef> {
-            if (form.size != accessionNumber.size || filingDate.size != accessionNumber.size) {
-                throw SecException.Parse(
-                    "Filing columns differ in length: ${accessionNumber.size} accession numbers, " +
-                        "${form.size} forms, ${filingDate.size} filing dates",
-                )
-            }
-            return accessionNumber.indices.map { i ->
-                FilingRef(accessionNumber[i], cik, FormType(form[i]), filingDate[i])
-            }
-        }
-    }
 }
