@@ -2,7 +2,6 @@ package com.alexkouzel.sec.ownership
 
 import com.alexkouzel.sec.Fixtures
 import com.alexkouzel.sec.SecException
-import com.alexkouzel.sec.filing.FilingRef
 import com.alexkouzel.sec.filing.FormType
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource

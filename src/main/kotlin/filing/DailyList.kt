@@ -1,8 +1,8 @@
 package com.alexkouzel.sec.filing
 
 import com.alexkouzel.sec.SecException
+import com.alexkouzel.sec.http.parseDate
 import java.net.URLEncoder
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 // The daily list (cgi-bin/current): one row per filing and related CIK, between two <hr> tags.
@@ -47,7 +47,7 @@ internal object DailyList {
             accessionNumber = accessionNumber,
             cik = cik.toLong(),
             formType = FormType(form.trim()),
-            filedOn = LocalDate.parse(filedOn, date),
+            filedOn = parseDate(filedOn, date),
         )
     }
 }

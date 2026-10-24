@@ -4,7 +4,7 @@ import com.alexkouzel.sec.SecException
 import com.alexkouzel.sec.http.attribute
 import com.alexkouzel.sec.http.child
 import com.alexkouzel.sec.http.children
-import com.alexkouzel.sec.http.isoDate
+import com.alexkouzel.sec.http.parseDate
 import com.alexkouzel.sec.http.parseXml
 import com.alexkouzel.sec.http.text
 import org.w3c.dom.Element
@@ -71,7 +71,7 @@ internal object LatestFeed {
                 accessionNumber = accessionNumber,
                 cik = cik.toLong(),
                 formType = FormType(form),
-                filedOn = isoDate(filedOn),
+                filedOn = parseDate(filedOn),
             )
         return Listing(ref, role = roleInTitle.group(title))
     }

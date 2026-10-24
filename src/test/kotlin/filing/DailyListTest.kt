@@ -41,6 +41,16 @@ class DailyListTest {
     }
 
     @Test
+    fun `rejects a row with a date in another order`() {
+        val row =
+            "21-10-2026   " +
+                """<a href="/Archives/edgar/data/1553209/0001099910-26-000286-index.html">4</a>"""
+        val page = "<pre><hr>$row\n<hr></pre>"
+
+        assertFailsWith<SecException.Parse> { DailyList.parse(page.toByteArray()) }
+    }
+
+    @Test
     fun `rejects a page without the list`() {
         val page = "<html><body>No filings</body></html>"
 

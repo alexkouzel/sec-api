@@ -110,11 +110,14 @@ internal object OwnershipXml {
         )
 
     private fun signature(signature: Element) =
-        Signature(signature.text("signatureName"), signature.date("signatureDate"))
+        Signature(
+            name = signature.text("signatureName"),
+            date = signature.date("signatureDate"),
+        )
 
     private fun footnote(footnote: Element): Footnote {
         val id = footnote.attribute("id") ?: throw SecException.Parse("A footnote has no id")
-        return Footnote(id, footnote.trimmedText().orEmpty())
+        return Footnote(id = id, text = footnote.trimmedText().orEmpty())
     }
 
     private fun transaction(

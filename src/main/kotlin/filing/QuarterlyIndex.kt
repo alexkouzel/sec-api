@@ -1,7 +1,7 @@
 package com.alexkouzel.sec.filing
 
 import com.alexkouzel.sec.SecException
-import com.alexkouzel.sec.http.isoDate
+import com.alexkouzel.sec.http.parseDate
 
 // master.idx: a free-form header, a line of dashes, then rows of
 // CIK|Company Name|Form Type|Date Filed|Filename, one per filing and related CIK.
@@ -39,7 +39,7 @@ internal object QuarterlyIndex {
             accessionNumber = accessionNumber,
             cik = cikValue,
             formType = FormType(form),
-            filedOn = isoDate(filedOn),
+            filedOn = parseDate(filedOn),
         )
     }
 }

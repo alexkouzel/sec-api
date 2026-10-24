@@ -2,6 +2,7 @@ package com.alexkouzel.sec.http
 
 import com.alexkouzel.sec.SecException
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -45,7 +46,15 @@ class ParsingTest {
 
     @Test
     fun `reads ISO dates and rejects others`() {
-        assertEquals(LocalDate.parse("2026-10-21"), isoDate("2026-10-21"))
-        assertFailsWith<SecException.Parse> { isoDate("10-21-2026") }
+        assertEquals(LocalDate.parse("2026-10-21"), parseDate("2026-10-21"))
+        assertFailsWith<SecException.Parse> { parseDate("10-21-2026") }
+    }
+
+    @Test
+    fun `reads dates in a given format`() {
+        val format = DateTimeFormatter.BASIC_ISO_DATE
+
+        assertEquals(LocalDate.parse("2026-10-21"), parseDate("20261021", format))
+        assertFailsWith<SecException.Parse> { parseDate("2026-10-21", format) }
     }
 }

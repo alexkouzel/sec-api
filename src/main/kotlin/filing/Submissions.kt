@@ -1,7 +1,7 @@
 package com.alexkouzel.sec.filing
 
 import com.alexkouzel.sec.SecException
-import com.alexkouzel.sec.http.isoDate
+import com.alexkouzel.sec.http.parseDate
 import com.alexkouzel.sec.http.parseJson
 import tools.jackson.databind.JsonNode
 
@@ -50,7 +50,7 @@ internal object Submissions {
                 accessionNumber = accessionNumbers[i],
                 cik = cik,
                 formType = FormType(forms[i]),
-                filedOn = isoDate(filingDates[i]),
+                filedOn = parseDate(filingDates[i]),
             )
         }
     }
