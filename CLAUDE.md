@@ -33,8 +33,9 @@ before changing code, and use the glossary's terms.
   `live-check-failed`; the `/fix-live-check` skill (`.claude/skills/`) finds what broke, saves
   the response as a fixture and fixes it test-first. The workflow needs the repository secret
   `EDGAR_USER_AGENT`.
-- Releases are made by hand on GitHub: Releases → "Draft a new release", tag `v<version>` on
-  `main`, "Generate release notes", publish. JitPack builds a release when it is first requested.
+- Releases are made by hand on GitHub. First set the new version in the README's installation
+  snippet on `main`, then Releases → "Draft a new release", tag `v<version>` on `main`,
+  "Generate release notes", publish. JitPack builds a release when it is first requested.
   The version follows the commits since the last tag (see Commits).
 
 ## Commits

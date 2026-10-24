@@ -46,7 +46,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.alexkouzel:sec-api:v2.0.0")
+    implementation("com.github.alexkouzel:sec-api:v2.0.3")
 }
 ```
 
