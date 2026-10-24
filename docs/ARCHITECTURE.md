@@ -74,26 +74,14 @@ Notes:
   (see the glossary). EDGAR serves a filing under each related CIK.
 - Small types that belong together share a file named after the concept (`Owner.kt`).
 
-## Public API
-
-```kotlin
-SecClient("Name contact@domain").use { sec ->
-    val companies = sec.companies.all()
-    val refs = sec.filings.latest(count = 40, form = FormType.F4)
-    val filing = sec.ownership.get(refs.first())
-}
-```
-
-Calls block, so Java uses the same API: `sec.getFilings().latest(40, FormType.F4)`.
-
 ## Tests
 
 ```
 src/
 ├── main/
-├── test/            unit tests, offline; mirrors main: filing/LatestFeed.kt -> filing/LatestFeedTest.kt
-│                    helpers at its root: Fixtures, FixtureHttp, LocalServer; resources/edgar/ (frozen);
-│                    java/: JavaApiTest, the API as Java sees it
+├── test/            unit tests, offline; mirror main (filing/LatestFeedTest.kt for
+│                    filing/LatestFeed.kt); helpers Fixtures, FixtureHttp, LocalServer at
+│                    the root; resources/edgar/ (frozen); java/JavaApiTest, the Java view
 └── liveTest/        the library against live EDGAR
 ```
 
@@ -112,7 +100,7 @@ src/
 `.github/workflows/live.yml` runs `liveTest` every day. The live tests call every source and
 check the values users rely on (issuer, owners, transaction dates and codes) in a sample of
 recent Form 3, 4 and 5 filings. When EDGAR changes something the library reads, a test fails
-with the URL of the response, and the workflow opens an issue labelled `edgar-change`.
+with the URL of the response, and the workflow opens an issue labelled `live-check-failed`.
 Fields EDGAR only adds don't break anything and aren't reported.
 
 ## Build

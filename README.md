@@ -39,7 +39,8 @@ Maven works too, with the repository `https://jitpack.io` and the same coordinat
 ## Usage
 
 EDGAR asks every client to identify itself as `Name contact@domain`. Create one `SecClient`,
-share it, and close it when done; calls block.
+share it (it is safe to use from several threads, and keeps them all under EDGAR's limit of 10
+requests per second), and close it when done. Calls block.
 
 ```kotlin
 SecClient("Sample Company admin@example.com").use { sec ->
@@ -71,6 +72,8 @@ try (SecClient sec = new SecClient("Sample Company admin@example.com")) {
 
 ### What you get
 
+- `Company(cik, name, ticker, exchange)`, one per ticker; `exchange` is null where EDGAR lists
+  none.
 - `FilingRef(accessionNumber, cik, formType, filedOn)`. `cik` is a CIK related to the filing;
   its role depends on the source (the issuer's on the latest feed where one is named, the
   requested one for `ofCompany`).
@@ -94,10 +97,14 @@ offer, quarter 5) throw `IllegalArgumentException`.
 ## Development
 
 See [CLAUDE.md](CLAUDE.md) for commands and [docs/](docs/) for the architecture and
-conventions. In Claude Code, `/edgar-change` adapts the library when the daily live check fails
-and `/release` releases the next version, worked out from the commits. In short:
+conventions. In Claude Code, `/fix-live-check` adapts the library when the daily live check fails.
+In short:
 
 ```bash
 ./gradlew check       # offline: unit tests and ktlint
 ./gradlew liveTest    # against live EDGAR; set EDGAR_USER_AGENT
 ```
+
+## License
+
+[MIT](LICENSE).
