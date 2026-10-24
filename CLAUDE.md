@@ -13,13 +13,13 @@ before changing code, and use the glossary's terms.
   `FixtureHttp`, `LocalServer`) and frozen EDGAR responses. `src/liveTest` — the library against
   live EDGAR.
 - `specs/` — the SEC's Ownership XML specification and XSDs.
-- `config/detekt.yml` — detekt's differences from its defaults; versions in
-  `gradle/libs.versions.toml`, kept current by Dependabot (`.github/dependabot.yml`).
+- `build.gradle.kts` — the whole build, with every version; Dependabot (`.github/dependabot.yml`)
+  proposes updates. `.editorconfig` configures ktlint.
 - `jitpack.yml` — JitPack builds each release from its git tag; there is no publish step.
 
 ## Commands
 
-- `./gradlew check` — offline: unit tests, ktlint, detekt. Must stay green; CI runs it on every
+- `./gradlew check` — offline: unit tests and ktlint. Must stay green; CI runs it on every
   push and pull request.
 - `./gradlew ktlintFormat` — fixes formatting.
 - `./gradlew liveTest` — against live EDGAR; reads the User-Agent from env `EDGAR_USER_AGENT`
@@ -45,7 +45,7 @@ Two project skills (`.claude/skills/`) cover the recurring jobs:
 
 Angular convention: `type(scope): subject`, imperative, lowercase, no trailing period.
 Types: `build`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `test`, `chore`.
-Example: `fix(http): inflate deflate-encoded responses`.
+Example: `fix(filing): read the daily list's new row layout`.
 
 `/release` derives the version from these: `feat` is a minor release, everything else a patch.
 Mark a change that breaks the public API with `!` (`feat(filing)!: rename latest to recent`)

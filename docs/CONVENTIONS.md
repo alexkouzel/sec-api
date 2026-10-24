@@ -105,7 +105,7 @@ Code should explain itself through names and structure; a comment is a last reso
 
 ## Kotlin style
 
-- Formatting by ktlint, lint by detekt, public API by explicit API mode. Rules in tools
+- Formatting by ktlint, public API by explicit API mode. Rules in tools
   where possible; this file holds only what they can't check.
 - Data classes of `val`s; `List`/`Map` (read-only) in signatures. No `lateinit`, no `!!`.
 - Nullability means absence: a field EDGAR leaves out or empty is `null`. Collections are
@@ -114,7 +114,7 @@ Code should explain itself through names and structure; a comment is a last reso
   `null` for a failure. Messages name the URL and what was expected.
 - Don't pack code onto one line. Give intermediate values a name instead of chaining many
   calls or nesting expressions; a plain `if` or loop over a clever one-liner. Lines are at most
-  100 characters (ktlint and detekt enforce it).
+  100 characters (ktlint enforces it).
 - Guard with `?: throw` and early `return` where it keeps the main path flat.
 - One public top-level type per file, named after the file; small related types may share
   a file named after their concept (see ARCHITECTURE.md).
