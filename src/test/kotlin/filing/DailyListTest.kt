@@ -24,6 +24,7 @@ class DailyListTest {
 
         assertEquals(52, refs.size)
         assertEquals(refs.size, refs.distinctBy { it.accessionNumber }.size)
+        assertEquals(1112996, refs.single { it.accessionNumber == "0002071844-26-001439" }.cik)
     }
 
     @Test

@@ -42,7 +42,10 @@ internal object FilingText {
     // The <FILENAME> of the document that holds the <XML> block.
     private fun documentName(text: String): String {
         val beforeXml = text.substringBefore("<XML>")
-        return beforeXml.substringAfterLast("<FILENAME>", "").substringBefore('\n').trim()
+        if ("<FILENAME>" !in beforeXml) {
+            throw SecException.Parse("No <FILENAME> for the <XML> block")
+        }
+        return beforeXml.substringAfterLast("<FILENAME>").substringBefore('\n').trim()
     }
 
     // Found by label, so added or reordered header lines don't matter.

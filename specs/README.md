@@ -22,8 +22,8 @@ Reference material for the EDGAR sources this library reads. Checked 2026-10-23.
 |--------|-----|-------|
 | Company tickers | `https://www.sec.gov/files/company_tickers_exchange.json` | `{fields: [cik, name, ticker, exchange], data: [[...]]}` |
 | Submissions | `https://data.sec.gov/submissions/CIK##########.json` | Columnar `filings.recent` arrays; older filings in `filings.files`. Fields get added (e.g. `isXBRLNumeric`). |
-| Latest filings | `https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&output=atom` | Atom. `type` is a **prefix** filter. One entry per related CIK (Filer/Issuer/Reporting). |
-| Daily filings | `https://www.sec.gov/cgi-bin/current?q1=<daysAgo>&q3=<type>` | HTML `<pre>` between two `<hr>`. Same prefix filter and per-CIK duplicates. |
+| Latest filings feed | `https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&output=atom` | Atom. `type` is a **prefix** filter. One entry per related CIK (Filer/Issuer/Reporting). |
+| Daily list | `https://www.sec.gov/cgi-bin/current?q1=<daysAgo>&q3=<type>` | HTML `<pre>` between two `<hr>`. Same prefix filter and per-CIK duplicates. |
 | Quarterly index | `https://www.sec.gov/Archives/edgar/full-index/<year>/QTR<n>/master.idx` | 11 header lines, then `CIK\|Company Name\|Form Type\|Date Filed\|Filename`. |
 | Filing text | `https://www.sec.gov/Archives/edgar/data/<cik>/<accession number without dashes>/<accession number>.txt` | SGML header, then documents; ownership XML inside `<XML>`. |
 

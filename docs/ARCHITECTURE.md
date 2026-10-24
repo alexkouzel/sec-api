@@ -1,6 +1,7 @@
 # Architecture
 
-How the library is laid out, and why. Code rules are in [CONVENTIONS.md](CONVENTIONS.md).
+How the library is laid out, and why. Code rules are in [CONVENTIONS.md](CONVENTIONS.md),
+EDGAR's terms in [GLOSSARY.md](GLOSSARY.md).
 
 ## Principles
 
@@ -71,7 +72,7 @@ Notes:
   `TransactionCode` is an enum, but `Coding.value` keeps the raw code, so an unknown one
   isn't lost.
 - `FilingRef.cik` is a related CIK, not necessarily the issuer's; its role depends on the source
-  (see the glossary). EDGAR serves a filing under each related CIK.
+  (see [GLOSSARY.md](GLOSSARY.md)). EDGAR serves a filing under each related CIK.
 - Small types that belong together share a file named after the concept (`Owner.kt`).
 
 ## Tests

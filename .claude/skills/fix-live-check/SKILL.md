@@ -39,8 +39,8 @@ Name ownership filings `<accession number>.txt`. Add a row for the file to
   `OwnershipXml.kt`.
 - Write a unit test on the new fixture in the parser's test file (`<Name>Test.kt`). Take the
   expected values from the raw response, not from the code. Run it and see it fail.
-- Fix the parser or the model until it passes. Follow docs/CONVENTIONS.md and keep the
-  change minimal; existing fixtures must keep passing.
+- Fix the parser or the model until it passes. Follow docs/CONVENTIONS.md and docs/GLOSSARY.md
+  and keep the change minimal; existing fixtures must keep passing.
 - New ownership spec: if the SEC published one (https://www.sec.gov/submit-filings/technical-specifications),
   put it in `specs/ownership-xml-v<version>/` as `specs/README.md` describes, and update that
   README. `OwnershipXmlTest` then names every element `OwnershipXml.kt` doesn't read yet and
