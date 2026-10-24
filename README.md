@@ -125,11 +125,11 @@ try (SecClient sec = new SecClient("Your Name you@example.com")) {
 
 ### Errors
 
-| Exception                  | Thrown when                                                 |
-|----------------------------|-------------------------------------------------------------|
-| `SecException.Http`        | a request still fails after 3 attempts                      |
-| `SecException.Parse`       | a response isn't in the expected format: EDGAR changed it   |
-| `IllegalArgumentException` | an argument is invalid, such as quarter 5                   |
+| Exception                  | Thrown when                                                                      |
+|----------------------------|----------------------------------------------------------------------------------|
+| `SecException.Http`        | a request fails: after 3 attempts for I/O errors, 429 and 5xx, at once otherwise |
+| `SecException.Parse`       | a response isn't in the expected format: EDGAR changed it                        |
+| `IllegalArgumentException` | an argument is invalid, such as quarter 5                                        |
 
 Both `SecException`s are unchecked and name the URL in their message.
 
