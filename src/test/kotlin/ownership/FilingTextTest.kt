@@ -82,6 +82,13 @@ class FilingTextTest {
     }
 
     @Test
+    fun `rejects a filing whose XML document has no file name`() {
+        val text = text("0001127602-23-028345").replace("<FILENAME>form4.xml", "")
+
+        assertFailsWith<SecException.Parse> { FilingText.parse(text.toByteArray()) }
+    }
+
+    @Test
     fun `rejects a filing that isn't an ownership form`() {
         val original = text("0001127602-23-028345")
         val text =
