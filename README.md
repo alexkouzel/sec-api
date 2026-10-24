@@ -142,7 +142,7 @@ Both `SecException`s are unchecked and name the URL in their message.
 
 [CLAUDE.md](CLAUDE.md) has the commands and how the project is managed; [docs/](docs/) has the
 architecture and conventions. In Claude Code, `/fix-live-check` adapts the library when the
-daily check fails.
+daily check fails, and `/improve` opens a pull request with improvements to the code and docs.
 
 ## License
 
