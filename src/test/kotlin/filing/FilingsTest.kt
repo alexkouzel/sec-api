@@ -2,7 +2,6 @@ package com.alexkouzel.sec.filing
 
 import com.alexkouzel.sec.FixtureHttp
 import com.alexkouzel.sec.SecException
-import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -87,11 +86,4 @@ class FilingsTest {
 
         assertContains(error.message.orEmpty(), "https://www.sec.gov/cgi-bin/current?q1=2")
     }
-
-    private fun ref(
-        accessionNumber: String,
-        cik: Long,
-        form: String,
-        filedOn: String,
-    ) = FilingRef(accessionNumber, cik, FormType(form), LocalDate.parse(filedOn))
 }

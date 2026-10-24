@@ -2,7 +2,6 @@ package com.alexkouzel.sec.filing
 
 import com.alexkouzel.sec.Fixtures
 import com.alexkouzel.sec.SecException
-import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -56,11 +55,4 @@ class SubmissionsTest {
     fun `pads the CIK in the URL`() {
         assertEquals("https://data.sec.gov/submissions/CIK0000946581.json", Submissions.url(946581))
     }
-
-    private fun ref(
-        accessionNumber: String,
-        cik: Long,
-        form: String,
-        filedOn: String,
-    ) = FilingRef(accessionNumber, cik, FormType(form), LocalDate.parse(filedOn))
 }
