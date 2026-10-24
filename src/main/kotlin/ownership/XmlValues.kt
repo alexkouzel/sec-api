@@ -60,6 +60,8 @@ internal fun Element.flag(name: String): Boolean? {
     }
 }
 
-internal fun Element.cik(name: String): Long =
-    text(name)?.toLongOrNull()
-        ?: throw SecException.Parse("Invalid <$name> in the ownership document: ${text(name)}")
+internal fun Element.cik(name: String): Long {
+    val text = text(name)
+    return text?.toLongOrNull()
+        ?: throw SecException.Parse("Invalid <$name> in the ownership document: $text")
+}
