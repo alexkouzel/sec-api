@@ -33,6 +33,8 @@ before changing code, and use the glossary's terms.
   `live-check-failed`; the `/fix-live-check` skill (`.claude/skills/`) finds what broke, saves
   the response as a fixture and fixes it test-first. The workflow needs the repository secret
   `EDGAR_USER_AGENT`.
+- `/improve` reviews the code, structure and docs and opens one pull request with the changes
+  worth making, each checked by an independent reviewer agent.
 - Releases are made by hand on GitHub. First set the new version in the README's installation
   snippet on `main`, then Releases → "Draft a new release", tag `v<version>` on `main`,
   "Generate release notes", publish. JitPack builds a release when it is first requested.
