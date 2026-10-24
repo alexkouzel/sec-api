@@ -40,9 +40,10 @@ A filing relates to several CIKs. Use the role name, never a bare "CIK", when th
 | Filed by | The other party on such a filing (the investor filing a Schedule 13D/G). | Latest feed `(Filed by)` |
 | Related CIK | A CIK attached to the filing whose role the source doesn't say. | Daily page (`cgi-bin/current`), quarterly `master.idx` |
 
-The latest feed and daily page list one entry per related CIK, so a filing appears several
-times; results are deduplicated by accession number. From the latest feed the Issuer's or
-Subject's CIK is kept (else the first entry's); from the daily page, the first row's.
+The latest feed, daily page and quarterly index list one entry per related CIK, so a filing
+appears several times; results are deduplicated by accession number. From the latest feed the
+Issuer's or Subject's CIK is kept (else the first entry's); from the daily page and quarterly
+index, the first row's.
 
 ### Ownership filings (Forms 3, 4, 5)
 
