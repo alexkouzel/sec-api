@@ -18,7 +18,7 @@ java {
 }
 
 dependencies {
-    implementation("tools.jackson.core:jackson-databind:3.2.4")
+    implementation("tools.jackson.core:jackson-databind:3.3.0")
 }
 
 testing {
